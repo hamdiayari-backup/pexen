@@ -1,20 +1,33 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-</div>
+# PEXEN — Ingénierie & Performance Énergétique
 
-# Run and deploy your AI Studio app
+Site vitrine PEXEN et son backoffice (`/administrator`) : pages entièrement composées de blocs, aperçu en direct, SEO, formulaires, statistiques, assistant IA.
 
-This contains everything you need to run your app locally.
+## Stack
 
-View your app in AI Studio: https://ai.studio/apps/a4d48579-4805-449a-ab4c-870f2e6db5d5
+- React 19 + Vite + Tailwind CSS v4 (site public et backoffice)
+- Express (TypeScript via `tsx`)
+- PostgreSQL 17 (Docker) + Drizzle ORM
 
-## Run Locally
+## Démarrage local
 
-**Prerequisites:**  Node.js
+**Prérequis :** Node.js 20+, Docker.
 
+1. Installer les dépendances : `npm install`
+2. Copier `.env.example` en `.env` et renseigner les valeurs (base de données, compte admin, clés)
+3. Lancer PostgreSQL : `npm run db:up`
+4. Construire le front : `npm run build`
+5. Démarrer le serveur : `npm run dev`
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+Le site est servi sur le port défini par `PORT`, le backoffice sur `/administrator`.
+
+## Scripts utiles
+
+| Commande | Rôle |
+| --- | --- |
+| `npm run lint` | Vérification TypeScript |
+| `npm run db:generate` | Générer une migration après modification de `server/db/schema.ts` |
+| `npm run db:backup` / `db:restore` | Sauvegarde / restauration de la base |
+
+## Documentation
+
+Guide complet du backoffice : [docs/BACKOFFICE_PEXEN.md](docs/BACKOFFICE_PEXEN.md)
