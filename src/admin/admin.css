@@ -1,0 +1,121 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --color-brand-50: #e6faf8;
+  --color-brand-100: #c2f2ee;
+  --color-brand-200: #8fe6df;
+  --color-brand-500: #00c6ba;
+  --color-brand-600: #00a89d;
+  --color-brand-700: #00867d;
+  --color-navy-800: #111d33;
+  --color-navy-900: #0b1528;
+  --color-navy-950: #070e1c;
+}
+
+@layer base {
+  html,
+  body {
+    font-family: var(--font-sans);
+    background: #f6f7f9;
+    color: #0f172a;
+    -webkit-font-smoothing: antialiased;
+    font-feature-settings: 'cv11', 'ss01';
+  }
+  ::selection {
+    background: rgb(0 198 186 / 0.2);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-brand-500);
+    outline-offset: 2px;
+  }
+}
+
+/* Contenu édité dans TipTap — reflète la typographie du site public */
+.rte-content {
+  min-height: 220px;
+  outline: none;
+  font-size: 15px;
+  line-height: 1.7;
+  color: #1e293b;
+}
+.rte-content.rte-compact {
+  min-height: 110px;
+  font-size: 14px;
+}
+.rte-content > * + * {
+  margin-top: 0.75em;
+}
+.rte-content h2 {
+  font-size: 1.5rem;
+  font-weight: 650;
+  line-height: 1.3;
+  color: #0b1528;
+  margin-top: 1.4em;
+}
+.rte-content h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #0b1528;
+  margin-top: 1.2em;
+}
+.rte-content h4 {
+  font-size: 1rem;
+  font-weight: 600;
+}
+.rte-content ul {
+  list-style: disc;
+  padding-left: 1.4em;
+}
+.rte-content ol {
+  list-style: decimal;
+  padding-left: 1.4em;
+}
+.rte-content blockquote {
+  border-left: 3px solid var(--color-brand-500);
+  padding-left: 1em;
+  color: #475569;
+  font-style: italic;
+}
+.rte-content a {
+  color: var(--color-brand-700);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.rte-content img {
+  border-radius: 10px;
+  max-width: 100%;
+}
+.rte-content img.ProseMirror-selectednode {
+  outline: 3px solid var(--color-brand-500);
+}
+.rte-content code {
+  background: #f1f5f9;
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+.rte-content hr {
+  border: none;
+  border-top: 1px solid #e2e8f0;
+  margin: 1.5em 0;
+}
+.rte-content p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  color: #94a3b8;
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: rgb(148 163 184 / 0.35);
+  border-radius: 8px;
+}
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}

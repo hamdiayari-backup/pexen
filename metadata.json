@@ -1,0 +1,7 @@
+{
+  "name": "PEXEN | Ingénierie & Performance Énergétique",
+  "description": "Réduisez durablement la facture énergétique de vos sites industriels, tertiaires et résidentiels collectifs : audit, travaux, financement CEE et suivi des économies.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+
