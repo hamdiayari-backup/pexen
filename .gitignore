@@ -1,24 +1,2 @@
+# Régénérable via npm ci — trop volumineux pour GitHub
 node_modules/
-build/
-dist/
-coverage/
-.DS_Store
-*.log
-.env*
-!.env.example
-
-backups/
-
-# Données d'exécution (contiennent comptes admin et messages) et fichiers déposés par le backoffice
-/data/
-public/uploads/
-
-# Fichiers bruts déposés à la racine (sources, archives)
-/*.zip
-/*.mp3
-/*.mp4
-/*.jpg
-/*.jpeg
-/*.webp
-/*.png
-/*.bak

@@ -14,7 +14,12 @@ import type {
 } from '../../../../server/cms/blocks';
 import { ButtonRow, CountUp, cx, Eyebrow, Icon, Reveal, Section, SectionHeading, useCms, useDark, useGo } from '../kit';
 
-const COLS = { 2: 'md:grid-cols-2', 3: 'md:grid-cols-2 lg:grid-cols-3', 4: 'sm:grid-cols-2 lg:grid-cols-4' } as const;
+const COLS = {
+  2: 'md:grid-cols-2',
+  3: 'md:grid-cols-2 lg:grid-cols-3',
+  4: 'sm:grid-cols-2 lg:grid-cols-4',
+  5: 'sm:grid-cols-2 lg:grid-cols-5',
+} as const;
 
 /* ------------------------------------------------------------------ Cartes */
 
@@ -44,28 +49,40 @@ function CardsGrid({ d }: { d: CardsData }) {
               <Tag
                 type={clickable ? 'button' : undefined}
                 onClick={onClick}
-                className="group relative h-full w-full overflow-hidden rounded-[1.5rem] border border-px-border bg-white p-7 text-left transition-all duration-500 hover:border-transparent hover:shadow-[0_30px_60px_-30px_rgba(11,21,40,0.35)] sm:p-8"
+                className="group relative h-full w-full overflow-hidden rounded-[1.5rem] border border-px-border bg-white text-left transition-all duration-500 hover:border-transparent hover:shadow-[0_30px_60px_-30px_rgba(11,21,40,0.35)]"
               >
-                <div className="absolute inset-0 translate-y-full bg-px-navy transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-y-0" />
-                <div className="absolute inset-x-0 top-0 h-1 origin-left scale-x-0 bg-gradient-to-r from-px-primary to-px-accent transition-transform duration-500 group-hover:scale-x-100" />
-                <span className="absolute right-7 top-6 select-none text-6xl font-bold text-slate-100 transition-colors group-hover:text-white/5">{String(idx + 1).padStart(2, '0')}</span>
-                <div className="relative">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-px-primary/10 text-px-primary-dark transition-colors group-hover:bg-px-primary group-hover:text-px-navy">
-                    <Icon name={it.icon} />
+                {it.image ? (
+                  <div className="relative aspect-[16/10] overflow-hidden bg-px-navy">
+                    <img src={it.image} alt="" loading="lazy" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-px-navy/55 via-transparent to-transparent opacity-70 transition-opacity group-hover:opacity-95" />
                   </div>
-                  <h3 className="mt-6 pr-12 text-lg font-semibold text-px-navy transition-colors group-hover:text-white sm:text-xl">{t(it.title)}</h3>
-                  {it.text ? (
-                    <p className="mt-3 text-sm leading-relaxed text-slate-600 transition-colors group-hover:text-white/75">
-                      {d.textPrefix ? <span className="font-semibold text-px-primary-dark group-hover:text-px-primary-light">{t(d.textPrefix)} </span> : null}
-                      {t(it.text)}
-                    </p>
-                  ) : null}
-                  {it.linkLabel ? (
-                    <span className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-px-navy transition-colors group-hover:text-px-primary-light">
-                      {t(it.linkLabel)}
-                      <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                    </span>
-                  ) : null}
+                ) : null}
+                <div className="relative p-7 sm:p-8">
+                  <div className="absolute inset-0 translate-y-full bg-px-navy transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-y-0" />
+                  <div className="absolute inset-x-0 top-0 h-1 origin-left scale-x-0 bg-gradient-to-r from-px-primary to-px-accent transition-transform duration-500 group-hover:scale-x-100" />
+                  <span className="absolute right-7 top-6 select-none text-6xl font-bold text-slate-100 transition-colors group-hover:text-white/5">
+                    {String(idx + 1).padStart(2, '0')}
+                  </span>
+                  <div className="relative">
+                    {it.icon ? (
+                      <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-px-primary/10 text-px-primary-dark transition-colors group-hover:bg-px-primary group-hover:text-px-navy">
+                        <Icon name={it.icon} />
+                      </div>
+                    ) : null}
+                    <h3 className={cx('pr-12 text-lg font-semibold text-px-navy transition-colors group-hover:text-white sm:text-xl', it.icon ? 'mt-6' : '')}>{t(it.title)}</h3>
+                    {it.text ? (
+                      <p className="mt-3 text-sm leading-relaxed text-slate-600 transition-colors group-hover:text-white/75">
+                        {d.textPrefix ? <span className="font-semibold text-px-primary-dark group-hover:text-px-primary-light">{t(d.textPrefix)} </span> : null}
+                        {t(it.text)}
+                      </p>
+                    ) : null}
+                    {it.linkLabel ? (
+                      <span className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-px-navy transition-colors group-hover:text-px-primary-light">
+                        {t(it.linkLabel)}
+                        <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                      </span>
+                    ) : null}
+                  </div>
                 </div>
               </Tag>
             </Reveal>
@@ -77,9 +94,17 @@ function CardsGrid({ d }: { d: CardsData }) {
             <Reveal key={it.id} delay={idx * 80}>
               <Tag type={clickable ? 'button' : undefined} onClick={onClick} className="card-pexen group flex h-full w-full flex-col overflow-hidden text-left">
                 <div className="relative aspect-16/10 overflow-hidden bg-px-navy">
-                  {it.image ? <img src={it.image} alt={it.title} loading="lazy" className="h-full w-full object-cover opacity-90 transition-transform duration-500 group-hover:scale-105" /> : null}
-                  <div className="absolute inset-0 bg-gradient-to-t from-px-navy/80 via-transparent to-transparent" />
-                  <h3 className="absolute bottom-4 left-4 right-4 text-xl font-semibold text-white">{t(it.title)}</h3>
+                  {it.image ? (
+                    <img
+                      src={it.image}
+                      alt={it.title}
+                      loading="lazy"
+                      className="h-full w-full object-cover opacity-90 transition-transform duration-[900ms] ease-out group-hover:scale-110"
+                    />
+                  ) : null}
+                  <div className="absolute inset-0 bg-gradient-to-t from-px-navy/85 via-px-navy/20 to-transparent" />
+                  <div className="absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100 px-aurora mix-blend-soft-light" />
+                  <h3 className="absolute bottom-4 left-4 right-4 text-xl font-semibold text-white drop-shadow-sm">{t(it.title)}</h3>
                 </div>
                 <div className="flex-1 space-y-4 p-6">
                   {it.text ? <p className="text-xs leading-relaxed text-slate-600 sm:text-sm">{t(it.text)}</p> : null}
@@ -110,11 +135,28 @@ function CardsGrid({ d }: { d: CardsData }) {
         if (d.style === 'numbered') {
           return (
             <Reveal key={it.id} delay={idx * 80}>
-              <div className="card-pexen h-full space-y-3 bg-white p-6">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-px-primary/10 text-xs font-bold text-px-primary-dark">{String(idx + 1).padStart(2, '0')}</div>
-                {it.title ? <h3 className="text-base font-semibold text-px-navy">{t(it.title)}</h3> : null}
-                {it.text ? <p className="text-sm font-medium leading-relaxed text-slate-700">{t(it.text)}</p> : null}
-              </div>
+              <Tag
+                type={clickable ? 'button' : undefined}
+                onClick={onClick}
+                className={cx(
+                  'group relative flex h-full w-full flex-col border-r border-px-border bg-white px-5 py-8 text-left last:border-r-0 sm:px-6',
+                  clickable && 'transition hover:bg-px-surface/60'
+                )}
+              >
+                <span className="mb-6 font-mono text-xs font-bold tracking-widest text-slate-300">{String(idx + 1).padStart(2, '0')}</span>
+                {it.icon ? (
+                  <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-full bg-px-navy text-white">
+                    <Icon name={it.icon} />
+                  </div>
+                ) : null}
+                {it.title ? <h3 className="pr-8 text-lg font-semibold leading-snug text-px-navy">{t(it.title)}</h3> : null}
+                {it.text ? <p className="mt-3 flex-1 text-sm leading-relaxed text-slate-500">{t(it.text)}</p> : null}
+                {clickable ? (
+                  <span className="mt-8 inline-flex h-9 w-9 items-center justify-center rounded-full border border-px-border text-px-navy transition group-hover:border-px-primary group-hover:bg-px-primary group-hover:text-white">
+                    <Plus className="h-4 w-4" />
+                  </span>
+                ) : null}
+              </Tag>
             </Reveal>
           );
         }
@@ -144,23 +186,56 @@ function CardsGrid({ d }: { d: CardsData }) {
 
         return (
           <Reveal key={it.id} delay={idx * 80}>
-            <Tag type={clickable ? 'button' : undefined} onClick={onClick} className={cx('card-pexen group flex h-full w-full flex-col justify-between p-7 text-left', clickable && 'hover:border-px-primary/60')}>
+            <Tag
+              type={clickable ? 'button' : undefined}
+              onClick={onClick}
+              className={cx(
+                'group flex h-full w-full flex-col justify-between overflow-hidden text-left transition-all duration-500',
+                dark
+                  ? 'rounded-[1.25rem] border border-white/10 bg-white/[0.06] backdrop-blur-sm hover:-translate-y-1 hover:border-px-primary/50 hover:bg-white/[0.1] hover:shadow-[0_24px_50px_-28px_rgba(0,159,204,0.45)]'
+                  : cx('card-pexen', clickable && 'hover:border-px-primary/60')
+              )}
+            >
+              {it.image ? (
+                <div className={cx('relative aspect-[16/10] overflow-hidden', dark ? 'bg-black/40' : 'bg-px-navy')}>
+                  <img src={it.image} alt="" loading="lazy" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                  <div className={cx('absolute inset-0', dark ? 'bg-gradient-to-t from-px-navy/80 via-px-navy/20 to-transparent' : 'bg-gradient-to-t from-white/10 via-transparent to-transparent')} />
+                  {it.icon ? (
+                    <div
+                      className={cx(
+                        'absolute left-4 top-4 flex h-10 w-10 items-center justify-center rounded-xl backdrop-blur-sm',
+                        dark ? 'border border-white/20 bg-px-navy/50 text-px-primary-light' : 'border border-white/30 bg-white/90 text-px-primary-dark'
+                      )}
+                    >
+                      <Icon name={it.icon} className="h-5 w-5" />
+                    </div>
+                  ) : null}
+                </div>
+              ) : null}
+              <div className="flex flex-1 flex-col justify-between space-y-4 p-7">
               <div className="space-y-4">
-                {it.icon ? (
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-slate-200 bg-px-surface text-px-navy transition-colors group-hover:bg-px-primary/10 group-hover:text-px-primary-dark">
+                {!it.image && it.icon ? (
+                  <div
+                    className={cx(
+                      'flex h-12 w-12 items-center justify-center rounded-xl transition-colors',
+                      dark
+                        ? 'border border-white/15 bg-px-primary/15 text-px-primary-light group-hover:bg-px-primary group-hover:text-px-navy'
+                        : 'border border-slate-200 bg-px-surface text-px-navy group-hover:bg-px-primary/10 group-hover:text-px-primary-dark'
+                    )}
+                  >
                     <Icon name={it.icon} className="h-6 w-6" />
                   </div>
                 ) : null}
                 <div>
-                  <h3 className="text-lg font-semibold text-px-navy transition-colors group-hover:text-px-primary-dark">{t(it.title)}</h3>
-                  {it.text ? <p className="mt-2 text-xs leading-relaxed text-slate-500 sm:text-sm">{t(it.text)}</p> : null}
+                  <h3 className={cx('text-lg font-semibold transition-colors', dark ? 'text-white' : 'text-px-navy group-hover:text-px-primary-dark')}>{t(it.title)}</h3>
+                  {it.text ? <p className={cx('mt-2 text-xs leading-relaxed sm:text-sm', dark ? 'text-white/65' : 'text-slate-500')}>{t(it.text)}</p> : null}
                 </div>
                 {it.tags.length ? (
                   <div className="pt-2">
-                    {d.tagsLabel ? <div className="mb-1.5 text-[11px] font-semibold uppercase tracking-wider text-slate-400">{t(d.tagsLabel)}</div> : null}
+                    {d.tagsLabel ? <div className={cx('mb-1.5 text-[11px] font-semibold uppercase tracking-wider', dark ? 'text-white/40' : 'text-slate-400')}>{t(d.tagsLabel)}</div> : null}
                     <div className="flex flex-wrap gap-1.5">
                       {it.tags.map((tag) => (
-                        <span key={tag} className="rounded bg-slate-100 px-2 py-0.5 font-mono text-[10px] text-slate-700">
+                        <span key={tag} className={cx('rounded px-2 py-0.5 font-mono text-[10px]', dark ? 'bg-white/10 text-white/80' : 'bg-slate-100 text-slate-700')}>
                           {t(tag)}
                         </span>
                       ))}
@@ -169,11 +244,17 @@ function CardsGrid({ d }: { d: CardsData }) {
                 ) : null}
               </div>
               {it.linkLabel ? (
-                <div className="mt-4 flex items-center justify-between border-t border-slate-100 pt-6 text-xs font-semibold text-px-primary-dark group-hover:text-px-navy">
+                <div
+                  className={cx(
+                    'mt-4 flex items-center justify-between border-t pt-6 text-xs font-semibold',
+                    dark ? 'border-white/10 text-px-primary-light' : 'border-slate-100 text-px-primary-dark group-hover:text-px-navy'
+                  )}
+                >
                   <span>{t(it.linkLabel)}</span>
                   <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </div>
               ) : null}
+              </div>
             </Tag>
           </Reveal>
         );
@@ -281,6 +362,7 @@ export function ShowcaseBlock({ d, style }: { d: ShowcaseData; style: BlockStyle
 export function StepsBlock({ d, style }: { d: StepsData; style: BlockStyle }) {
   const [active, setActive] = useState(0);
   const { t } = useCms();
+  const dark = useDark();
   const n = d.items.length;
   useEffect(() => {
     if (d.style !== 'timeline' || n < 2) return;
@@ -293,7 +375,7 @@ export function StepsBlock({ d, style }: { d: StepsData; style: BlockStyle }) {
       <SectionHeading h={d} />
       {d.style === 'timeline' ? (
         <div className="relative">
-          <div className="absolute left-[12.5%] right-[12.5%] top-7 hidden h-[3px] rounded-full bg-px-border lg:block">
+          <div className={cx('absolute left-[12.5%] right-[12.5%] top-7 hidden h-[3px] rounded-full lg:block', dark ? 'bg-white/15' : 'bg-px-border')}>
             <div className="h-full rounded-full bg-gradient-to-r from-px-primary to-px-accent transition-all duration-700 ease-out" style={{ width: `${n > 1 ? (active / (n - 1)) * 100 : 0}%` }} />
           </div>
           <div className={cx('grid grid-cols-1 gap-5 sm:grid-cols-2', n >= 4 ? 'lg:grid-cols-4' : 'lg:grid-cols-3')}>
@@ -306,19 +388,42 @@ export function StepsBlock({ d, style }: { d: StepsData; style: BlockStyle }) {
                     <div
                       className={cx(
                         'relative z-10 mx-auto flex h-14 w-14 items-center justify-center rounded-2xl text-sm font-bold transition-all duration-500 lg:mx-0 lg:ml-[calc(50%-28px)]',
-                        on ? 'scale-110 bg-gradient-to-br from-px-primary to-px-accent text-white shadow-[0_12px_30px_-8px_rgba(0,112,243,0.6)]' : done ? 'bg-px-navy text-white' : 'border border-px-border bg-white text-slate-400'
+                        on
+                          ? 'scale-110 bg-gradient-to-br from-px-primary to-px-accent text-white shadow-[0_12px_30px_-8px_rgba(0,159,204,0.55)]'
+                          : done
+                            ? dark
+                              ? 'bg-white/15 text-white'
+                              : 'bg-px-navy text-white'
+                            : dark
+                              ? 'border border-white/20 bg-white/5 text-white/50'
+                              : 'border border-px-border bg-white text-slate-400'
                       )}
                     >
                       {step.num}
                     </div>
-                    <div className={cx('mt-6 flex-1 rounded-[1.25rem] border p-6 transition-all duration-500', on ? '-translate-y-1 border-px-primary/50 bg-white shadow-[0_24px_50px_-28px_rgba(11,21,40,0.4)]' : 'border-px-border bg-white/60')}>
-                      <h3 className="text-base font-semibold leading-snug text-px-navy">{t(step.title)}</h3>
-                      {step.text ? <p className={cx('mt-2 text-xs leading-relaxed text-slate-600 transition-opacity', on ? 'opacity-100' : 'opacity-70')}>{t(step.text)}</p> : null}
+                    <div
+                      className={cx(
+                        'mt-6 flex-1 rounded-[1.25rem] border p-6 transition-all duration-500',
+                        on
+                          ? dark
+                            ? '-translate-y-1 border-px-primary/60 bg-white/10 shadow-[0_24px_50px_-28px_rgba(0,159,204,0.35)]'
+                            : '-translate-y-1 border-px-primary/50 bg-white shadow-[0_24px_50px_-28px_rgba(11,21,40,0.4)]'
+                          : dark
+                            ? 'border-white/10 bg-white/[0.04]'
+                            : 'border-px-border bg-white/60'
+                      )}
+                    >
+                      <h3 className={cx('text-base font-semibold leading-snug', dark ? 'text-white' : 'text-px-navy')}>{t(step.title)}</h3>
+                      {step.text ? (
+                        <p className={cx('mt-2 text-xs leading-relaxed transition-opacity', dark ? 'text-white/65' : 'text-slate-600', on ? 'opacity-100' : 'opacity-70')}>
+                          {t(step.text)}
+                        </p>
+                      ) : null}
                       {step.deliverable ? (
-                        <div className="mt-4 border-t border-dashed border-px-border pt-4">
-                          <div className="text-[10px] font-semibold uppercase tracking-wider text-slate-400">{t(d.deliverableLabel)}</div>
-                          <div className="mt-1 flex items-start gap-1.5 text-xs font-medium text-px-navy">
-                            <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-px-primary-dark" />
+                        <div className={cx('mt-4 border-t border-dashed pt-4', dark ? 'border-white/15' : 'border-px-border')}>
+                          <div className={cx('text-[10px] font-semibold uppercase tracking-wider', dark ? 'text-white/40' : 'text-slate-400')}>{t(d.deliverableLabel)}</div>
+                          <div className={cx('mt-1 flex items-start gap-1.5 text-xs font-medium', dark ? 'text-white' : 'text-px-navy')}>
+                            <CheckCircle2 className={cx('mt-0.5 h-3.5 w-3.5 shrink-0', dark ? 'text-px-primary-light' : 'text-px-primary-dark')} />
                             {t(step.deliverable)}
                           </div>
                         </div>
@@ -380,61 +485,144 @@ export function StepsBlock({ d, style }: { d: StepsData; style: BlockStyle }) {
 
 /* ------------------------------------------------------------------ Chiffres */
 
+function parseStatNumber(raw: string): { num: number; decimals: number } | null {
+  const cleaned = String(raw).trim().replace(/\s/g, '').replace(',', '.');
+  if (!/^-?\d+(\.\d+)?$/.test(cleaned)) return null;
+  const num = Number(cleaned);
+  if (!Number.isFinite(num)) return null;
+  const decimals = cleaned.includes('.') ? cleaned.split('.')[1].length : 0;
+  return { num, decimals };
+}
+
+function StatValue({
+  it,
+  countUp,
+  size = 'md',
+}: {
+  it: StatsData['items'][number];
+  countUp: boolean;
+  size?: 'lg' | 'md';
+}) {
+  const { t } = useCms();
+  const dark = useDark();
+  const parsed = parseStatNumber(it.value);
+  const valueCls = size === 'lg' ? 'text-5xl sm:text-6xl' : 'text-3xl sm:text-4xl';
+  const suffixCls = size === 'lg' ? 'text-lg sm:text-xl' : 'text-sm sm:text-base';
+  const number = (
+    <span
+      className={cx(
+        'font-bold leading-none tracking-tight tabular-nums',
+        valueCls,
+        dark ? 'text-white' : 'bg-gradient-to-r from-px-primary-dark via-px-accent-mid to-px-accent bg-clip-text text-transparent'
+      )}
+    >
+      {countUp && parsed ? (
+        <CountUp end={parsed.num} prefix={it.prefix} decimals={parsed.decimals} />
+      ) : (
+        <>
+          {it.prefix}
+          {t(it.value)}
+        </>
+      )}
+    </span>
+  );
+  const suffix = it.suffix ? (
+    <span className={cx('font-semibold leading-snug', suffixCls, dark ? 'text-px-primary-light' : 'text-px-primary-dark')}>
+      {t(it.suffix.trim())}
+    </span>
+  ) : null;
+  return (
+    <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
+      {number}
+      {suffix}
+    </div>
+  );
+}
+
 export function StatsBlock({ d, style }: { d: StatsData; style: BlockStyle }) {
   const dark = useDark();
   const { t } = useCms();
-  const value = (it: StatsData['items'][number]) => {
-    const num = Number(String(it.value).replace(/\s/g, '').replace(',', '.'));
-    return d.countUp && Number.isFinite(num) && String(it.value).trim() !== '' ? (
-      <CountUp end={num} prefix={it.prefix} suffix={it.suffix} />
-    ) : (
-      <>
-        {it.prefix}
-        {t(it.value)}
-        {it.suffix}
-      </>
+  const items = d.items;
+  const featured = d.style === 'cards' && items.length >= 4 ? items[0] : null;
+  const rest = featured ? items.slice(1) : items;
+
+  const cardShell = (featuredCard: boolean) =>
+    cx(
+      'relative h-full overflow-hidden transition-all duration-500',
+      featuredCard ? 'p-7 sm:p-9' : 'p-6 sm:p-7',
+      dark
+        ? 'rounded-[1.5rem] border border-white/10 bg-white/[0.06] hover:border-px-primary/40'
+        : 'rounded-[1.5rem] border border-px-border bg-white/90 shadow-sm hover:-translate-y-0.5 hover:shadow-md'
     );
-  };
+
+  const footnote = d.footnote ? (
+    <Reveal delay={280}>
+      <p className={cx('mt-6 max-w-4xl text-[11px] leading-relaxed sm:text-xs', dark ? 'text-white/45' : 'text-slate-500')}>{t(d.footnote)}</p>
+    </Reveal>
+  ) : null;
+
   return (
     <Section style={style}>
       <SectionHeading h={d} />
       {d.style === 'strip' ? (
         <Reveal>
-          <div className={cx('grid grid-cols-2 gap-4 rounded-2xl border p-6 md:grid-cols-4', dark ? 'border-white/10 bg-white/5' : 'border-px-border bg-white shadow-xs')}>
-            {d.items.map((it) => (
-              <div key={it.id} className={cx('border-r pr-4 last:border-r-0', dark ? 'border-white/10' : 'border-slate-100')}>
-                <div className={cx('text-[11px] font-medium uppercase tracking-wider', dark ? 'text-white/50' : 'text-slate-400')}>{t(it.label)}</div>
-                <div className={cx('mt-0.5 text-base font-bold sm:text-lg', dark ? 'text-white' : 'text-px-navy')}>{value(it)}</div>
+          <div
+            className={cx(
+              'grid grid-cols-2 gap-px overflow-hidden rounded-2xl border md:grid-cols-4',
+              dark ? 'border-white/10 bg-white/10' : 'border-px-border bg-px-border'
+            )}
+          >
+            {items.map((it) => (
+              <div key={it.id} className={cx('p-5 sm:p-6', dark ? 'bg-px-navy' : 'bg-white')}>
+                <StatValue it={it} countUp={d.countUp} />
+                <div className={cx('mt-2 text-sm font-medium', dark ? 'text-white/70' : 'text-slate-600')}>{t(it.label)}</div>
+                {it.hint ? <div className={cx('mt-1 text-xs', dark ? 'text-white/45' : 'text-slate-400')}>{t(it.hint)}</div> : null}
               </div>
             ))}
           </div>
         </Reveal>
       ) : d.style === 'inline' ? (
-        <div className={cx('grid grid-cols-2 gap-8', d.items.length >= 4 ? 'lg:grid-cols-4' : 'lg:grid-cols-3')}>
-          {d.items.map((it, idx) => (
+        <div className={cx('grid grid-cols-2 gap-8', items.length >= 4 ? 'lg:grid-cols-4' : 'lg:grid-cols-3')}>
+          {items.map((it, idx) => (
             <Reveal key={it.id} delay={idx * 80} className="text-center">
-              <div className={cx('text-4xl font-bold tracking-tight sm:text-5xl', dark ? 'text-white' : 'bg-gradient-to-r from-px-primary-dark to-px-accent bg-clip-text text-transparent')}>{value(it)}</div>
+              <div className="flex justify-center">
+                <StatValue it={it} countUp={d.countUp} />
+              </div>
               <div className={cx('mt-2 text-sm font-semibold', dark ? 'text-white/80' : 'text-px-navy')}>{t(it.label)}</div>
               {it.hint ? <div className={cx('mt-1 text-xs', dark ? 'text-white/55' : 'text-slate-500')}>{t(it.hint)}</div> : null}
             </Reveal>
           ))}
         </div>
       ) : (
-        <div className={cx('grid grid-cols-2 gap-4', d.items.length >= 4 ? 'lg:grid-cols-4' : 'lg:grid-cols-3')}>
-          {d.items.map((it, idx) => (
-            <Reveal key={it.id} delay={idx * 80}>
-              <div className="group h-full rounded-[1.5rem] border border-px-border bg-white p-6 transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_24px_50px_-30px_rgba(0,112,243,0.4)] sm:p-7">
-                <div className="bg-gradient-to-r from-px-primary-dark to-px-accent bg-clip-text text-3xl font-bold leading-none tracking-tight text-transparent sm:text-[2.6rem]">{value(it)}</div>
-                <div className="mt-3 text-sm font-semibold text-px-navy">{t(it.label)}</div>
-                {it.hint ? <div className="mt-1 text-xs text-slate-500">{t(it.hint)}</div> : null}
-                <div className="mt-5 h-1 overflow-hidden rounded-full bg-px-border-soft">
-                  <div className="h-full w-1/3 bg-gradient-to-r from-px-primary to-px-accent transition-all duration-700 group-hover:w-full" />
+        <div className="space-y-4">
+          {featured ? (
+            <Reveal>
+              <div className={cardShell(true)}>
+                <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-px-primary/15 blur-3xl" />
+                <div className="relative grid gap-4 sm:grid-cols-[1fr_auto] sm:items-end">
+                  <div>
+                    <StatValue it={featured} countUp={d.countUp} size="lg" />
+                    <div className={cx('mt-3 text-base font-semibold sm:text-lg', dark ? 'text-white' : 'text-px-navy')}>{t(featured.label)}</div>
+                    {featured.hint ? <div className={cx('mt-1 text-sm', dark ? 'text-white/55' : 'text-slate-500')}>{t(featured.hint)}</div> : null}
+                  </div>
                 </div>
               </div>
             </Reveal>
-          ))}
+          ) : null}
+          <div className={cx('grid gap-4', rest.length >= 3 ? 'grid-cols-1 sm:grid-cols-3' : rest.length === 2 ? 'grid-cols-1 sm:grid-cols-2' : 'grid-cols-1')}>
+            {rest.map((it, idx) => (
+              <Reveal key={it.id} delay={(idx + 1) * 70}>
+                <div className={cardShell(false)}>
+                  <StatValue it={it} countUp={d.countUp} />
+                  <div className={cx('mt-3 text-sm font-semibold', dark ? 'text-white' : 'text-px-navy')}>{t(it.label)}</div>
+                  {it.hint ? <div className={cx('mt-1 text-xs', dark ? 'text-white/55' : 'text-slate-500')}>{t(it.hint)}</div> : null}
+                </div>
+              </Reveal>
+            ))}
+          </div>
         </div>
       )}
+      {footnote}
     </Section>
   );
 }
@@ -617,16 +805,46 @@ export function FaqBlock({ d, style }: { d: FaqData; style: BlockStyle }) {
         const isOpen = open === index;
         return (
           <Reveal key={faq.id} delay={index * 60}>
-            <div className={cx('rounded-[1.25rem] border bg-white transition-all duration-300', isOpen ? 'border-px-primary/50 shadow-[0_20px_40px_-30px_rgba(11,21,40,0.35)]' : 'border-px-border')}>
+            <div
+              className={cx(
+                'rounded-[1.25rem] border transition-all duration-300',
+                dark
+                  ? isOpen
+                    ? 'border-px-primary/50 bg-white/10 shadow-[0_20px_40px_-30px_rgba(0,159,204,0.35)]'
+                    : 'border-white/10 bg-white/[0.05]'
+                  : isOpen
+                    ? 'border-px-primary/50 bg-white shadow-[0_20px_40px_-30px_rgba(11,21,40,0.35)]'
+                    : 'border-px-border bg-white'
+              )}
+            >
               <button type="button" onClick={() => setOpen(isOpen ? null : index)} className="flex w-full items-center justify-between gap-4 p-5 text-left sm:p-6" aria-expanded={isOpen}>
-                <span className={cx('text-sm font-semibold transition-colors sm:text-base', isOpen ? 'text-px-primary-dark' : 'text-px-navy')}>{t(faq.question)}</span>
-                <span className={cx('flex h-8 w-8 shrink-0 items-center justify-center rounded-full transition-all duration-300', isOpen ? 'rotate-45 bg-px-navy text-white' : 'border border-px-border bg-px-surface text-slate-500')}>
+                <span
+                  className={cx(
+                    'text-sm font-semibold transition-colors sm:text-base',
+                    dark ? (isOpen ? 'text-px-primary-light' : 'text-white') : isOpen ? 'text-px-primary-dark' : 'text-px-navy'
+                  )}
+                >
+                  {t(faq.question)}
+                </span>
+                <span
+                  className={cx(
+                    'flex h-8 w-8 shrink-0 items-center justify-center rounded-full transition-all duration-300',
+                    isOpen
+                      ? 'rotate-45 bg-px-primary text-px-navy'
+                      : dark
+                        ? 'border border-white/20 bg-white/5 text-white/60'
+                        : 'border border-px-border bg-px-surface text-slate-500'
+                  )}
+                >
                   <Plus className="h-4 w-4" />
                 </span>
               </button>
               <div className={cx('grid transition-all duration-500', isOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]')}>
                 <div className="overflow-hidden">
-                  <div className="cms-prose px-5 pb-6 text-sm leading-relaxed text-slate-600 sm:px-6" dangerouslySetInnerHTML={{ __html: t(faq.answer) }} />
+                  <div
+                    className={cx('cms-prose px-5 pb-6 text-sm leading-relaxed sm:px-6', dark ? 'cms-prose-dark text-white/70' : 'text-slate-600')}
+                    dangerouslySetInnerHTML={{ __html: t(faq.answer) }}
+                  />
                 </div>
               </div>
             </div>
@@ -660,7 +878,7 @@ export function FaqBlock({ d, style }: { d: FaqData; style: BlockStyle }) {
               </span>
               <span>
                 <span className="block text-[11px] text-slate-500">{t(d.contactLabel) || 'Une autre question ?'}</span>
-                <span className="block text-sm font-semibold text-px-navy">{tokens.phone}</span>
+                <span className="px-phone block text-sm font-semibold text-px-navy">{tokens.phone}</span>
               </span>
             </a>
           ) : null}

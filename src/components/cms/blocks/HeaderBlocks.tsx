@@ -24,6 +24,24 @@ function useMouseParallax(enabled: boolean, strength = 18) {
   return { ref, offset };
 }
 
+function AnimatedTitleWords({ text }: { text: string }) {
+  const { t } = useCms();
+  const words = t(text).split(/(\s+)/).filter(Boolean);
+  return (
+    <span className="inline">
+      {words.map((w, i) =>
+        /^\s+$/.test(w) ? (
+          <span key={`s-${i}`}>{w}</span>
+        ) : (
+          <span key={`${w}-${i}`} className="px-hero-word inline-block" style={{ animationDelay: `${80 + i * 55}ms` }}>
+            {w}
+          </span>
+        )
+      )}
+    </span>
+  );
+}
+
 function RotatingTitle({ title, words, highlight }: { title: string; words: string[]; highlight?: string }) {
   const [i, setI] = useState(0);
   const { t } = useCms();
@@ -35,9 +53,9 @@ function RotatingTitle({ title, words, highlight }: { title: string; words: stri
   const word = words.length ? words[i % words.length] : highlight;
   return (
     <>
-      {t(title)}
+      <AnimatedTitleWords text={title} />{' '}
       {word ? (
-        <span className="relative block w-fit">
+        <span className="relative inline-block w-fit align-bottom">
           <span key={i} className="px-word-in inline-block bg-gradient-to-r from-px-primary via-px-accent-mid to-px-accent bg-clip-text text-transparent">
             {t(word)}
           </span>
@@ -66,6 +84,101 @@ function RotatingTitle({ title, words, highlight }: { title: string; words: stri
   );
 }
 
+const POKER_FAN = [
+  { rot: -11, x: -18, y: 14, z: 1 },
+  { rot: -3, x: -4, y: 4, z: 2 },
+  { rot: 4, x: 10, y: 2, z: 3 },
+  { rot: 12, x: 26, y: 12, z: 4 },
+] as const;
+
+function HeroPokerStack({ images, alt }: { images: string[]; alt?: string }) {
+  const [active, setActive] = useState(0);
+
+  useEffect(() => {
+    if (images.length < 2) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const timer = setInterval(() => setActive((n) => (n + 1) % images.length), 3400);
+    return () => clearInterval(timer);
+  }, [images.length]);
+
+  const visible = images;
+  if (!visible.length) return null;
+  const current = active % visible.length;
+
+  return (
+    <div className="relative mx-auto h-[380px] w-full max-w-[420px] sm:h-[460px]" aria-label={alt || 'Galerie'}>
+      <div className="pointer-events-none absolute inset-8 rounded-full bg-px-primary/15 blur-3xl px-blob" aria-hidden="true" />
+      {visible.map((src, i) => {
+        const order = (i - current + visible.length) % visible.length;
+        if (order >= POKER_FAN.length) return null;
+        const fan = POKER_FAN[order];
+        const isFront = order === 0;
+        return (
+          <div
+            key={`${src}-${i}`}
+            className={cx(
+              'px-poker-card absolute left-1/2 top-1/2 w-[72%] max-w-[280px] origin-bottom',
+              isFront && 'px-poker-front'
+            )}
+            style={
+              {
+                '--poker-rot': `${isFront ? 0 : fan.rot}deg`,
+                '--poker-x': `${isFront ? 0 : fan.x}%`,
+                '--poker-y': `${isFront ? -8 : fan.y}px`,
+                zIndex: isFront ? 20 : 10 - order,
+                transitionDelay: `${Math.min(order, 3) * 35}ms`,
+              } as React.CSSProperties
+            }
+          >
+            <div className="px-polaroid relative overflow-hidden rounded-md">
+              <span className="px-tape" aria-hidden="true" />
+              <div className="aspect-[4/5] overflow-hidden bg-slate-100">
+                <img
+                  src={src}
+                  alt={isFront ? alt || '' : ''}
+                  className={cx('h-full w-full object-cover', isFront && 'px-kenburns')}
+                  draggable={false}
+                />
+              </div>
+              <div className="px-3 py-2 text-center">
+                <span className="font-hand text-base leading-none text-px-navy/80">PEXEN</span>
+              </div>
+            </div>
+          </div>
+        );
+      })}
+      <div className="absolute bottom-2 left-1/2 z-30 flex -translate-x-1/2 gap-1.5">
+        {visible.map((_, i) => (
+          <button
+            key={i}
+            type="button"
+            aria-label={`Image ${i + 1}`}
+            onClick={() => setActive(i)}
+            className={cx(
+              'h-1.5 rounded-full transition-all',
+              i === current ? 'w-5 bg-px-primary' : 'w-1.5 bg-px-navy/25 hover:bg-px-navy/40'
+            )}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function heroGalleryUrls(raw: HeroData['galleryImages'] | Array<string | { image?: string }> | undefined): string[] {
+  if (!raw?.length) return [];
+  return raw
+    .map((it) => (typeof it === 'string' ? it : it?.image))
+    .filter((u): u is string => typeof u === 'string' && !!u);
+}
+
+function heroSlideImages(d: HeroData): string[] {
+  const extras = heroGalleryUrls(d.galleryImages);
+  const main = d.mainImage ? [d.mainImage] : [];
+  const secondary = d.secondaryImage && d.secondaryImage !== d.mainImage ? [d.secondaryImage] : [];
+  return [...main, ...secondary, ...extras.filter((u) => u !== d.mainImage && u !== d.secondaryImage)];
+}
+
 function HeroVisual({ d }: { d: HeroData }) {
   const { ref, offset } = useMouseParallax(d.parallax);
   const { t } = useCms();
@@ -78,9 +191,13 @@ function HeroVisual({ d }: { d: HeroData }) {
     );
   }
   if (d.media === 'image') {
+    const slides = heroSlideImages(d);
+    if (slides.length >= 2) {
+      return <HeroPokerStack images={slides} alt={d.mainImageAlt} />;
+    }
     return (
       <div className="relative h-[360px] overflow-hidden rounded-[2rem] shadow-[0_40px_80px_-30px_rgba(11,21,40,0.45)] sm:h-[460px]">
-        {d.mainImage ? <img src={d.mainImage} alt={d.mainImageAlt || ''} className="h-full w-full object-cover" /> : null}
+        {d.mainImage ? <img src={d.mainImage} alt={d.mainImageAlt || ''} className="h-full w-full object-cover px-kenburns" /> : null}
         <div className="absolute inset-0 bg-gradient-to-tr from-px-navy/50 via-transparent to-transparent" />
       </div>
     );
@@ -178,9 +295,26 @@ export function Marquee({ d, embedded }: { d: MarqueeData; embedded?: boolean })
 export function HeroBlock({ d, style }: { d: HeroData; style: BlockStyle }) {
   const { t } = useCms();
   const centered = d.layout === 'centered' || d.media === 'none';
+  const ultraVideo = typeof document !== 'undefined' && document.documentElement.dataset.pexenTheme === 'pexen-ultra' && d.media === 'video';
+  if (ultraVideo) {
+    return (
+      <>
+        <Section style={style} className="ultra-hero-video relative min-h-[100svh] overflow-hidden !px-0 !pt-0" ambient={false}>
+          <div className="absolute inset-0">
+            <VideoPlayer source={/youtu|vimeo/.test(d.video || '') ? 'embed' : 'file'} url={d.video} poster={d.videoPoster} autoplay className="h-full w-full object-cover" />
+            <div className="absolute inset-0 bg-gradient-to-r from-px-navy/95 via-px-navy/75 to-px-navy/35" />
+          </div>
+          <div className="relative z-10 mx-auto max-w-7xl px-4 pb-20 pt-28 lg:pt-36">
+            <HeroInner d={d} centered={false} t={t} hideVisual forceDark />
+          </div>
+        </Section>
+        {d.marquee.length ? <Marquee d={{ speed: 'normal', items: d.marquee.map((text, i) => ({ id: String(i), text })) }} embedded /> : null}
+      </>
+    );
+  }
   return (
     <>
-      <Section style={style} className="overflow-hidden">
+      <Section style={style} className="overflow-hidden" ambient={false}>
         <div className="pointer-events-none absolute -left-32 -top-40 h-[560px] w-[560px] rounded-full bg-px-primary/15 blur-[110px] px-blob" aria-hidden="true" />
         <HeroInner d={d} centered={centered} t={t} />
       </Section>
@@ -189,8 +323,21 @@ export function HeroBlock({ d, style }: { d: HeroData; style: BlockStyle }) {
   );
 }
 
-function HeroInner({ d, centered, t }: { d: HeroData; centered: boolean; t: (s?: string) => string }) {
-  const dark = useDark();
+function HeroInner({
+  d,
+  centered,
+  t,
+  hideVisual,
+  forceDark,
+}: {
+  d: HeroData;
+  centered: boolean;
+  t: (s?: string) => string;
+  hideVisual?: boolean;
+  forceDark?: boolean;
+}) {
+  const darkCtx = useDark();
+  const dark = forceDark || darkCtx;
   return (
     <div className={cx('relative grid grid-cols-1 items-center gap-12 lg:gap-10', !centered && 'lg:grid-cols-12')}>
       <div className={cx('space-y-7', centered ? 'mx-auto max-w-3xl text-center' : 'lg:col-span-7')}>
@@ -220,13 +367,21 @@ function HeroInner({ d, centered, t }: { d: HeroData; centered: boolean; t: (s?:
               centered && '[&_.block]:mx-auto'
             )}
           >
-            {d.rotatingWords.length ? <RotatingTitle title={d.title} words={d.rotatingWords} highlight={d.highlight} /> : <Highlighted title={d.title} highlight={d.highlight} />}
+            {d.rotatingWords.length ? (
+              <RotatingTitle title={d.title} words={d.rotatingWords} highlight={d.highlight} />
+            ) : d.highlight ? (
+              <Highlighted title={d.title} highlight={d.highlight} />
+            ) : (
+              <AnimatedTitleWords text={d.title} />
+            )}
           </h1>
         </Reveal>
 
         {d.subtitle ? (
-          <Reveal delay={160}>
-            <p className={cx('max-w-xl text-base leading-relaxed sm:text-lg', dark ? 'text-white/75' : 'text-slate-600', centered && 'mx-auto')}>{t(d.subtitle)}</p>
+          <Reveal delay={220}>
+            <p className={cx('px-hero-subtitle max-w-xl text-base leading-relaxed sm:text-lg', dark ? 'text-white/75' : 'text-slate-600', centered && 'mx-auto')}>
+              {t(d.subtitle)}
+            </p>
           </Reveal>
         ) : null}
 
@@ -248,8 +403,10 @@ function HeroInner({ d, centered, t }: { d: HeroData; centered: boolean; t: (s?:
               ) : null}
               {d.liveText && d.trustItems.length ? <span className="hidden h-4 w-px bg-slate-200 sm:block" /> : null}
               {d.trustItems.map((badge) => (
-                <span key={badge} className={cx('inline-flex items-center gap-1.5 text-xs font-medium', dark ? 'text-white/60' : 'text-slate-500')}>
-                  <ShieldCheck className="h-3.5 w-3.5 text-px-primary-dark" />
+                <span key={badge} className={cx('inline-flex items-center gap-1.5 text-xs font-medium', dark ? 'text-white/80' : 'text-slate-500')}>
+                  <span className={cx('inline-flex h-6 w-6 items-center justify-center rounded-full border', dark ? 'border-white/35 bg-white/10 text-px-accent' : 'border-px-border bg-white text-px-primary-dark')}>
+                    <ShieldCheck className="h-3.5 w-3.5" />
+                  </span>
                   {t(badge)}
                 </span>
               ))}
@@ -258,7 +415,7 @@ function HeroInner({ d, centered, t }: { d: HeroData; centered: boolean; t: (s?:
         ) : null}
       </div>
 
-      {!centered ? (
+      {!centered && !hideVisual ? (
         <div className="lg:col-span-5">
           <HeroVisual d={d} />
         </div>

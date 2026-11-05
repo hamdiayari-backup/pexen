@@ -62,6 +62,20 @@ export interface MenuConfig {
   items: MenuItem[];
 }
 
+/** Thèmes front React (pas les démos HTML /themes/). */
+export type ThemeId = 'default' | 'pexen-ultra' | 'pexen-maquette';
+
+export interface ThemeInstallState {
+  id: ThemeId;
+  installedAt: string;
+  contentVersion?: number;
+}
+
+export interface AppearanceConfig {
+  activeThemeId: ThemeId;
+  installed: ThemeInstallState[];
+}
+
 export interface ThemeBranding {
   siteName: string;
   tagline: string;
@@ -123,6 +137,12 @@ export interface AiAssistantConfig {
   maxTokensPerDayGlobal: number;
   systemInstructionOverride?: string;
   showOnPages: '*' | string[];
+  /** Libellé bouton flottant (brief : « Conseil PXN »). */
+  buttonLabel?: string;
+  /** Sous-texte statut (ex. « En ligne »). */
+  statusLabel?: string;
+  /** Titre du panneau ouvert. */
+  panelTitle?: string;
 }
 
 export interface ContactFormField {
@@ -134,6 +154,8 @@ export interface ContactFormField {
   options?: string[];
   placeholder?: string;
   width?: 'full' | 'half';
+  /** Message d’erreur métier (brief 00c). */
+  error?: string;
 }
 
 export interface ContactFormConfig {
@@ -144,6 +166,7 @@ export interface ContactFormConfig {
   fields: ContactFormField[];
   honeypotField?: string;
   enabled: boolean;
+  successMessage?: string;
 }
 
 export interface ContactSubmission {
@@ -202,6 +225,8 @@ export interface SeoGlobalSettings {
   socialProfiles: string[];
   googleVerification?: string;
   bingVerification?: string;
+  /** ID de mesure GA4 (G-…), chargé uniquement après consentement. */
+  gaMeasurementId?: string;
 }
 
 export interface SiteSettings {
@@ -212,6 +237,8 @@ export interface SiteSettings {
   robotsTxtExtra?: string;
   sitemapAuto: boolean;
   seo: SeoGlobalSettings;
+  /** Mentions astérisque (chiffres Preuves) affichées en bas de page. */
+  footerLegalNotes?: string[];
 }
 
 export interface GoogleIntegration {
@@ -267,19 +294,101 @@ export interface AnalyticsEvent {
   ts: string;
 }
 
+export type UserStatus = 'active' | 'invited' | 'suspended';
+
 export interface AdminUser {
   id: string;
   email: string;
   passwordHash: string;
   salt: string;
-  role: 'superadmin' | 'editor' | 'seo' | 'viewer';
+  /** Identifiant d'un rôle de `CmsSnapshot.roles` (`superadmin` = tous les droits). */
+  role: string;
   name: string;
+  status?: UserStatus;
+  title?: string;
+  phone?: string;
+  avatarUrl?: string;
+  totpSecret?: string;
+  totpEnabled?: boolean;
+  recoveryCodes?: string[];
+  mustChangePassword?: boolean;
+  passwordChangedAt?: string;
   lastLoginAt?: string;
+  lastLoginIp?: string;
+  loginCount?: number;
+  invitedBy?: string;
+  createdAt?: string;
+}
+
+export interface SmtpSettings {
+  enabled: boolean;
+  host: string;
+  port: number;
+  security: 'starttls' | 'ssl' | 'none';
+  username: string;
+  passwordEnc?: string;
+  fromName: string;
+  fromEmail: string;
+  replyTo: string;
+  timeoutSec: number;
+  allowSelfSigned: boolean;
+}
+
+export interface RateWindow {
+  max: number;
+  windowMinutes: number;
+}
+
+export interface SystemSettings {
+  smtp: SmtpSettings;
+  notifications: {
+    securityAlerts: boolean;
+    accountChanges: boolean;
+    adminEmails: string[];
+  };
+  security: {
+    passwordMinLength: number;
+    requireUppercase: boolean;
+    requireNumber: boolean;
+    requireSymbol: boolean;
+    passwordExpiryDays: number;
+    sessionHours: number;
+    rememberDays: number;
+    idleMinutes: number;
+    maxLoginAttempts: number;
+    lockoutMinutes: number;
+    twoFactor: 'optional' | 'superadmins' | 'all';
+    adminIpAllowlist: string[];
+    hsts: boolean;
+  };
+  limits: {
+    publicApiPerMinute: number;
+    adminApiPerMinute: number;
+    formSubmissions: RateWindow;
+    newsletter: RateWindow;
+    passwordReset: RateWindow;
+  };
+  uploads: {
+    maxSizeMb: number;
+    allowImages: boolean;
+    allowSvg: boolean;
+    allowVideo: boolean;
+    allowPdf: boolean;
+  };
+  privacy: {
+    analyticsRetentionDays: number;
+    submissionsRetentionDays: number;
+    auditRetentionDays: number;
+    mailLogRetentionDays: number;
+    storeSubmitterIp: boolean;
+  };
+  performance: { publicCacheSeconds: number };
 }
 
 export interface CmsSnapshot {
   version: number;
   general: SiteGeneralInfo;
+  appearance?: AppearanceConfig;
   branding: ThemeBranding;
   pages: CmsPage[];
   posts: BlogPost[];
@@ -298,6 +407,8 @@ export interface CmsSnapshot {
   /** Hérité : les événements sont désormais dans data/cms/analytics.jsonl */
   analyticsEvents?: AnalyticsEvent[];
   users: AdminUser[];
+  roles: import('./permissions').RoleDefinition[];
+  system: SystemSettings;
 }
 
 export interface AnalyticsSummary {

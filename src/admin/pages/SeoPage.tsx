@@ -458,6 +458,9 @@ function GlobalSettings() {
       </Section>
 
       <Section title="Validation des outils pour webmasters" description="Collez uniquement le code (valeur de l’attribut content).">
+        <Field label="Google Analytics 4 (ID de mesure)" hint="Chargé sur le site public uniquement après consentement cookies (Consent Mode v2 basic).">
+          <Input value={s.gaMeasurementId || ''} onChange={(e) => ed.patch({ gaMeasurementId: e.target.value.trim() })} placeholder="G-XXXXXXXXXX" className="font-mono" />
+        </Field>
         <Field label="Google Search Console">
           <Input value={s.googleVerification || ''} onChange={(e) => ed.patch({ googleVerification: e.target.value.replace(/.*content="([^"]+)".*/, '$1') })} placeholder="abc123…" className="font-mono" />
         </Field>

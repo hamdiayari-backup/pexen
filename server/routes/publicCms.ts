@@ -8,6 +8,14 @@ import { appendAnalyticsEvent } from '../cms/analyticsStore';
 import { asyncRouter, HttpError } from '../http';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const FR_PHONE_RE = /^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.\-]*\d{2}){4}$/;
+
+function isFrPhone(raw: string): boolean {
+  const compact = raw.replace(/[\s.\-()]/g, '');
+  if (/^(?:\+33|0033)[1-9]\d{8}$/.test(compact)) return true;
+  if (/^0[1-9]\d{8}$/.test(compact)) return true;
+  return FR_PHONE_RE.test(raw.trim());
+}
 
 const submitHits = new Map<string, number[]>();
 function allowSubmission(ip: string, max = 5, windowMs = 10 * 60_000): boolean {
@@ -65,22 +73,31 @@ export function createPublicCmsRouter() {
       menus: s.menus,
       whatsapp: s.whatsapp,
       floatingButtons: s.floatingButtons.filter((b) => b.enabled),
-      ai: { enabled: s.ai.enabled, showOnPages: s.ai.showOnPages },
+      ai: {
+        enabled: s.ai.enabled,
+        showOnPages: s.ai.showOnPages,
+        buttonLabel: s.ai.buttonLabel || 'Conseiller PEXEN',
+        statusLabel: s.ai.statusLabel || 'En ligne',
+        panelTitle: s.ai.panelTitle || s.ai.buttonLabel || 'Conseiller PEXEN',
+      },
       settings: {
         publicUrl: s.settings.publicUrl,
         maintenance: { enabled: maintenanceOn, title: m.title, message: m.message },
         cookieBannerEnabled: s.settings.cookieBannerEnabled,
         analyticsEnabled: s.settings.analyticsEnabled,
+        footerLegalNotes: s.settings.footerLegalNotes || [],
         seo: {
           titleSeparator: s.settings.seo.titleSeparator,
           titleSuffix: s.settings.seo.titleSuffix,
           defaultOgImage: s.settings.seo.defaultOgImage,
           googleVerification: s.settings.seo.googleVerification,
           bingVerification: s.settings.seo.bingVerification,
+          gaMeasurementId: s.settings.seo.gaMeasurementId,
         },
       },
       redirects: s.redirects,
       newsletterEnabled: s.newsletter.enabled,
+      appearance: { activeThemeId: s.appearance?.activeThemeId ?? 'default' },
     });
   });
 
@@ -99,8 +116,14 @@ export function createPublicCmsRouter() {
     res.set('Cache-Control', 'public, max-age=30');
     res.json(
       s.pages
-        .filter((p) => p.template === 'project' && p.status === 'published' && p.project)
+        .filter((p) => p.template === 'project' && p.status === 'published' && p.project && !p.seo.noindex)
         .map((p) => ({ id: p.id, path: p.path, title: p.title, ...p.project! }))
+        .sort((a, b) => {
+          const ao = typeof a.sortOrder === 'number' ? a.sortOrder : 999;
+          const bo = typeof b.sortOrder === 'number' ? b.sortOrder : 999;
+          if (ao !== bo) return ao - bo;
+          return String(a.client || a.title).localeCompare(String(b.client || b.title), 'fr');
+        })
     );
   });
 
@@ -142,8 +165,13 @@ export function createPublicCmsRouter() {
     for (const field of form.fields) {
       const v = body[field.name];
       const empty = v === undefined || v === null || v === '' || v === false;
-      if (field.required && empty) errors[field.name] = `${field.label} est requis`;
-      else if (!empty && field.type === 'email' && !EMAIL_RE.test(String(v))) errors[field.name] = 'E-mail invalide';
+      const fieldError = field.error || `${field.label} est requis`;
+      if (field.required && empty) errors[field.name] = fieldError;
+      else if (!empty && field.type === 'email' && !EMAIL_RE.test(String(v))) {
+        errors[field.name] = field.error || 'Indiquez une adresse e-mail valide.';
+      } else if (!empty && field.type === 'tel' && !isFrPhone(String(v))) {
+        errors[field.name] = field.error || 'Indiquez un numéro de téléphone valide.';
+      }
       if (!empty) payload[field.name] = typeof v === 'string' ? v.slice(0, 5000) : v;
     }
     // Champs historiques du formulaire React non déclarés dans le CMS : conservés mais bornés.
@@ -172,9 +200,11 @@ export function createPublicCmsRouter() {
         return `<tr><td style="padding:6px 12px;color:#64748b">${escapeHtml(label)}</td><td style="padding:6px 12px">${escapeHtml(v)}</td></tr>`;
       })
       .join('');
+    const profil = String(payload.vousEtes || payload.vous_etes || '');
+    const partner = /partenaire/i.test(profil);
     sendMail({
       to: form.recipientEmails,
-      subject: `[${s.branding.siteName}] ${form.name}`,
+      subject: `${partner ? '[PARTENAIRE] ' : ''}[${s.branding.siteName}] ${form.name}`,
       html: `<h2 style="font-family:sans-serif">${escapeHtml(form.name)}</h2><table style="font-family:sans-serif;font-size:14px">${rows}</table>`,
     }).catch((e) => console.error('[mail] envoi formulaire', e));
 

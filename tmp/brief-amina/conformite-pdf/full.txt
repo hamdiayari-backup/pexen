@@ -1,0 +1,278 @@
+Homepage PEXEN – conformité du contenu
+Site test pexen-test.tuniplay.app, vérifié le 22/10/2026 · Référence : brief webmaster Phase 2 V5, onglets 01_Accueil, 00b_Homepage,
+00e_Corrections_site_test et 32_Menu_Footer_Outils
+
+
+     Badr, le contenu de la homepage n'est pas encore à jour. Sur les 14 éléments vérifiés, 3 sont conformes, 5 le sont
+     en partie et 4 ne correspondent pas au brief. En plus, 1 bloc manque et 1 bloc a été ajouté sans être dans le brief.
+     Avant toute reprise du design, il faut coller les textes exacts de l'onglet 01_Accueil, bloc par bloc, puis nous renvoyer
+     le contenu final pour relecture.
+
+     Ordre de travail : 1) contenu final intégré, 2) design finalisé, 3) validation PEXEN / DEESCO, 4) déclinaison sur les
+     pages internes. Il nous faut une version aboutie de la homepage pour demain, vendredi 23/10.
+
+
+ #    Bloc                        Statut                En résumé
+
+ 1    Hero                          PARTIEL             Textes conformes. La vidéo n'est pas celle du brief.
+
+ 2    Preuves                       PARTIEL             Chiffres et textes conformes. Logos clients et ligne de qualifications non
+                                                        conformes.
+
+ 3    Vos enjeux                    ABSENT              Le bloc entier manque.
+
+ 4    Un seul interlocuteur         CONFORME            Textes identiques au brief.
+
+ 5    Solutions                     PARTIEL             5 cartes sur 7 : il manque Rénovation globale et Éclairage LED. Une phrase a
+                                                        été ajoutée.
+
+ 6    Parcours 5 étapes             PARTIEL             Étape 04 tronquée, paragraphe final manquant.
+
+ 7    Réalisations                  NON CONFORME        C'est l'ancien contenu (primes en €, codes de fiches, ville), pas celui du brief.
+
+ 7b Qualifications                  PARTIEL             Une consigne du brief est affichée comme texte, les titres sont en double, et Leo
+                                                        Energy est à retirer.
+
+ 8    Secteurs                      NON CONFORME        Les 4 titres H3 sont remplacés par « SECTEUR PEXEN » ×2, et il y a du texte
+                                                        de remplissage.
+
+ 10 Contact                         CONFORME            Textes conformes. Deux écarts mineurs : le téléphone et un libellé « SITE WEB
+                                                        ».
+
+ 11 FAQ                             NON CONFORME        Les réponses 2 à 5 sont absentes de la page.
+
+ 12 Estimation                      CONFORME            —
+
+ —    Pré-footer « Ingénierie &     HORS BRIEF          Bloc ajouté, à supprimer.
+      CEE »
+
+ 13 Footer et assistant             NON CONFORME        Colonnes Expertises et Solutions mélangées, et « Conseil PEXEN » au lieu de «
+                                                        Conseil PXN ».
+1 · Hero    PARTIEL
+
+
+                                                                 Le sur-titre, le H1, le paragraphe et les 2 boutons sont
+                                                                 conformes.
+                                                                 Vidéo : la vidéo actuelle (« paris-the-last-drone-
+                                                                 aerials.mp4 », Arc de Triomphe) n'est pas la bonne. La
+                                                                 vidéo à mettre est dans le dossier Drive indiqué dans le
+                                                                 brief (onglet 00h_Photos_videos, dossier « Photos,
+                                                                 vidéos et logos clients du site »).
+                                                                 On abandonne le signe infini dans la hero.
+
+
+
+
+2 · Preuves      PARTIEL
+
+
+                                                                 Le titre, les 4 chiffres et leurs légendes sont conformes.
+                                                                 Logos clients : il faut les vrais logos en carrousel
+                                                                 (dossier Drive du brief), et non les noms en texte. On
+                                                                 les veut sur fond blanc, bien visibles.
+                                                                 Chiffres à « 0 » : dans le code, les chiffres valent 0
+                                                                 tant que l'animation ne s'est pas lancée, donc Google,
+                                                                 les IA et les captures lisent « 0 % », « 0 kW »… Mets la
+                                                                 valeur réelle dans le HTML et garde l'animation par-
+                                                                 dessus.
+                                                                 Mentions astérisque : on garde l'astérisque sur les
+                                                                 chiffres, mais les 2 mentions complètes passent tout en
+                                                                 bas de la page.
+
+En ligne                                          À mettre
+
+Pastilles texte : RGE QUALIPAC · RGE QUALISOL ·   Les logos officiels fournis dans le brief (RGE QualiPAC, Qualisol, OPQIBI,
+OPQIBI · COFRAC · MIC                             COFRAC, MIC). Sous le logo MIC, ajoute le titre « Assurance décennale ».
+                                                  Pas de mention ni de logo Leo Energy.
+
+INTERMARCHÉ · CARREFOUR MARKET · CEDIM ·          Logos clients officiels en carrousel continu
+COLORCON (texte)
+3 · Vos enjeux        BLOC ABSENT
+
+Ce bloc doit être créé entre « Preuves » et « Un seul interlocuteur ». Il était déjà signalé dans l'onglet 00e. Textes à
+coller (onglet 01_Accueil) :
+
+Élément                     Texte exact                                                                  Lien
+
+H2                          Vos enjeux énergétiques                                                      —
+
+Carte 1                     Le froid, un poste énergétique majeur                                        /solutions/froid-commercial-
+                            Sur les sites alimentaires et logistiques, la production frigorifique peut   industriel/
+                            représenter une part majeure des consommations électriques.
+                            Régulation, HP flottante, récupération de chaleur ou modernisation des
+                            équipements : le potentiel d'optimisation se détermine à partir des
+                            conditions réelles d'exploitation.
+
+Carte 2                     Le décret tertiaire fixe une trajectoire                                     /decret-tertiaire-decret-bacs/
+                            −40 % de consommation en 2030, −50 % en 2040, −60 % en 2050
+                            pour les bâtiments tertiaires de 1 000 m² et plus, avec une déclaration
+                            annuelle sur OPERAT.
+
+Carte 3                     Le décret BACS impose le pilotage                                            /solutions/pilotage-gtb-decret-
+                            Un système d'automatisation et de contrôle est obligatoire au-delà de        bacs/
+                            290 kW de chauffage ou de climatisation depuis 2025, au-delà de 70
+                            kW en 2030.
+
+Carte 4                     Des installations à moderniser                                               /etudes-ingenierie-
+                            Chaudières fioul, réseaux non isolés, régulations figées : chaque            energetique/
+                            équipement se dimensionne à partir d'un relevé sur site et d'une note
+                            de calcul.
+
+
+
+
+4 · Un seul interlocuteur            CONFORME
+
+
+                                                                       Le H2, le sous-titre, les 4 cartes et la phrase sous les
+                                                                       cartes sont identiques au brief.
+                                                                       Vérifie quand même les liens des cartes : Ingénierie →
+                                                                       /etudes-ingenierie-energetique/, Travaux →
+                                                                       /accompagnement-travaux/, Suivi → /contrat-de-
+                                                                       performance-energetique/, Financement CEE →
+                                                                       /decret-tertiaire-decret-bacs/.
+5 · Solutions      PARTIEL
+
+
+
+
+  Le H2 et les textes des 5 cartes sont conformes. Il n'y a pas de bloc en double : « Solutions » et « Cinq expertises
+  » sont un seul et même bloc (bloc 5 du brief).
+  Il manque les 2 cartes plus petites prévues au brief (« 5 + 2 cartes ») :
+  Rénovation globale : « Un bouquet de travaux sur l'enveloppe, les systèmes et le pilotage. » →
+  /solutions/renovation-globale-tertiaire/
+  Éclairage LED : « Luminaires LED, détection de présence, gradation selon la lumière du jour. » →
+  /solutions/eclairage-led/
+  Texte ajouté, absent du brief : « De l'étude à l'exploitation, sur toute la chaîne énergétique de vos sites. »
+  Supprime-le et garde seulement le lien « Toutes nos solutions » → /solutions/.
+
+
+
+
+6 · Parcours en 5 étapes           PARTIEL
+
+
+                                                              En ligne                   À mettre
+
+                                                              04 … Pour les              … contrôle par un organisme
+                                                              opérations CEE :           accrédité COFRAC (dossier, visite sur
+                                                              contrôle par un            site, enquête de satisfaction client).
+                                                              organisme accrédité
+                                                              COFRAC.
+
+                                                              (absent, sous la frise)    Un seul interlocuteur du premier
+                                                                                         relevé jusqu'à la prise en charge
+                                                                                         complète du dossier. Vos équipes
+                                                                                         n'ont pas à coordonner les
+                                                                                         intervenants.
+
+                                                             Le H2, le bandeau des 3 phases, les étapes 01, 02, 03 et 05 et le
+                                                             bouton « Notre approche » sont conformes.
+7 · Réalisations           NON CONFORME : BLOC À REPRENDRE ENTIÈREMENT
+
+
+
+
+C'est encore l'ancien contenu du site test. L'onglet 00e demandait déjà : « Aucun montant en euros, aucun code de
+fiche ». La page Réalisations ajoute : « Aucune adresse, aucune ville ». À remplacer intégralement par :
+
+ Carte       En ligne (à supprimer)                            Texte exact du brief
+
+ 1           INTERMARCHÉ SUPER · TRÉVENANS (90) ·              Carrefour Market
+             tag « Coup de pouce & CEE » · «                   Île-de-France · Grande distribution
+             Modernisation centrale froid, PAC air/eau &       535 kW de chaleur récupérée sur le froid commercial
+             sortie complète du fioul » · 3 puces · Prime      30,6 GWh cumac* · 5 opérations · objectif −40 %* sur 10 ans
+             CEE valorisée 170 000 €                           Voir la réalisation → /realisations/carrefour-market-recuperation-de-
+                                                               chaleur/
+
+ 2           CARREFOUR MARKET · tag « Opération                Intermarché
+             financée CEE » · « Récupération de chaleur &      Bourgogne-Franche-Comté · Grande distribution
+             optimisation frigorifique sous CPE » · « Fiches   1 650 m² chauffés et sortis du fioul
+             BAT-TH-134 / BAT-TH-139 » · Prime CEE             240 kW récupérés · 14,8 GWh cumac* · 6 opérations
+             valorisée 290 000 €                               Voir la réalisation → /realisations/intermarche-sortie-du-fioul/
+
+ 3           PLATEFORME LOGISTIQUE CEDIM · tag «               CEDIM
+             Décret BACS & Logistique » · « BAT-TH-116 »       Centre-Val de Loire · Négoce et entrepôt
+             · « baisse jusqu'à 30 % » · Prime CEE             9 m de hauteur traitée par déstratification
+             valorisée 64 000 €                                1 213 m² · 2,1 GWh cumac*
+                                                               Voir la réalisation → /realisations/cedim-destratification/
+
+ Lien        TOUTES LES RÉALISATIONS (3)                       Voir toutes nos réalisations → /realisations/
+
+Photos de couverture : celles de Terasse Energie, que nous te transmettons. Les tags CEE (« Coup de pouce », « Opération financée CEE »)
+disparaissent avec ce contenu.
+7b · Qualifications   PARTIEL
+
+
+                                En ligne                       À mettre
+
+                                « Logos officiels — ancre      Supprimer : c'est une consigne
+                                #qualifications. »             du brief, pas un texte à afficher
+
+                                Pastille + H3 en double («     Un seul titre par colonne
+                                Qualifications PEXEN » ×2, «
+                                Assurances et contrôle » ×2)
+
+                                Audit énergétique, via notre   Audit énergétique, via notre
+                                bureau d'études partenaire     bureau d'études partenaire
+                                Leo Energy                     (sans nom ni logo Leo Energy)
+
+                                Pictos dessinés                Logos officiels (RGE QualiPAC,
+                                                               Qualisol, OPQIBI, COFRAC,
+                                                               MIC avec le titre « Assurance
+                                                               décennale »)
+8 · Secteurs          NON CONFORME
+
+
+
+
+ En ligne                                     À mettre
+
+ « SECTEUR PEXEN » ×2 sur chaque carte        H3 : Industrie · Tertiaire · Bâtiments collectifs · Partenaires professionnels
+ (correction déjà demandée dans l'onglet
+ 00e)
+
+ « Solutions dédiées »                        Supprimer (absent du brief)
+
+ 4 cartes dans une grille de 3 colonnes (la   Nouvelle mise en page pour 4 cartes, avec les liens /secteurs/efficacite-energetique-
+ 4e est seule sur sa ligne)                   industrielle/, /secteurs/efficacite-energetique-tertiaire/, /secteurs/batiments-collectifs/ et
+                                              /partenaires/
+
+Le H2 et les 4 descriptions sont conformes.
+
+
+
+
+10 · Contact          CONFORME          11 · FAQ       NON CONFORME
+
+
+
+
+   Contact : le H2 et la mention 48 h sont conformes. Selon la consigne du brief, le téléphone n'apparaît que dans le
+   header et le footer : retire « Téléphone : 01 41 93 52 80 » de ce bloc. Un libellé « SITE WEB » apparaît aussi au-
+   dessus du formulaire : à supprimer.
+   FAQ : seule la réponse 1 existe. Les réponses aux questions 2 à 5 sont vides, alors qu'elles sont indispensables
+   pour le SEO (balisage FAQPage). Colle les 4 réponses de l'onglet 01_Accueil, avec le lien « Estimer le financement
+   » en Q3 et le lien OPERAT (operat.ademe.fr) en Q4.
+   Le chapeau « Réponses directes aux questions des décideurs techniques — éligibilité… » n'est pas dans le brief et
+   utilise un tiret long : supprime-le.
+Hors brief et footer   NON CONFORME
+
+
+                                      Pré-footer à supprimer : « PEXEN — Ingénierie &
+                                      CEE · Optimiser aujourd'hui. Performer demain. · Un
+                                      ingénieur d'affaires analyse vos installations… » et ses
+                                      2 boutons. Ce bloc n'est pas dans le brief, et il met le
+                                      CEE au premier plan.
+                                      Footer (onglet 32) : la colonne « Voir les expertises »
+                                      liste en fait les solutions. Il faut 3 colonnes : Expertises
+                                      (4 liens : Études et ingénierie, Accompagnement
+                                      travaux, CPE, Réglementation et financement),
+                                      Solutions (7 liens) et PEXEN. Les logos RGE QualiPAC
+                                      et Qualisol vont en bas du footer. LinkedIn reste.
+                                      Assistant : il s'affiche « Conseil PEXEN » avec visuel.
+                                      Le brief prévoit « Conseil PXN », en texte seul, sans
+                                      avatar.
+                                      En bas de page : les 2 mentions astérisque complètes
+                                      des chiffres.
+

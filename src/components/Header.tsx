@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Phone, ArrowRight, Menu, X, ChevronDown, Snowflake, Flame, Wind, Cpu, ShieldCheck, FileCheck, Factory, Building2, Home } from 'lucide-react';
 import { EXPERTISES, SECTEURS } from '../data/pexenData';
 import { usePexenInfo, useSiteConfig, type MenuItemDto } from '../context/SiteConfigContext';
-import { PexenAnimatedLogo } from './PexenAnimatedLogo';
-
 const FALLBACK_MENU: MenuItemDto[] = [
   { id: 'exp', label: 'Expertises', path: '/expertises/', children: EXPERTISES.map((e) => ({ id: e.slug, label: e.title, path: `/expertises/${e.slug}/` })) },
   { id: 'sec', label: 'Secteurs', path: '/secteurs/', children: SECTEURS.map((e) => ({ id: e.slug, label: e.title, path: `/secteurs/${e.slug}/` })) },
@@ -73,21 +71,28 @@ export const Header: React.FC<HeaderProps> = ({ currentPath, onNavigate }) => {
 
   const getExpertiseIcon = (slug: string) => {
     switch (slug) {
-      case 'froid': return <Snowflake className="w-4 h-4 text-px-primary-dark" />;
-      case 'recuperation-de-chaleur': return <Flame className="w-4 h-4 text-orange-500" />;
-      case 'chauffage-traitement-air': return <Wind className="w-4 h-4 text-sky-500" />;
-      case 'gtb-gtc': return <Cpu className="w-4 h-4 text-indigo-500" />;
-      case 'isolation-technique': return <ShieldCheck className="w-4 h-4 text-teal-600" />;
-      case 'reglementation-cee': return <FileCheck className="w-4 h-4 text-emerald-600" />;
+      case 'froid':
+      case 'froid-commercial-industriel': return <Snowflake className="w-4 h-4 text-px-primary-dark" />;
+      case 'recuperation-de-chaleur': return <Flame className="w-4 h-4 text-px-primary-dark" />;
+      case 'chauffage-traitement-air':
+      case 'pompe-a-chaleur-tertiaire': return <Wind className="w-4 h-4 text-px-primary-dark" />;
+      case 'gtb-gtc':
+      case 'gtb-tertiaire-gtc': return <Cpu className="w-4 h-4 text-px-primary-dark" />;
+      case 'isolation-technique': return <ShieldCheck className="w-4 h-4 text-px-primary-dark" />;
+      case 'reglementation-cee':
+      case 'financement-cee-reglementation': return <FileCheck className="w-4 h-4 text-px-primary-dark" />;
       default: return <FileCheck className="w-4 h-4 text-px-primary-dark" />;
     }
   };
 
   const getSecteurIcon = (slug: string) => {
     switch (slug) {
-      case 'industrie': return <Factory className="w-4 h-4 text-slate-700" />;
-      case 'tertiaire': return <Building2 className="w-4 h-4 text-slate-700" />;
-      case 'residentiel-collectif': return <Home className="w-4 h-4 text-slate-700" />;
+      case 'industrie':
+      case 'efficacite-energetique-industrielle': return <Factory className="w-4 h-4 text-px-navy" />;
+      case 'tertiaire':
+      case 'efficacite-energetique-tertiaire': return <Building2 className="w-4 h-4 text-px-navy" />;
+      case 'residentiel-collectif':
+      case 'renovation-energetique-copropriete': return <Home className="w-4 h-4 text-px-navy" />;
       default: return <Building2 className="w-4 h-4 text-slate-700" />;
     }
   };
@@ -108,24 +113,7 @@ export const Header: React.FC<HeaderProps> = ({ currentPath, onNavigate }) => {
               onClick={() => navigateTo('/')}
               className="flex items-center gap-3 cursor-pointer group select-none"
             >
-              {cfg?.branding.logoUrl ? (
-                <img src={cfg.branding.logoUrl} alt={cfg.branding.siteName || 'PEXEN'} className="h-11 w-auto max-w-[200px] object-contain" />
-              ) : (
-                <>
-                  <PexenAnimatedLogo className="w-10 h-10" />
-                  <div>
-                    <div className="flex items-center gap-1">
-                      <span className="text-xl font-bold tracking-tight text-px-navy group-hover:text-px-primary-dark transition-colors">
-                        {(cfg?.branding.siteName || 'PEXEN').replace(/®$/, '')}
-                      </span>
-                      <span className="text-[10px] font-bold text-slate-500 align-super">®</span>
-                    </div>
-                    <div className="text-[11px] font-normal text-slate-500 tracking-tight leading-none">
-                      {cfg?.branding.tagline || 'Ingénierie & Performance Énergétique'}
-                    </div>
-                  </div>
-                </>
-              )}
+              <img src={cfg?.branding.logoUrl || '/brand/logo-sans-baseline-couleur.svg'} alt={cfg?.branding.siteName || 'PEXEN'} className="h-12 w-auto max-w-[220px] object-contain" />
             </div>
 
             {/* Desktop Navigation (menu principal géré dans l'administration) */}
@@ -198,7 +186,7 @@ export const Header: React.FC<HeaderProps> = ({ currentPath, onNavigate }) => {
                 className="flex items-center gap-2 text-xs xl:text-sm font-semibold text-px-navy hover:text-px-primary-dark transition-colors py-2 px-3 rounded-lg hover:bg-slate-50"
               >
                 <Phone className="w-4 h-4 text-px-primary-dark" />
-                <span className="font-mono tracking-tight">{PEXEN_INFO.phone}</span>
+                <span className="px-phone tracking-tight">{PEXEN_INFO.phone}</span>
               </a>
 
               <button

@@ -1,7 +1,14 @@
+/**
+ * Pexen
+ * © 2026 NOVALABS WEB DESIGN — Tunisie
+ * Contact : contact@novalabs.tn · +216 24 734 647
+ * Tous droits réservés. Toute reproduction, modification ou diffusion sans autorisation écrite est interdite.
+ */
 import { Router, type Request, type Response, type NextFunction, type RequestHandler } from 'express';
 
 export class HttpError extends Error {
-  constructor(public status: number, message: string) {
+  /** `code` : identifiant stable exploité par l'administration (ex. PASSWORD_CHANGE_REQUIRED). */
+  constructor(public status: number, message: string, public code?: string) {
     super(message);
   }
 }
@@ -25,9 +32,22 @@ export function asyncRouter(): Router {
   return router;
 }
 
+/** Pagination des listes : `?page=` (≥ 1) et `?pageSize=` borné entre 10 et 100. */
+export function paging(query: Record<string, unknown>, defaultSize = 25): { page: number; pageSize: number } {
+  const size = Number(query.pageSize);
+  return {
+    page: Math.max(1, Math.floor(Number(query.page)) || 1),
+    pageSize: Number.isFinite(size) && size > 0 ? Math.min(Math.max(Math.floor(size), 10), 100) : defaultSize,
+  };
+}
+
 export function apiErrorHandler(err: unknown, _req: Request, res: Response, _next: NextFunction) {
-  const status = err instanceof HttpError ? err.status : 500;
-  const message = err instanceof Error ? err.message : 'Erreur serveur';
+  const bodyError = (err as { type?: string })?.type === 'entity.too.large';
+  const status = err instanceof HttpError ? err.status : bodyError ? 413 : 500;
+  const message = bodyError ? 'Requête trop volumineuse' : err instanceof Error ? err.message : 'Erreur serveur';
   if (status >= 500) console.error('[api]', err);
-  res.status(status).json({ error: status >= 500 ? 'Erreur serveur' : message });
+  res.status(status).json({
+    error: err instanceof HttpError || status < 500 ? message : 'Erreur serveur',
+    ...(err instanceof HttpError && err.code ? { code: err.code } : {}),
+  });
 }

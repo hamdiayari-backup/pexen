@@ -255,7 +255,7 @@ export default function PageEditorPage() {
 
         <main className="relative hidden min-w-0 flex-1 md:block">
           <PreviewFrame
-            path={data.path}
+            path={page.path}
             payload={payload}
             device={device}
             onBlockClick={(blockId) => {

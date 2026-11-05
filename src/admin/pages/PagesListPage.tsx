@@ -11,17 +11,36 @@ import { publicUrl, useSite } from '../context/SiteContext';
 import { Badge, Button, Card, EmptyState, ErrorState, Field, Input, PageHeader, PageSkeleton, ScoreDot, Segmented, Select, StatusBadge, Table, Td, Th } from '../ui/primitives';
 import { Dropdown, DropdownItem, Modal, useConfirm } from '../ui/overlays';
 
-type Filter = 'all' | CmsPage['status'];
+type Filter = 'all' | CmsPage['status'] | 'project';
 
-export function CreatePageModal({ open, onClose }: { open: boolean; onClose: () => void }) {
+export function CreatePageModal({
+  open,
+  onClose,
+  defaultTemplate = 'default',
+}: {
+  open: boolean;
+  onClose: () => void;
+  defaultTemplate?: CmsPage['template'];
+}) {
   const navigate = useNavigate();
   const { reload } = useSite();
   const [title, setTitle] = useState('');
   const [path, setPath] = useState('');
   const [pathTouched, setPathTouched] = useState(false);
-  const [template, setTemplate] = useState<CmsPage['template']>('default');
+  const [template, setTemplate] = useState<CmsPage['template']>(defaultTemplate);
   const [saving, setSaving] = useState(false);
-  const effectivePath = pathTouched ? path : title ? `/${slugify(title)}/` : '';
+
+  React.useEffect(() => {
+    if (open) setTemplate(defaultTemplate);
+  }, [open, defaultTemplate]);
+
+  const effectivePath = pathTouched
+    ? path
+    : title
+      ? template === 'project'
+        ? `/realisations/${slugify(title)}/`
+        : `/${slugify(title)}/`
+      : '';
 
   const submit = async () => {
     setSaving(true);
@@ -79,6 +98,7 @@ export function CreatePageModal({ open, onClose }: { open: boolean; onClose: () 
             onChange={(v) => setTemplate(v as CmsPage['template'])}
             options={[
               { value: 'default', label: 'Standard' },
+              { value: 'project', label: 'Réalisation (étude de cas client)' },
               { value: 'landing', label: 'Page d’atterrissage (pleine largeur)' },
               { value: 'legal', label: 'Page légale (texte)' },
             ]}
@@ -99,12 +119,14 @@ export default function PagesListPage() {
   const [q, setQ] = useState('');
   const [filter, setFilter] = useState<Filter>('all');
   const [createOpen, setCreateOpen] = useState(false);
+  const [createTemplate, setCreateTemplate] = useState<CmsPage['template']>('default');
 
   const counts = useMemo(() => {
-    const c = { all: 0, published: 0, draft: 0, scheduled: 0 };
+    const c = { all: 0, published: 0, draft: 0, scheduled: 0, project: 0 };
     (data || []).forEach((p) => {
       c.all++;
       c[p.status]++;
+      if (p.template === 'project') c.project++;
     });
     return c;
   }, [data]);
@@ -112,7 +134,7 @@ export default function PagesListPage() {
   const rows = useMemo(() => {
     const nq = q.trim().toLowerCase();
     return (data || [])
-      .filter((p) => filter === 'all' || p.status === filter)
+      .filter((p) => (filter === 'all' ? true : filter === 'project' ? p.template === 'project' : p.status === filter))
       .filter((p) => !nq || p.title.toLowerCase().includes(nq) || p.path.includes(nq))
       .sort((a, b) => (a.path === '/' ? -1 : b.path === '/' ? 1 : a.path.localeCompare(b.path)));
   }, [data, q, filter]);
@@ -163,9 +185,27 @@ export default function PagesListPage() {
         description="Gérez les pages du site, leur contenu, leur statut de publication et leur référencement."
         actions={
           can('editor') ? (
-            <Button variant="primary" icon={FilePlus2} onClick={() => setCreateOpen(true)}>
-              Nouvelle page
-            </Button>
+            <div className="flex flex-wrap gap-2">
+              <Button
+                icon={FilePlus2}
+                onClick={() => {
+                  setCreateTemplate('project');
+                  setCreateOpen(true);
+                }}
+              >
+                Nouvelle réalisation
+              </Button>
+              <Button
+                variant="primary"
+                icon={FilePlus2}
+                onClick={() => {
+                  setCreateTemplate('default');
+                  setCreateOpen(true);
+                }}
+              >
+                Nouvelle page
+              </Button>
+            </div>
           ) : null
         }
       />
@@ -177,9 +217,9 @@ export default function PagesListPage() {
             onChange={setFilter}
             options={[
               { value: 'all', label: `Toutes (${counts.all})` },
+              { value: 'project', label: `Réalisations (${counts.project})` },
               { value: 'published', label: `Publiées (${counts.published})` },
               { value: 'draft', label: `Brouillons (${counts.draft})` },
-              { value: 'scheduled', label: `Planifiées (${counts.scheduled})` },
             ]}
           />
           <div className="relative sm:w-72">
@@ -219,7 +259,15 @@ export default function PagesListPage() {
                       <span className="block text-xs text-slate-500">{p.path}</span>
                     </Link>
                   </Td>
-                  <Td>{p.contentSource === 'cms' ? <Badge tone="brand">Éditeur visuel</Badge> : <Badge>Gabarit du site</Badge>}</Td>
+                  <Td>
+                    {p.template === 'project' ? (
+                      <Badge tone="brand">Réalisation{p.project?.primeCee ? ` · ${p.project.primeCee}` : ''}</Badge>
+                    ) : p.contentSource === 'cms' ? (
+                      <Badge tone="neutral">Page CMS</Badge>
+                    ) : (
+                      <Badge>Gabarit du site</Badge>
+                    )}
+                  </Td>
                   <Td>
                     <StatusBadge status={p.status} />
                     {p.status === 'scheduled' && p.scheduledAt ? <span className="mt-1 block text-xs text-slate-500">{new Date(p.scheduledAt).toLocaleString('fr-FR')}</span> : null}
@@ -261,7 +309,7 @@ export default function PagesListPage() {
           </Table>
         )}
       </Card>
-      <CreatePageModal open={createOpen} onClose={() => setCreateOpen(false)} />
+      <CreatePageModal open={createOpen} onClose={() => setCreateOpen(false)} defaultTemplate={createTemplate} />
     </div>
   );
 }

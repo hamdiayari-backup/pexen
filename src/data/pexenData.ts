@@ -9,11 +9,10 @@ export const PEXEN_INFO = {
   phoneClean: '+33141935280',
   contactEmail: 'contact@pexen.fr',
   slaHours: '48 h ouvrées',
-  address: 'Paris & Déploiement partout en France',
+  address: '111 avenue Victor Hugo, 93300 Aubervilliers',
   rgeBadges: [
-    { name: 'RGE Ventilation+', desc: 'Ventilation & traitement d\'air haute efficacité' },
+    { name: 'RGE QualiPAC', desc: 'Chauffage et eau chaude sanitaire' },
     { name: 'RGE Qualisol CESI', desc: 'Solaire thermique & eau chaude sanitaire collective' },
-    { name: 'SOCOTEC Fluides Frigorigènes', desc: 'Attestation de capacité Catégorie I (installations frigorifiques)' }
   ],
   partnerEngineering: {
     name: 'Leo Energy',
@@ -150,7 +149,7 @@ export const CEE_SHEETS: CeeSheet[] = [
 
 export const EXPERTISES: ExpertiseItem[] = [
   {
-    slug: 'froid',
+    slug: 'froid-commercial-industriel',
     title: 'Froid commercial & industriel',
     shortDesc: 'Haute et basse pression flottante, condenseurs haute efficacité, variateurs et fermeture de meubles frigorifiques.',
     heroTitle: 'Froid commercial et industriel : optimiser vos groupes froids',
@@ -212,7 +211,7 @@ export const EXPERTISES: ExpertiseItem[] = [
     ceeList: ['BAT-TH-139', 'IND-UT-103', 'IND-UT-137', 'BAT-TH-154']
   },
   {
-    slug: 'chauffage-traitement-air',
+    slug: 'pompe-a-chaleur-tertiaire',
     title: 'Chauffage & traitement d\'air',
     shortDesc: 'Pompes à chaleur en remplacement fioul/gaz et déstratification des halls de grande hauteur.',
     heroTitle: 'Chauffage et traitement d\'air des grands volumes',
@@ -233,7 +232,7 @@ export const EXPERTISES: ExpertiseItem[] = [
     ceeList: ['BAT-TH-163', 'IND-UT-117', 'BAT-TH-142', 'IND-BA-116']
   },
   {
-    slug: 'gtb-gtc',
+    slug: 'gtb-tertiaire-gtc',
     title: 'Pilotage GTB / GTC',
     shortDesc: 'Gestion Technique du Bâtiment classe A/B et mise en conformité réglementaire avec le décret BACS.',
     heroTitle: 'Pilotage GTB / GTC et conformité au décret BACS',
@@ -275,7 +274,7 @@ export const EXPERTISES: ExpertiseItem[] = [
     ceeList: ['BAT-TH-106', 'IND-UT-121', 'BAT-TH-107']
   },
   {
-    slug: 'reglementation-cee',
+    slug: 'financement-cee-reglementation',
     title: 'Réglementation & financement CEE',
     shortDesc: 'Décret tertiaire, décret BACS et montage intégral de vos dossiers de Certificats d\'Économies d\'Énergie.',
     heroTitle: 'Réglementation et financement CEE',
@@ -304,57 +303,57 @@ export const EXPERTISES: ExpertiseItem[] = [
 
 export const SECTEURS: SecteurItem[] = [
   {
-    slug: 'industrie',
+    slug: 'efficacite-energetique-industrielle',
     title: 'Industrie',
     shortDesc: 'Sites de production, process, froid industriel, chaleur fatale.',
     heroTitle: 'Performance énergétique des sites industriels',
     metaDesc: 'Froid industriel, récupération de chaleur fatale, variateurs, isolation : réduisez les consommations de vos sites de production.',
-    image: '/images/terrain/gaz_renouvelable.jpg',
+    image: '/images/installation-technique.webp',
     enjeux: [
       'Poids prépondérant du coût de l\'énergie dans le coût de revient des process de fabrication.',
       'Impératif absolu de continuité de production sans interruption d\'activité pendant les travaux d\'ingénierie.',
       'Valorisation de la chaleur fatale industrielle perdue au condenseur et aux cheminées.'
     ],
     solutions: [
-      { title: 'Froid commercial & industriel', slug: 'froid' },
+      { title: 'Froid commercial & industriel', slug: 'froid-commercial-industriel' },
       { title: 'Récupération de chaleur', slug: 'recuperation-de-chaleur' },
       { title: 'Isolation technique', slug: 'isolation-technique' }
     ],
     typicalEquipments: ['Centrales froid NH3 / CO2', 'Fours & compresseurs d\'air', 'Réseaux vapeur & eau surchauffée', 'Boucles de glycol']
   },
   {
-    slug: 'tertiaire',
+    slug: 'efficacite-energetique-tertiaire',
     title: 'Tertiaire',
     shortDesc: 'Grande distribution, bureaux, entrepôts logistiques, santé.',
     heroTitle: 'Performance énergétique des bâtiments tertiaires',
     metaDesc: 'Grande distribution, bureaux, entrepôts, santé : décret tertiaire, BACS, froid commercial et pilotage énergétique.',
-    image: '/images/terrain/meubles_froids.jpg',
+    image: '/images/performance-energetique.webp',
     enjeux: [
       'Conformité stricte aux exigences du Décret Tertiaire (échéances 2030 / 2040 / 2050 et télédéclaration OPERAT).',
       'Mise en conformité immédiate avec le Décret BACS (systèmes CVC > 290 kW puis > 70 kW).',
       'Maîtrise des coûts électriques du froid commercial alimentaire et du chauffage des grands volumes logistiques.'
     ],
     solutions: [
-      { title: 'Froid commercial & industriel', slug: 'froid' },
-      { title: 'Pilotage GTB / GTC', slug: 'gtb-gtc' },
-      { title: 'Chauffage & traitement d\'air', slug: 'chauffage-traitement-air' }
+      { title: 'Froid commercial & industriel', slug: 'froid-commercial-industriel' },
+      { title: 'Pilotage GTB / GTC', slug: 'gtb-tertiaire-gtc' },
+      { title: 'Chauffage & traitement d\'air', slug: 'pompe-a-chaleur-tertiaire' }
     ],
     typicalEquipments: ['Meubles froids & centrales positives/négatives', 'Rooftops & CTA', 'Supervision GTB', 'Déstratificateurs d\'air']
   },
   {
-    slug: 'residentiel-collectif',
+    slug: 'renovation-energetique-copropriete',
     title: 'Résidentiel collectif',
     shortDesc: 'Bailleurs sociaux, syndics et gestionnaires de copropriétés.',
     heroTitle: 'Performance énergétique du résidentiel collectif',
     metaDesc: 'Bailleurs sociaux, syndics, gestionnaires : maîtrisez les consommations et les charges de vos bâtiments collectifs.',
-    image: '/images/terrain/maison_solaire.jpg',
+    image: '/images/renovation-energetique.webp',
     enjeux: [
       'Maîtrise indispensable des charges locatives et d\'énergie répercutées sur les occupants.',
       'Modernisation des chaufferies collectives vieillissantes et transition hors des combustibles fossiles (fioul/gaz).',
       'Sécurisation des financements CEE pour réduire au strict minimum l\'effort financier des copropriétaires et bailleurs.'
     ],
     solutions: [
-      { title: 'Chauffage & traitement d\'air', slug: 'chauffage-traitement-air' },
+      { title: 'Chauffage & traitement d\'air', slug: 'pompe-a-chaleur-tertiaire' },
       { title: 'Isolation technique', slug: 'isolation-technique' },
       { title: 'Récupération de chaleur', slug: 'recuperation-de-chaleur' }
     ],
@@ -379,7 +378,7 @@ export const REALISATIONS: RealisationItem[] = [
       'Suppression des pointes de condensation estivales',
       'Travaux réalisés sans aucune rupture de la chaîne du froid'
     ],
-    image: '/images/terrain/meubles_froids.jpg',
+    image: '/images/pompes-a-chaleur-toiture.webp',
     ceeSheet: 'BAT-TH-134 & BAT-TH-112',
     metrics: [
       { label: 'Secteur', value: 'Grande distribution' },
@@ -404,7 +403,7 @@ export const REALISATIONS: RealisationItem[] = [
       'Amortissement technique rapide via les Certificats d\'Économies d\'Énergie',
       'Intervention en salle propre sans interruption de la production'
     ],
-    image: '/images/terrain/gaz_renouvelable.jpg',
+    image: '/images/centrale-froid.webp',
     ceeSheet: 'IND-UT-103 & IND-UT-121',
     metrics: [
       { label: 'Secteur', value: 'Industrie pharmaceutique' },
@@ -429,7 +428,7 @@ export const REALISATIONS: RealisationItem[] = [
       'Amélioration notable du confort client dans les allées réfrigérées',
       'Prise en charge financière majeure par le dispositif CEE'
     ],
-    image: '/images/terrain/froid_condenseurs.jpg',
+    image: '/images/installation-technique.webp',
     ceeSheet: 'BAT-EQ-130 & BAT-TH-124',
     metrics: [
       { label: 'Secteur', value: 'Grande distribution' },
@@ -454,7 +453,7 @@ export const REALISATIONS: RealisationItem[] = [
       'Baisse immédiate du déclenchement des aérothermes en toiture',
       'Supervision accessible à distance par le gestionnaire technique'
     ],
-    image: '/images/terrain/rooftop_cta.jpg',
+    image: '/images/climatisation-toiture.webp',
     ceeSheet: 'BAT-TH-142 & BAT-TH-116',
     metrics: [
       { label: 'Secteur', value: 'Entrepôt logistique' },

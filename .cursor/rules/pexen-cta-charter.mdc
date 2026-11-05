@@ -1,0 +1,61 @@
+---
+description: Charte CTA PEXEN — 3 niveaux (L1/L2/L3) fond clair et foncé
+globs: /home/pexen/**/*.{tsx,ts,css}
+alwaysApply: false
+---
+
+# Charte des CTA PEXEN — 3 niveaux (v1.1, oct. 2026)
+
+À décliner **partout** sur le site public (thème Ultra en priorité, Maquette si réactivée).
+
+## Niveaux
+
+| Niveau | Rôle | Classes | Fond clair | Fond foncé |
+|--------|------|---------|------------|------------|
+| **L1** | Conversion principale | `btn btn-primary` + `px-cta px-cta--l1` | Cyan `#01CDF3` plein, texte `#082D4A` | **Identique** |
+| **L2** | Secondaire (exploration) | `btn btn-outline` / `btn-tertiary` + `px-cta px-cta--l2` | Transparent, bordure 1px + texte `#082D4A` | Ajouter `px-cta--l2-on-dark` (ou parent hero/atm) : bordure + texte `#FFFFFF` |
+| **L3** | Lien contextuel **dans un bloc** | `px-cta px-cta--l3` | Texte `#00769A` + flèche, pas de boîte | `px-cta--l3-on-dark` : texte `#01CDF3` |
+
+## Specs communes L1 / L2
+- Hauteur **48px**, padding horizontal confortable
+- Typo **600**, taille **16px** (Figtree si dispo, sinon `--px-font-heading` / Sora)
+- Radius **4–6px** (`0.375rem`) — jamais pill
+- Flèche `→` ou `fa-arrow-right` à droite du libellé
+
+## Specs L3
+- Taille **15–16px**, poids 600
+- Pas de fond / bordure / hauteur fixe
+- Hover : **souligné** + flèche décale de **+4px**
+
+## Règles d’usage
+1. **Une seule L1** dominante par viewport / section critique (hero, contact).
+2. L2 = alternative (réalisations, solutions), jamais en concurrence visuelle avec 3 L1.
+3. L3 **uniquement dans les cartes/blocs** (enjeux, expertises, secteurs, etc.) — jamais comme CTA hero principal.
+4. Ne pas inventer un 4ᵉ style (boutons outline cyan, pills, ghost navy plein, etc.).
+5. Les URLs peuvent différer ; c’est la **hiérarchie visuelle** qui est fixe, pas le lien.
+
+## Exemples
+```tsx
+{/* L1 */}
+<button className="btn btn-primary px-cta px-cta--l1">Parler de votre projet <i className="fa fa-arrow-right" /></button>
+
+{/* L2 clair */}
+<button className="btn btn-outline px-cta px-cta--l2">Voir nos réalisations <i className="fa fa-arrow-right" /></button>
+
+{/* L2 foncé */}
+<button className="btn btn-outline px-cta px-cta--l2 px-cta--l2-on-dark">Voir nos réalisations <i className="fa fa-arrow-right" /></button>
+
+{/* L3 clair (carte) */}
+<span className="px-cta px-cta--l3">Découvrir la solution →</span>
+
+{/* L3 foncé */}
+<span className="px-cta px-cta--l3 px-cta--l3-on-dark">Découvrir la solution →</span>
+```
+
+Source design : *Charte des CTA — 3 niveaux* (Amina / PEXEN, v1.1).
+
+## Règles layout associées (Amina)
+- **Titres centrés** partout (`.sec-title`, hero, bandeaux).
+- **Schémas techniques** en fond sur toutes les sections blanches / light.
+- Formulaire contact : selects avec **chevron** visible ; option **Autres** dans « Vous êtes » / « Type de site ».
+- L1 hover : garder le texte **navy** (pas de flash blanc illisible).

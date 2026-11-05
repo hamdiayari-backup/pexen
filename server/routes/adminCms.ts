@@ -2,31 +2,19 @@ import crypto from 'crypto';
 import fs from 'fs/promises';
 import path from 'path';
 import { loadSnapshot, updateSnapshot, getDataPaths } from '../cms/store';
-import {
-  checkLoginThrottle,
-  clearLoginFailures,
-  createToken,
-  hashPassword,
-  recordLoginFailure,
-  validatePasswordStrength,
-  verifyPassword,
-} from '../cms/auth';
-import { requireAdmin, canEdit, canSeo, superOnly, type AuthedRequest } from '../middleware/adminAuth';
+import { hasPerm, requireAuth, requirePerm, type AuthedRequest } from '../middleware/adminAuth';
 import { analyzePageSeo, analyzePostSeo } from '../cms/seoAnalyzer';
 import { saveRevision, listRevisions, getRevision } from '../cms/revisions';
 import { summarizeAnalytics } from '../cms/analyticsStore';
+import { assertPsiCooldown, resolveAuditUrl, runPageSpeed, type PsiStrategy } from '../cms/pagespeed';
 import { asyncRouter, HttpError } from '../http';
-import type { AdminUser, BlogPost, CmsPage, CmsSnapshot, MenuItem, RedirectRule } from '../cms/types';
+import type { BlogPost, CmsPage, CmsSnapshot, MenuItem, RedirectRule } from '../cms/types';
 import { defaultSeoForPath } from '../cms/defaults';
 import { aiUsageToday } from '../aiLimits';
 import { PEXEN_SYSTEM_INSTRUCTION } from '../aiPrompt';
 
 const ALLOWED_MIME = /^(image\/(png|jpe?g|webp|gif|svg\+xml|avif)|video\/(mp4|webm)|application\/pdf)$/;
 const MAX_UPLOAD_BYTES = 15 * 1024 * 1024;
-
-function publicUser(u: AdminUser) {
-  return { id: u.id, email: u.email, name: u.name, role: u.role, lastLoginAt: u.lastLoginAt };
-}
 
 function pick<T extends object>(source: unknown, keys: (keyof T)[]): Partial<T> {
   const out: Partial<T> = {};
@@ -72,10 +60,27 @@ function sanitizeMenuItems(items: unknown, depth = 0): MenuItem[] {
 
 function sanitizeSnapshotForClient(s: CmsSnapshot) {
   const { oauthRefreshToken, ...google } = s.google;
+  // system secrets stripped below
   return {
     ...s,
+    system: undefined,
+    roles: undefined,
     google: { ...google, hasRefreshToken: !!oauthRefreshToken },
-    users: s.users.map(publicUser),
+    users: s.users.map((u) => ({
+      id: u.id,
+      email: u.email,
+      name: u.name,
+      role: u.role,
+      status: u.status ?? 'active',
+      title: u.title,
+      phone: u.phone,
+      avatarUrl: u.avatarUrl,
+      totpEnabled: !!u.totpEnabled,
+      mustChangePassword: !!u.mustChangePassword,
+      lastLoginAt: u.lastLoginAt,
+      loginCount: u.loginCount ?? 0,
+      createdAt: u.createdAt,
+    })),
     formSubmissions: undefined,
     subscribers: undefined,
   };
@@ -84,62 +89,16 @@ function sanitizeSnapshotForClient(s: CmsSnapshot) {
 export function createAdminCmsRouter() {
   const router = asyncRouter();
 
-  /* ---------- Authentification ---------- */
-
-  router.post('/login', async (req, res) => {
-    const { email, password } = req.body as { email?: string; password?: string };
-    if (!email || !password) throw new HttpError(400, 'Identifiants requis');
-    const key = `${req.ip}:${email.toLowerCase()}`;
-    const throttle = checkLoginThrottle(key);
-    if (!throttle.ok) {
-      throw new HttpError(429, `Trop de tentatives. Réessayez dans ${Math.ceil(throttle.retryInSec! / 60)} min.`);
-    }
-    const s = await loadSnapshot();
-    const user = s.users.find((u) => u.email.toLowerCase() === email.toLowerCase());
-    if (!user || !verifyPassword(password, user)) {
-      recordLoginFailure(key);
-      throw new HttpError(401, 'E-mail ou mot de passe incorrect');
-    }
-    clearLoginFailures(key);
-    await updateSnapshot((snap) => {
-      const u = snap.users.find((x) => x.id === user.id);
-      if (u) u.lastLoginAt = new Date().toISOString();
-    });
-    res.json({ token: createToken(user), user: publicUser(user) });
-  });
-
-  router.get('/me', requireAdmin(), async (req: AuthedRequest, res) => {
-    const s = await loadSnapshot();
-    const user = s.users.find((u) => u.id === req.admin!.sub);
-    if (!user) throw new HttpError(404, 'Utilisateur introuvable');
-    res.json({ user: publicUser(user) });
-  });
-
-  router.put('/me/password', requireAdmin(), async (req: AuthedRequest, res) => {
-    const { current, next } = req.body as { current?: string; next?: string };
-    const s = await loadSnapshot();
-    const user = s.users.find((u) => u.id === req.admin!.sub);
-    if (!user || !current || !verifyPassword(current, user)) throw new HttpError(400, 'Mot de passe actuel incorrect');
-    const weak = validatePasswordStrength(next || '');
-    if (weak) throw new HttpError(400, weak);
-    const { hash, salt } = hashPassword(next!);
-    const updated = await updateSnapshot((snap) => {
-      const u = snap.users.find((x) => x.id === user.id)!;
-      u.passwordHash = hash;
-      u.salt = salt;
-    });
-    res.json({ token: createToken(updated.users.find((u) => u.id === user.id)!) });
-  });
-
   /* ---------- Lecture globale & tableau de bord ---------- */
 
-  router.get('/snapshot', requireAdmin(), async (_req, res) => {
+  router.get('/snapshot', requireAuth(), async (_req, res) => {
     res.json(sanitizeSnapshotForClient(await loadSnapshot()));
   });
 
-  router.get('/dashboard', requireAdmin(), async (_req, res) => {
+    router.get('/dashboard', requireAuth(), async (req: AuthedRequest, res) => {
     const s = await loadSnapshot();
-    const analytics = await summarizeAnalytics(30, new URL(s.settings.publicUrl).hostname);
+    const canForms = hasPerm(req, 'forms.view');
+    const analytics = hasPerm(req, 'analytics.view') ? await summarizeAnalytics(30, new URL(s.settings.publicUrl).hostname) : null;
     const seoScores = [
       ...s.pages.filter((p) => p.status === 'published').map((p) => analyzePageSeo(p).score),
       ...s.posts.filter((p) => p.status === 'published').map((p) => analyzePostSeo(p).score),
@@ -151,26 +110,28 @@ export function createAdminCmsRouter() {
         publishedPages: s.pages.filter((p) => p.status === 'published').length,
         posts: s.posts.length,
         draftPosts: s.posts.filter((p) => p.status === 'draft').length,
-        unreadSubmissions: s.formSubmissions.filter((x) => !x.read).length,
-        submissions: s.formSubmissions.length,
-        subscribers: s.subscribers.filter((x) => x.status === 'active').length,
+        unreadSubmissions: canForms ? s.formSubmissions.filter((x) => !x.read).length : null,
+        submissions: canForms ? s.formSubmissions.length : null,
+        subscribers: hasPerm(req, 'newsletter.manage') ? s.subscribers.filter((x) => x.status === 'active').length : null,
         media: s.media.length,
       },
       seoAverage: seoScores.length ? Math.round(seoScores.reduce((a, b) => a + b, 0) / seoScores.length) : 0,
-      recentSubmissions: s.formSubmissions.slice(0, 5),
+      recentSubmissions: canForms ? s.formSubmissions.slice(0, 5) : null,
       maintenance: s.settings.maintenance.enabled,
-      health: {
-        smtp: !!process.env.SMTP_HOST,
-        gemini: !!process.env.GEMINI_API_KEY,
-        google: s.google.connected,
-        googleOAuthConfigured: !!process.env.GOOGLE_CLIENT_ID,
-      },
+      health: hasPerm(req, 'settings.manage')
+        ? {
+            smtp: !!(process.env.SMTP_HOST || s.system?.smtp?.enabled),
+            gemini: !!process.env.GEMINI_API_KEY,
+            google: s.google.connected,
+            googleOAuthConfigured: !!process.env.GOOGLE_CLIENT_ID,
+          }
+        : null,
     });
   });
 
   /* ---------- Réglages ---------- */
 
-  router.put('/general', canEdit, async (req, res) => {
+  router.put('/general', requirePerm('pages.edit', 'posts.edit', 'media.upload', 'menus.edit', 'forms.manage', 'newsletter.manage', 'engagement.edit', 'appearance.customize', 'site.general'), async (req, res) => {
     const patch = pick<CmsSnapshot['general']>(req.body, [
       'legalName', 'baseline', 'slogan', 'phone', 'phoneClean', 'contactEmail', 'slaHours', 'address', 'timezone', 'locale',
     ]);
@@ -184,7 +145,7 @@ export function createAdminCmsRouter() {
     res.json({ ok: true });
   });
 
-  router.put('/branding', canEdit, async (req, res) => {
+  router.put('/branding', requirePerm('pages.edit', 'posts.edit', 'media.upload', 'menus.edit', 'forms.manage', 'newsletter.manage', 'engagement.edit', 'appearance.customize', 'site.general'), async (req, res) => {
     const body = req.body as Partial<CmsSnapshot['branding']>;
     const patch = pick<CmsSnapshot['branding']>(body, ['siteName', 'tagline', 'logoUrl', 'logoDarkUrl', 'faviconUrl']);
     await updateSnapshot((s) => {
@@ -198,7 +159,7 @@ export function createAdminCmsRouter() {
     res.json({ ok: true });
   });
 
-  router.put('/settings', superOnly, async (req, res) => {
+  router.put('/settings', requirePerm('settings.manage'), async (req, res) => {
     const body = req.body as Partial<CmsSnapshot['settings']>;
     const patch = pick<CmsSnapshot['settings']>(body, [
       'publicUrl', 'cookieBannerEnabled', 'analyticsEnabled', 'robotsTxtExtra', 'sitemapAuto',
@@ -221,9 +182,9 @@ export function createAdminCmsRouter() {
     res.json({ ok: true });
   });
 
-  router.put('/seo-settings', canSeo, async (req, res) => {
+  router.put('/seo-settings', requirePerm('seo.edit', 'pages.edit', 'posts.edit'), async (req, res) => {
     const patch = pick<CmsSnapshot['settings']['seo']>(req.body || {}, [
-      'titleSeparator', 'titleSuffix', 'defaultOgImage', 'organizationName', 'organizationLogo', 'socialProfiles', 'googleVerification', 'bingVerification',
+      'titleSeparator', 'titleSuffix', 'defaultOgImage', 'organizationName', 'organizationLogo', 'socialProfiles', 'googleVerification', 'bingVerification', 'gaMeasurementId',
     ]);
     if (patch.socialProfiles && !Array.isArray(patch.socialProfiles)) throw new HttpError(400, 'Profils sociaux invalides');
     await updateSnapshot((s) => {
@@ -233,7 +194,7 @@ export function createAdminCmsRouter() {
     res.json({ ok: true });
   });
 
-  router.put('/whatsapp', canEdit, async (req, res) => {
+  router.put('/whatsapp', requirePerm('pages.edit', 'posts.edit', 'media.upload', 'menus.edit', 'forms.manage', 'newsletter.manage', 'engagement.edit', 'appearance.customize', 'site.general'), async (req, res) => {
     const patch = pick<CmsSnapshot['whatsapp']>(req.body, [
       'enabled', 'number', 'defaultMessage', 'showOnMobile', 'showOnDesktop', 'position',
     ]);
@@ -244,7 +205,7 @@ export function createAdminCmsRouter() {
     res.json({ ok: true });
   });
 
-  router.put('/floating-buttons', canEdit, async (req, res) => {
+  router.put('/floating-buttons', requirePerm('pages.edit', 'posts.edit', 'media.upload', 'menus.edit', 'forms.manage', 'newsletter.manage', 'engagement.edit', 'appearance.customize', 'site.general'), async (req, res) => {
     const list = Array.isArray(req.body?.buttons) ? req.body.buttons : [];
     await updateSnapshot((s) => {
       s.floatingButtons = list.map((b: CmsSnapshot['floatingButtons'][number]) => ({
@@ -258,11 +219,11 @@ export function createAdminCmsRouter() {
     res.json({ ok: true });
   });
 
-  router.get('/ai/info', superOnly, async (_req, res) => {
+  router.get('/ai/info', requirePerm('settings.manage'), async (_req, res) => {
     res.json({ usage: aiUsageToday(), defaultSystemInstruction: PEXEN_SYSTEM_INSTRUCTION, configured: !!process.env.GEMINI_API_KEY });
   });
 
-  router.put('/ai', superOnly, async (req, res) => {
+  router.put('/ai', requirePerm('settings.manage'), async (req, res) => {
     const patch = pick<CmsSnapshot['ai']>(req.body, [
       'enabled', 'model', 'temperature', 'maxMessagesPerSession', 'maxSessionsPerDayPerIp', 'maxTokensPerDayGlobal',
       'systemInstructionOverride', 'showOnPages',
@@ -276,7 +237,7 @@ export function createAdminCmsRouter() {
     res.json({ ok: true });
   });
 
-  router.put('/newsletter', canEdit, async (req, res) => {
+  router.put('/newsletter', requirePerm('pages.edit', 'posts.edit', 'media.upload', 'menus.edit', 'forms.manage', 'newsletter.manage', 'engagement.edit', 'appearance.customize', 'site.general'), async (req, res) => {
     const patch = pick<CmsSnapshot['newsletter']>(req.body, ['enabled', 'provider', 'doubleOptIn', 'welcomeEmailSubject', 'listId']);
     await updateSnapshot((s) => {
       s.newsletter = { ...s.newsletter, ...patch };
@@ -284,7 +245,7 @@ export function createAdminCmsRouter() {
     res.json({ ok: true });
   });
 
-  router.put('/google', canSeo, async (req, res) => {
+  router.put('/google', requirePerm('seo.edit', 'pages.edit', 'posts.edit'), async (req, res) => {
     const patch = pick<CmsSnapshot['google']>(req.body, ['searchConsoleProperty', 'analyticsPropertyId']);
     await updateSnapshot((s) => {
       s.google = { ...s.google, ...patch };
@@ -292,7 +253,7 @@ export function createAdminCmsRouter() {
     res.json({ ok: true });
   });
 
-  router.put('/menus/:menuId', canEdit, async (req, res) => {
+  router.put('/menus/:menuId', requirePerm('pages.edit', 'posts.edit', 'media.upload', 'menus.edit', 'forms.manage', 'newsletter.manage', 'engagement.edit', 'appearance.customize', 'site.general'), async (req, res) => {
     const items = sanitizeMenuItems(req.body.items);
     await updateSnapshot((s) => {
       const menu = s.menus.find((m) => m.id === req.params.menuId);
@@ -302,7 +263,7 @@ export function createAdminCmsRouter() {
     res.json({ ok: true });
   });
 
-  router.put('/redirects', canSeo, async (req, res) => {
+  router.put('/redirects', requirePerm('seo.edit', 'pages.edit', 'posts.edit'), async (req, res) => {
     const list = (Array.isArray(req.body?.redirects) ? req.body.redirects : []) as RedirectRule[];
     const seen = new Set<string>();
     const redirects = list.map((r) => {
@@ -322,12 +283,12 @@ export function createAdminCmsRouter() {
 
   /* ---------- Pages ---------- */
 
-  router.get('/pages', requireAdmin(), async (_req, res) => {
+  router.get('/pages', requireAuth(), async (_req, res) => {
     const s = await loadSnapshot();
     res.json(s.pages.map((p) => ({ ...p, seoScore: analyzePageSeo(p).score })));
   });
 
-  router.post('/pages', canEdit, async (req, res) => {
+  router.post('/pages', requirePerm('pages.edit', 'posts.edit', 'media.upload', 'menus.edit', 'forms.manage', 'newsletter.manage', 'engagement.edit', 'appearance.customize', 'site.general'), async (req, res) => {
     const body = req.body as Partial<CmsPage>;
     if (!body.title?.trim()) throw new HttpError(400, 'Titre requis');
     const pagePath = normalizePath(body.path || body.title);
@@ -353,7 +314,7 @@ export function createAdminCmsRouter() {
     res.status(201).json(page);
   });
 
-  router.put('/pages/:id', canSeo, async (req: AuthedRequest, res) => {
+  router.put('/pages/:id', requirePerm('seo.edit', 'pages.edit', 'posts.edit'), async (req: AuthedRequest, res) => {
     const id = req.params.id;
     const s = await loadSnapshot();
     const before = s.pages.find((p) => p.id === id);
@@ -385,7 +346,7 @@ export function createAdminCmsRouter() {
     res.json({ ...page, seoScore: analyzePageSeo(page).score });
   });
 
-  router.delete('/pages/:id', superOnly, async (req, res) => {
+  router.delete('/pages/:id', requirePerm('settings.manage'), async (req, res) => {
     await updateSnapshot((s) => {
       const page = s.pages.find((p) => p.id === req.params.id);
       if (!page) throw new HttpError(404, 'Page introuvable');
@@ -395,12 +356,12 @@ export function createAdminCmsRouter() {
     res.json({ ok: true });
   });
 
-  router.get('/pages/:id/revisions', requireAdmin(), async (req, res) => {
+  router.get('/pages/:id/revisions', requireAuth(), async (req, res) => {
     const revs = await listRevisions('page', req.params.id);
     res.json(revs.map(({ snapshot, ...r }) => ({ ...r, title: snapshot.title })));
   });
 
-  router.post('/pages/:id/revisions/:revId/restore', canEdit, async (req: AuthedRequest, res) => {
+  router.post('/pages/:id/revisions/:revId/restore', requirePerm('pages.edit', 'posts.edit', 'media.upload', 'menus.edit', 'forms.manage', 'newsletter.manage', 'engagement.edit', 'appearance.customize', 'site.general'), async (req: AuthedRequest, res) => {
     const rev = await getRevision(req.params.revId);
     if (!rev || rev.entityType !== 'page' || rev.entityId !== req.params.id) throw new HttpError(404, 'Révision introuvable');
     const current = (await loadSnapshot()).pages.find((p) => p.id === req.params.id);
@@ -415,12 +376,12 @@ export function createAdminCmsRouter() {
 
   /* ---------- Articles ---------- */
 
-  router.get('/posts', requireAdmin(), async (_req, res) => {
+  router.get('/posts', requireAuth(), async (_req, res) => {
     const s = await loadSnapshot();
     res.json(s.posts.map((p) => ({ ...p, seoScore: analyzePostSeo(p).score })));
   });
 
-  router.post('/posts', canEdit, async (req: AuthedRequest, res) => {
+  router.post('/posts', requirePerm('pages.edit', 'posts.edit', 'media.upload', 'menus.edit', 'forms.manage', 'newsletter.manage', 'engagement.edit', 'appearance.customize', 'site.general'), async (req: AuthedRequest, res) => {
     const body = req.body as Partial<BlogPost>;
     const title = body.title?.trim() || 'Nouvel article';
     const s = await loadSnapshot();
@@ -448,7 +409,7 @@ export function createAdminCmsRouter() {
     res.status(201).json(post);
   });
 
-  router.put('/posts/:id', canSeo, async (req: AuthedRequest, res) => {
+  router.put('/posts/:id', requirePerm('seo.edit', 'pages.edit', 'posts.edit'), async (req: AuthedRequest, res) => {
     const id = req.params.id;
     const s = await loadSnapshot();
     const before = s.posts.find((p) => p.id === id);
@@ -473,7 +434,7 @@ export function createAdminCmsRouter() {
     res.json({ ...post, seoScore: analyzePostSeo(post).score });
   });
 
-  router.delete('/posts/:id', canEdit, async (req, res) => {
+  router.delete('/posts/:id', requirePerm('pages.edit', 'posts.edit', 'media.upload', 'menus.edit', 'forms.manage', 'newsletter.manage', 'engagement.edit', 'appearance.customize', 'site.general'), async (req, res) => {
     await updateSnapshot((s) => {
       if (!s.posts.some((p) => p.id === req.params.id)) throw new HttpError(404, 'Article introuvable');
       s.posts = s.posts.filter((p) => p.id !== req.params.id);
@@ -481,12 +442,12 @@ export function createAdminCmsRouter() {
     res.json({ ok: true });
   });
 
-  router.get('/posts/:id/revisions', requireAdmin(), async (req, res) => {
+  router.get('/posts/:id/revisions', requireAuth(), async (req, res) => {
     const revs = await listRevisions('post', req.params.id);
     res.json(revs.map(({ snapshot, ...r }) => ({ ...r, title: snapshot.title })));
   });
 
-  router.post('/posts/:id/revisions/:revId/restore', canEdit, async (req, res) => {
+  router.post('/posts/:id/revisions/:revId/restore', requirePerm('pages.edit', 'posts.edit', 'media.upload', 'menus.edit', 'forms.manage', 'newsletter.manage', 'engagement.edit', 'appearance.customize', 'site.general'), async (req, res) => {
     const rev = await getRevision(req.params.revId);
     if (!rev || rev.entityType !== 'post' || rev.entityId !== req.params.id) throw new HttpError(404, 'Révision introuvable');
     const updated = await updateSnapshot((s) => {
@@ -499,7 +460,7 @@ export function createAdminCmsRouter() {
 
   /* ---------- SEO ---------- */
 
-  router.get('/seo/overview', requireAdmin(), async (_req, res) => {
+  router.get('/seo/overview', requireAuth(), async (_req, res) => {
     const s = await loadSnapshot();
     res.json([
       ...s.pages.map((p) => ({ kind: 'page' as const, id: p.id, title: p.title, url: p.path, status: p.status, seo: p.seo, analysis: analyzePageSeo(p) })),
@@ -509,12 +470,12 @@ export function createAdminCmsRouter() {
 
   /* ---------- Formulaires ---------- */
 
-  router.get('/forms', requireAdmin(), async (_req, res) => {
+  router.get('/forms', requireAuth(), async (_req, res) => {
     const s = await loadSnapshot();
     res.json({ forms: s.forms, submissions: s.formSubmissions });
   });
 
-  router.put('/forms/:id', canEdit, async (req, res) => {
+  router.put('/forms/:id', requirePerm('pages.edit', 'posts.edit', 'media.upload', 'menus.edit', 'forms.manage', 'newsletter.manage', 'engagement.edit', 'appearance.customize', 'site.general'), async (req, res) => {
     const body = req.body as CmsSnapshot['forms'][number];
     const names = new Set<string>();
     for (const f of body.fields || []) {
@@ -536,7 +497,7 @@ export function createAdminCmsRouter() {
     res.json({ ok: true });
   });
 
-  router.patch('/submissions/:id', canEdit, async (req, res) => {
+  router.patch('/submissions/:id', requirePerm('pages.edit', 'posts.edit', 'media.upload', 'menus.edit', 'forms.manage', 'newsletter.manage', 'engagement.edit', 'appearance.customize', 'site.general'), async (req, res) => {
     await updateSnapshot((s) => {
       const sub = s.formSubmissions.find((x) => x.id === req.params.id);
       if (!sub) throw new HttpError(404, 'Message introuvable');
@@ -545,7 +506,7 @@ export function createAdminCmsRouter() {
     res.json({ ok: true });
   });
 
-  router.delete('/submissions/:id', canEdit, async (req, res) => {
+  router.delete('/submissions/:id', requirePerm('pages.edit', 'posts.edit', 'media.upload', 'menus.edit', 'forms.manage', 'newsletter.manage', 'engagement.edit', 'appearance.customize', 'site.general'), async (req, res) => {
     await updateSnapshot((s) => {
       s.formSubmissions = s.formSubmissions.filter((x) => x.id !== req.params.id);
     });
@@ -554,19 +515,46 @@ export function createAdminCmsRouter() {
 
   /* ---------- Statistiques ---------- */
 
-  router.get('/analytics', requireAdmin(), async (req, res) => {
+  router.get('/analytics', requireAuth(), async (req, res) => {
     const days = Math.min(Math.max(Number(req.query.days) || 30, 1), 365);
     const s = await loadSnapshot();
     res.json(await summarizeAnalytics(days, new URL(s.settings.publicUrl).hostname));
   });
 
+  /* ---------- Performance (PageSpeed Insights) ---------- */
+
+  router.get('/performance/targets', requirePerm('seo.edit', 'analytics.view'), async (_req, res) => {
+    const s = await loadSnapshot();
+    const base = s.settings.publicUrl.replace(/\/+$/, '');
+    const pages = s.pages
+      .filter((p) => p.status === 'published')
+      .map((p) => ({ id: p.id, title: p.title, path: p.path, url: `${base}${p.path === '/' ? '/' : p.path}` }))
+      .sort((a, b) => a.path.localeCompare(b.path));
+    res.json({
+      publicUrl: base,
+      hasApiKey: !!(process.env.PAGESPEED_API_KEY || process.env.GOOGLE_API_KEY),
+      pages,
+    });
+  });
+
+  router.post('/performance/run', requirePerm('seo.edit', 'analytics.view'), async (req, res) => {
+    const body = req.body as { url?: string; path?: string; strategy?: string };
+    const strategy: PsiStrategy = body.strategy === 'desktop' ? 'desktop' : 'mobile';
+    assertPsiCooldown(strategy);
+    const s = await loadSnapshot();
+    const target = resolveAuditUrl(body.url || body.path || '/', s.settings.publicUrl);
+    const result = await runPageSpeed(target, strategy);
+    res.locals.audit = { action: 'performance.run', target: result.url, detail: { strategy } };
+    res.json(result);
+  });
+
   /* ---------- Médias ---------- */
 
-  router.get('/media', requireAdmin(), async (_req, res) => {
+  router.get('/media', requireAuth(), async (_req, res) => {
     res.json((await loadSnapshot()).media);
   });
 
-  router.post('/media/upload', canEdit, async (req, res) => {
+  router.post('/media/upload', requirePerm('pages.edit', 'posts.edit', 'media.upload', 'menus.edit', 'forms.manage', 'newsletter.manage', 'engagement.edit', 'appearance.customize', 'site.general'), async (req, res) => {
     const { filename, dataBase64, mimeType, alt } = req.body as { filename?: string; dataBase64?: string; mimeType?: string; alt?: string };
     if (!filename || !dataBase64 || !mimeType) throw new HttpError(400, 'Fichier requis');
     if (!ALLOWED_MIME.test(mimeType)) throw new HttpError(415, 'Format non pris en charge (images, MP4/WebM, PDF)');
@@ -593,7 +581,7 @@ export function createAdminCmsRouter() {
     res.status(201).json(asset);
   });
 
-  router.patch('/media/:id', canEdit, async (req, res) => {
+  router.patch('/media/:id', requirePerm('pages.edit', 'posts.edit', 'media.upload', 'menus.edit', 'forms.manage', 'newsletter.manage', 'engagement.edit', 'appearance.customize', 'site.general'), async (req, res) => {
     await updateSnapshot((s) => {
       const m = s.media.find((x) => x.id === req.params.id);
       if (!m) throw new HttpError(404, 'Média introuvable');
@@ -602,7 +590,7 @@ export function createAdminCmsRouter() {
     res.json({ ok: true });
   });
 
-  router.delete('/media/:id', canEdit, async (req, res) => {
+  router.delete('/media/:id', requirePerm('pages.edit', 'posts.edit', 'media.upload', 'menus.edit', 'forms.manage', 'newsletter.manage', 'engagement.edit', 'appearance.customize', 'site.general'), async (req, res) => {
     const s = await loadSnapshot();
     const asset = s.media.find((x) => x.id === req.params.id);
     if (!asset) throw new HttpError(404, 'Média introuvable');
@@ -615,11 +603,11 @@ export function createAdminCmsRouter() {
 
   /* ---------- Newsletter ---------- */
 
-  router.get('/subscribers', canEdit, async (_req, res) => {
+  router.get('/subscribers', requirePerm('pages.edit', 'posts.edit', 'media.upload', 'menus.edit', 'forms.manage', 'newsletter.manage', 'engagement.edit', 'appearance.customize', 'site.general'), async (_req, res) => {
     res.json((await loadSnapshot()).subscribers.map(({ confirmToken, ...rest }) => rest));
   });
 
-  router.patch('/subscribers/:id', canEdit, async (req, res) => {
+  router.patch('/subscribers/:id', requirePerm('pages.edit', 'posts.edit', 'media.upload', 'menus.edit', 'forms.manage', 'newsletter.manage', 'engagement.edit', 'appearance.customize', 'site.general'), async (req, res) => {
     const status = req.body.status;
     if (!['pending', 'active', 'unsubscribed'].includes(status)) throw new HttpError(400, 'Statut invalide');
     await updateSnapshot((s) => {
@@ -630,68 +618,9 @@ export function createAdminCmsRouter() {
     res.json({ ok: true });
   });
 
-  router.delete('/subscribers/:id', canEdit, async (req, res) => {
+  router.delete('/subscribers/:id', requirePerm('pages.edit', 'posts.edit', 'media.upload', 'menus.edit', 'forms.manage', 'newsletter.manage', 'engagement.edit', 'appearance.customize', 'site.general'), async (req, res) => {
     await updateSnapshot((s) => {
       s.subscribers = s.subscribers.filter((x) => x.id !== req.params.id);
-    });
-    res.json({ ok: true });
-  });
-
-  /* ---------- Utilisateurs ---------- */
-
-  router.get('/users', superOnly, async (_req, res) => {
-    res.json((await loadSnapshot()).users.map(publicUser));
-  });
-
-  router.post('/users', superOnly, async (req, res) => {
-    const { email, name, role, password } = req.body as { email?: string; name?: string; role?: AdminUser['role']; password?: string };
-    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) throw new HttpError(400, 'E-mail invalide');
-    if (!name?.trim()) throw new HttpError(400, 'Nom requis');
-    if (!role || !['superadmin', 'editor', 'seo', 'viewer'].includes(role)) throw new HttpError(400, 'Rôle invalide');
-    const weak = validatePasswordStrength(password || '');
-    if (weak) throw new HttpError(400, weak);
-    const s = await loadSnapshot();
-    if (s.users.some((u) => u.email.toLowerCase() === email.toLowerCase())) throw new HttpError(409, 'Cet e-mail a déjà un compte');
-    const { hash, salt } = hashPassword(password!);
-    const user: AdminUser = { id: crypto.randomUUID(), email: email.toLowerCase(), name: name.trim(), role, passwordHash: hash, salt };
-    await updateSnapshot((snap) => {
-      snap.users.push(user);
-    });
-    res.status(201).json(publicUser(user));
-  });
-
-  router.patch('/users/:id', superOnly, async (req: AuthedRequest, res) => {
-    const { name, role, password } = req.body as { name?: string; role?: AdminUser['role']; password?: string };
-    if (password) {
-      const weak = validatePasswordStrength(password);
-      if (weak) throw new HttpError(400, weak);
-    }
-    await updateSnapshot((s) => {
-      const u = s.users.find((x) => x.id === req.params.id);
-      if (!u) throw new HttpError(404, 'Utilisateur introuvable');
-      if (role && role !== u.role && u.role === 'superadmin' && s.users.filter((x) => x.role === 'superadmin').length === 1) {
-        throw new HttpError(400, 'Il doit rester au moins un super administrateur');
-      }
-      if (name?.trim()) u.name = name.trim();
-      if (role) u.role = role;
-      if (password) {
-        const { hash, salt } = hashPassword(password);
-        u.passwordHash = hash;
-        u.salt = salt;
-      }
-    });
-    res.json({ ok: true });
-  });
-
-  router.delete('/users/:id', superOnly, async (req: AuthedRequest, res) => {
-    if (req.params.id === req.admin!.sub) throw new HttpError(400, 'Vous ne pouvez pas supprimer votre propre compte');
-    await updateSnapshot((s) => {
-      const u = s.users.find((x) => x.id === req.params.id);
-      if (!u) throw new HttpError(404, 'Utilisateur introuvable');
-      if (u.role === 'superadmin' && s.users.filter((x) => x.role === 'superadmin').length === 1) {
-        throw new HttpError(400, 'Il doit rester au moins un super administrateur');
-      }
-      s.users = s.users.filter((x) => x.id !== req.params.id);
     });
     res.json({ ok: true });
   });

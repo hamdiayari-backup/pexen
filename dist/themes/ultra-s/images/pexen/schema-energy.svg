@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" fill="none" aria-hidden="true">
+  <!-- Schéma énergétique abstrait — lignes / nœuds / flux -->
+  <g stroke="#082D4A" stroke-width="1.25" opacity="0.9">
+    <path d="M40 120 H320 L420 220 H780 L880 120 H1160" />
+    <path d="M40 400 H260 L360 520 H840 L940 400 H1160" />
+    <path d="M40 680 H400 L500 580 H700 L800 680 H1160" />
+    <path d="M200 80 V720" />
+    <path d="M600 40 V760" />
+    <path d="M1000 80 V720" />
+    <path d="M320 120 L200 400 L400 680" />
+    <path d="M880 120 L1000 400 L800 680" />
+    <path d="M420 220 L600 400 L780 220" stroke-dasharray="6 8" />
+    <path d="M360 520 L600 400 L840 520" stroke-dasharray="6 8" />
+  </g>
+  <g fill="#082D4A">
+    <circle cx="200" cy="120" r="5" />
+    <circle cx="420" cy="220" r="5" />
+    <circle cx="780" cy="220" r="5" />
+    <circle cx="1000" cy="120" r="5" />
+    <circle cx="200" cy="400" r="5" />
+    <circle cx="600" cy="400" r="7" />
+    <circle cx="1000" cy="400" r="5" />
+    <circle cx="400" cy="680" r="5" />
+    <circle cx="800" cy="680" r="5" />
+    <circle cx="360" cy="520" r="4" />
+    <circle cx="840" cy="520" r="4" />
+  </g>
+  <g stroke="#009FCC" stroke-width="1.5" opacity="0.55">
+    <path d="M600 400 L600 220" />
+    <path d="M600 400 L480 520" />
+    <path d="M600 400 L720 520" />
+  </g>
+</svg>

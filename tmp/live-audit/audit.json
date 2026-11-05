@@ -1,0 +1,77 @@
+{
+  "type": "object",
+  "value": {
+    "hasArc": true,
+    "videoSrc": [
+      "https://pexen-test.tuniplay.app/themes/ultra-s/videos/video-couv.mp4"
+    ],
+    "hasSecteurPexen": false,
+    "hasSolutionsDediees": false,
+    "hasLeo": false,
+    "hasEurosPrime": false,
+    "hasBAT": false,
+    "hasIngenierieCEE": false,
+    "hasConseilPexen": false,
+    "hasConseilPxn": true,
+    "hasEnjeux": true,
+    "hasReno": true,
+    "hasLed": true,
+    "hasEnquete": true,
+    "hasPremierReleve": true,
+    "hasSiteWebLabel": false,
+    "phoneInContact": false,
+    "faqAnswers": [
+      {
+        "q": "Par quoi commencer pour réduire la consommation énergétique ",
+        "aLen": 225
+      },
+      {
+        "q": "PEXEN réalise-t-il les travaux ou seulement l’étude ?",
+        "aLen": 178
+      },
+      {
+        "q": "Mes travaux peuvent-ils être financés ?",
+        "aLen": 290
+      },
+      {
+        "q": "Mon bâtiment est-il concerné par le décret tertiaire ?",
+        "aLen": 214
+      },
+      {
+        "q": "Intervenez-vous sans arrêter l’exploitation ?",
+        "aLen": 133
+      }
+    ],
+    "partenairesImgs": [
+      "https://pexen-test.tuniplay.app/themes/ultra-s/images/pexen/partners/intermarche.webp",
+      "https://pexen-test.tuniplay.app/themes/ultra-s/images/pexen/partners/carrefour-market.webp",
+      "https://pexen-test.tuniplay.app/themes/ultra-s/images/pexen/partners/cedim.webp",
+      "https://pexen-test.tuniplay.app/themes/ultra-s/images/pexen/partners/colorcon.webp",
+      "https://pexen-test.tuniplay.app/themes/ultra-s/images/pexen/partners/intermarche.webp",
+      "https://pexen-test.tuniplay.app/themes/ultra-s/images/pexen/partners/carrefour-market.webp",
+      "https://pexen-test.tuniplay.app/themes/ultra-s/images/pexen/partners/cedim.webp",
+      "https://pexen-test.tuniplay.app/themes/ultra-s/images/pexen/partners/colorcon.webp",
+      "https://pexen-test.tuniplay.app/themes/ultra-s/images/pexen/partners/intermarche.webp",
+      "https://pexen-test.tuniplay.app/themes/ultra-s/images/pexen/partners/carrefour-market.webp",
+      "https://pexen-test.tuniplay.app/themes/ultra-s/images/pexen/partners/cedim.webp",
+      "https://pexen-test.tuniplay.app/themes/ultra-s/images/pexen/partners/colorcon.webp"
+    ],
+    "qualiImgs": [
+      "Qualification RGE QualiPAC de PEXEN",
+      "Qualification RGE Qualisol de PEXEN",
+      "Qualifications OPQIBI de PEXEN",
+      "Assurance décennale MIC Insurance"
+    ],
+    "realCards": [
+      "Intermarché Bourgogne-Franche-Comté · Grande distribution 1 650 m² chauffés et sortis du fioul 240 kW récupérés · 14,8 G",
+      "Carrefour Market Île-de-France · Grande distribution 535 kW de chaleur récupérée sur le froid commercial 30,6 GWh cumac*",
+      "CEDIM Centre-Val de Loire · Négoce et entrepôt 9 m de hauteur traitée par déstratification 1 213 m² · 2,1 GWh cumac* Voi"
+    ],
+    "footerTitles": [
+      "Expertises",
+      "Solutions",
+      "PEXEN"
+    ],
+    "prefooter": false
+  }
+}

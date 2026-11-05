@@ -164,6 +164,17 @@ export default function AiPage() {
         <div className="space-y-6">
           <Section title="Activation et modèle">
             <Switch checked={ai.enabled} onChange={(enabled) => ed.patch({ enabled })} label="Assistant actif sur le site" description="Affiche la bulle de conversation pour les visiteurs." />
+            <div className="grid gap-4 sm:grid-cols-3">
+              <Field label="Libellé bouton" hint="Brief : Conseiller PEXEN">
+                <Input value={ai.buttonLabel || ''} onChange={(e) => ed.patch({ buttonLabel: e.target.value })} placeholder="Conseiller PEXEN" />
+              </Field>
+              <Field label="Statut" hint="Sous le libellé">
+                <Input value={ai.statusLabel || ''} onChange={(e) => ed.patch({ statusLabel: e.target.value })} placeholder="En ligne" />
+              </Field>
+              <Field label="Titre panneau">
+                <Input value={ai.panelTitle || ''} onChange={(e) => ed.patch({ panelTitle: e.target.value })} placeholder="Conseiller PEXEN" />
+              </Field>
+            </div>
             <Field label="Modèle d’IA">
               <Select value={MODELS.some((m) => m.value === ai.model) ? ai.model : MODELS[0].value} onChange={(model) => ed.patch({ model })} options={MODELS} />
             </Field>

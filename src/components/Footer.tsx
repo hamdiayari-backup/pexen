@@ -56,42 +56,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenCookies }) => 
               onClick={() => navigateTo('/')}
               className="flex items-center gap-3 cursor-pointer group inline-flex"
             >
-              {siteConfig?.branding.logoDarkUrl ? (
-                <img src={siteConfig.branding.logoDarkUrl} alt={PEXEN_INFO.name} className="h-11 w-auto max-w-[200px] object-contain" />
-              ) : (
-              <>
-              <div className="w-9 h-9 rounded-xl bg-slate-900 border border-slate-700 flex items-center justify-center">
-                <svg viewBox="0 0 40 40" className="w-5 h-5">
-                  <defs>
-                    <linearGradient id="footer-logo-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="var(--px-primary)" />
-                      <stop offset="100%" stopColor="var(--px-accent)" />
-                    </linearGradient>
-                  </defs>
-                  <path
-                    d="M10 20 L20 10 L30 20 L20 30 Z"
-                    fill="none"
-                    stroke="url(#footer-logo-grad)"
-                    strokeWidth="3.5"
-                    strokeLinejoin="round"
-                  />
-                  <circle cx="20" cy="20" r="3.5" fill="var(--px-primary)" />
-                </svg>
-              </div>
-
-              <div>
-                <div className="flex items-center gap-1">
-                  <span className="text-xl font-bold tracking-tight text-white">
-                    {PEXEN_INFO.name.replace(/®$/, '')}
-                  </span>
-                  <span className="text-[10px] font-bold text-slate-400">®</span>
-                </div>
-                <div className="text-[11px] font-normal text-slate-400 leading-none">
-                  {PEXEN_INFO.baseline}
-                </div>
-              </div>
-              </>
-              )}
+              <img src={siteConfig?.branding.logoDarkUrl || '/brand/logo-principal-blanc.svg'} alt={PEXEN_INFO.name} className="h-14 w-auto max-w-[220px] object-contain" />
             </div>
 
             <div className="text-xs font-medium text-px-primary-light tracking-wide">
@@ -99,7 +64,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenCookies }) => 
             </div>
 
             <p className="text-xs text-slate-400 leading-relaxed max-w-sm">
-              Conseil, ingénierie et suivi opérationnel pour l'industrie, le tertiaire et le résidentiel collectif, partout en France.
+              Des économies calculées, réalisées, démontrées. Conseil, ingénierie et suivi opérationnel pour l'industrie, le tertiaire et le résidentiel collectif, partout en France.
             </p>
 
             <div className="pt-2">
@@ -108,7 +73,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenCookies }) => 
                 className="inline-flex items-center gap-2 text-sm font-semibold text-white hover:text-px-primary-light transition-colors py-2 px-3 rounded-lg bg-slate-900/60 border border-slate-700/60"
               >
                 <Phone className="w-4 h-4 text-px-primary" />
-                <span className="font-mono">{PEXEN_INFO.phone}</span>
+                <span className="px-phone">{PEXEN_INFO.phone}</span>
               </a>
             </div>
           </div>
@@ -253,8 +218,8 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenCookies }) => 
               Gérer mes cookies
             </button>
             <span aria-hidden="true">·</span>
-            <span className="text-white/40" title="Photos de chantiers PEXEN et illustrations techniques : Wikimedia Commons (CC BY / CC BY-SA / CC0)">
-              Crédits photos : PEXEN · Wikimedia Commons (CC)
+            <span className="text-white/40" title="Visuels techniques fournis pour le site PEXEN">
+              Crédits photos : PEXEN
             </span>
           </div>
         </div>

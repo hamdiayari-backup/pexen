@@ -8,7 +8,10 @@
 export type BlockBackground = 'none' | 'white' | 'surface' | 'soft' | 'navy' | 'brand' | 'image' | 'video';
 export type BlockSpacing = 'none' | 'sm' | 'md' | 'lg' | 'xl';
 export type BlockAnimation = 'none' | 'fade-up' | 'fade' | 'zoom' | 'slide-left' | 'slide-right';
-export type BlockDecor = 'none' | 'dots' | 'grid' | 'rings' | 'diagonal' | 'glow';
+export type BlockDecor = 'none' | 'dots' | 'grid' | 'rings' | 'diagonal' | 'glow' | 'waves' | 'silk';
+export type BlockTextAlign = 'left' | 'center' | 'right';
+export type BlockTitleSize = 'sm' | 'md' | 'lg' | 'xl';
+export type BlockBodySize = 'sm' | 'md' | 'lg';
 
 export interface BlockStyle {
   background: BlockBackground;
@@ -26,6 +29,12 @@ export interface BlockStyle {
   anchor?: string;
   hideOnMobile?: boolean;
   hideOnDesktop?: boolean;
+  /** Placement du texte (titres + intro du bloc). */
+  textAlign?: BlockTextAlign;
+  /** Taille des titres de section. */
+  titleSize?: BlockTitleSize;
+  /** Taille du corps de texte / intro. */
+  bodySize?: BlockBodySize;
 }
 
 export const DEFAULT_STYLE: BlockStyle = {
@@ -35,6 +44,9 @@ export const DEFAULT_STYLE: BlockStyle = {
   paddingBottom: 'lg',
   width: 'default',
   animation: 'fade-up',
+  textAlign: 'center',
+  titleSize: 'md',
+  bodySize: 'md',
 };
 
 /* ------------------------------------------------------------------ Éléments réutilisables */
@@ -58,12 +70,17 @@ export interface SectionHeading {
   /** Partie du titre mise en couleur, affichée après le titre. */
   highlight?: string;
   intro?: string;
-  align?: 'left' | 'center';
+  align?: 'left' | 'center' | 'right';
   headerLinkLabel?: string;
   headerLink?: string;
 }
 
 /* ------------------------------------------------------------------ Données par type */
+
+export interface HeroGalleryImage {
+  id: string;
+  image: string;
+}
 
 export interface HeroData {
   layout: 'split' | 'centered';
@@ -80,6 +97,8 @@ export interface HeroData {
   media: 'composition' | 'image' | 'video' | 'none';
   mainImage?: string;
   mainImageAlt?: string;
+  /** Images supplémentaires pour le carrousel polaroid / poker (hero) — médiathèque. */
+  galleryImages?: HeroGalleryImage[];
   video?: string;
   videoPoster?: string;
   secondaryImage?: string;
@@ -94,12 +113,18 @@ export interface HeroData {
   marquee: string[];
 }
 
+export interface PageHeaderMetric {
+  id?: string;
+  value: string;
+  label: string;
+}
 export interface PageHeaderData {
   breadcrumb: boolean;
   parentLabel?: string;
   parentLink?: string;
   eyebrow?: string;
   title: string;
+  /** Accroche bénéfice (Solutions / Secteurs) affichée sous le H1. */
   highlight?: string;
   intro?: string;
   buttons: ButtonData[];
@@ -107,6 +132,13 @@ export interface PageHeaderData {
   imageAlt?: string;
   backLabel?: string;
   backLink?: string;
+  /** 3 chiffres clés du hero (propre à chaque page — recette Phase 2). */
+  metrics?: PageHeaderMetric[];
+  /**
+   * Gabarit hero Phase 2 :
+   * expertise = fond bleu glace · solution = photo / bleu nuit · sector = accroche + photo bâtiment.
+   */
+  heroVariant?: 'auto' | 'expertise' | 'solution' | 'sector' | 'default';
 }
 
 export interface RichTextData {
@@ -125,7 +157,7 @@ export interface TextMediaData extends SectionHeading {
   video?: string;
   poster?: string;
   mediaPosition: 'left' | 'right';
-  mediaStyle: 'rounded' | 'polaroid' | 'framed';
+  mediaStyle: 'rounded' | 'polaroid' | 'framed' | 'logoMask' | 'diagonal';
   caption?: string;
   ratio: 'landscape' | 'square' | 'portrait';
   autoplay: boolean;
@@ -167,6 +199,7 @@ export interface CardItem {
   id: string;
   icon?: string;
   image?: string;
+  imageAlt?: string;
   title: string;
   text?: string;
   tags: string[];
@@ -175,7 +208,7 @@ export interface CardItem {
 }
 export interface CardsData extends SectionHeading {
   style: 'card' | 'hoverDark' | 'image' | 'minimal' | 'numbered';
-  columns: 2 | 3 | 4;
+  columns: 2 | 3 | 4 | 5;
   items: CardItem[];
   /** Préfixe en gras ajouté au début du texte (ex. « Réponse PEXEN — »). */
   textPrefix?: string;
@@ -218,11 +251,33 @@ export interface StatItem {
   suffix?: string;
   label: string;
   hint?: string;
+  link?: string;
+  /** Image de carte (style « Cartes » / section Enjeux). */
+  image?: string;
+  imageAlt?: string;
+  /** Libellé du CTA sous la carte (ex. « Optimiser mon froid »). */
+  ctaLabel?: string;
+}
+export interface StatsPartner {
+  name: string;
+  logo?: string;
+}
+export interface StatsQualification {
+  label: string;
+  logo?: string;
+  alt?: string;
+  caption?: string;
 }
 export interface StatsData extends SectionHeading {
   style: 'cards' | 'inline' | 'strip';
   countUp: boolean;
   items: StatItem[];
+  /** Note légale / précision (astérisques) — affichée en bas de page / footer. */
+  footnote?: string;
+  /** Clients du bandeau Preuves — nom seul ou { name, logo }. */
+  partners?: Array<string | StatsPartner>;
+  /** Logos qualifications sous les chiffres (bandeau Preuves). */
+  qualifications?: StatsQualification[];
 }
 
 export interface CtaData {
@@ -247,6 +302,7 @@ export interface PanelItem {
   id: string;
   icon?: string;
   image: string;
+  imageAlt?: string;
   title: string;
   text?: string;
   bullets: string[];
@@ -274,11 +330,20 @@ export interface ChecklistEntry {
   title: string;
   text?: string;
 }
+export interface ChecklistLogo {
+  id: string;
+  src: string;
+  alt?: string;
+  /** sm | md | lg | wide — taille d’affichage dans la carte */
+  size?: 'sm' | 'md' | 'lg' | 'wide';
+}
 export interface ChecklistCard {
   id: string;
   icon?: string;
   tag?: string;
   title?: string;
+  /** Logos affichés en tête de carte (éditeur visuel). */
+  logos?: ChecklistLogo[];
   entries: ChecklistEntry[];
 }
 export interface ChecklistData extends SectionHeading {
@@ -308,7 +373,7 @@ export interface MarqueeData {
 }
 
 export interface ProjectsData extends SectionHeading {
-  layout: 'featured' | 'grid' | 'compact';
+  layout: 'featured' | 'grid' | 'compact' | 'cards';
   filter: 'all' | 'sector';
   sector?: string;
   showFilters: boolean;
@@ -322,7 +387,46 @@ export interface TableData extends SectionHeading {
   rows: { id: string; cells: string[] }[];
 }
 
-export interface SimulatorData extends SectionHeading {}
+export interface SimulatorOption {
+  id: string;
+  label: string;
+  factor: number;
+}
+export interface SimulatorOperation {
+  id: string;
+  label: string;
+  minPerM2: number;
+  maxPerM2: number;
+  minPerKw?: number;
+  maxPerKw?: number;
+}
+export interface SimulatorEnergy {
+  id: string;
+  label: string;
+  factor: number;
+}
+export interface SimulatorData extends SectionHeading {
+  /** Bandeau d’accueil (teaser) ou outil 3 étapes (tool). */
+  variant?: 'teaser' | 'tool';
+  teaserCtaLabel?: string;
+  teaserCtaLink?: string;
+  teaserNote?: string;
+  /** Formulaire CMS qui reçoit la demande (Engagement › Formulaires). */
+  formId?: string;
+  siteTypes?: SimulatorOption[];
+  regions?: SimulatorOption[];
+  operations?: SimulatorOperation[];
+  energies?: SimulatorEnergy[];
+  disclaimer?: string;
+  resultPrefix?: string;
+  resultNote?: string;
+  ctaLabel?: string;
+  howTitle?: string;
+  howText?: string;
+  privacyPath?: string;
+  contactTitle?: string;
+  contactText?: string;
+}
 
 export interface ContactFormData {
   formId: string;
@@ -333,6 +437,9 @@ export interface ContactFormData {
   listTitle?: string;
   listItems: string[];
   submitLabel: string;
+  /** ultra : champs progressifs (dropdown puis détails). */
+  variant?: 'default' | 'progressive';
+  privacyPath?: string;
 }
 
 export interface DetailsData {
@@ -400,12 +507,17 @@ export interface ProjectMeta {
   location: string;
   department?: string;
   sector: string;
+  badge?: string;
+  primeCee?: string;
+  cumac?: string;
   solution: string;
   summary: string;
   image: string;
   ceeSheet?: string;
   results: string[];
   featured?: boolean;
+  /** Ordre d’affichage (0 = premier) dans le bloc Réalisations / API publique. */
+  sortOrder?: number;
 }
 
 /* ------------------------------------------------------------------ Utilitaires */

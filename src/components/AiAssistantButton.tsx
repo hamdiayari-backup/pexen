@@ -1,7 +1,6 @@
 import { useSiteConfig } from '../context/SiteConfigContext';
 import React, { useState, useRef, useEffect } from 'react';
-import { X, Send, ArrowRight, Phone, RefreshCw, CheckCircle2, ChevronRight, HelpCircle } from 'lucide-react';
-import { PEXEN_INFO, EXPERTISES, SECTEURS, REALISATIONS, CEE_SHEETS } from '../data/pexenData';
+import { Send } from 'lucide-react';
 
 interface Message {
   id: string;
@@ -61,6 +60,10 @@ interface AiAssistantProps {
 export const AiAssistantButton: React.FC<AiAssistantProps> = ({ onNavigateToContact }) => {
   const [isOpen, setIsOpen] = useState(false);
   const siteCfg = useSiteConfig();
+  const aiCfg = siteCfg?.ai;
+  const buttonLabel = aiCfg?.buttonLabel || 'Conseiller PEXEN';
+  const statusLabel = aiCfg?.statusLabel || 'En ligne';
+  const panelTitle = aiCfg?.panelTitle || buttonLabel;
   const aiSide = siteCfg?.whatsapp.enabled && siteCfg.whatsapp.position === 'bottom-left' ? 'right-5' : 'left-5';
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState<Message[]>([
@@ -101,6 +104,13 @@ export const AiAssistantButton: React.FC<AiAssistantProps> = ({ onNavigateToCont
     setMessages((prev) => [...prev, userMsg]);
     setInput('');
     setIsLoading(true);
+    try {
+      const saved = localStorage.getItem('pexen_cookie_consent');
+      const ok = saved ? (JSON.parse(saved) as { analytics?: boolean }).analytics === true : false;
+      if (ok) (window as Window & { gtag?: (...a: unknown[]) => void }).gtag?.('event', 'pxn_question', { page: window.location.pathname });
+    } catch {
+      /* ignore */
+    }
 
     try {
       // 1. Try server endpoint first
@@ -209,174 +219,90 @@ export const AiAssistantButton: React.FC<AiAssistantProps> = ({ onNavigateToCont
     return "Chez PEXEN, nous auditons vos installations, concevons la solution technique optimale, réalisons les travaux sans rupture d'activité et sécurisons le financement CEE. Vous pouvez échanger directement avec un ingénieur au 01 41 93 52 80 ou formuler votre demande d'étude sous 48 h ouvrées.";
   };
 
+  const sideClass = aiSide === 'right-5' ? 'px-fab--wa' : 'px-fab--ai';
+
   return (
-    <>
-      {/* Floating Trigger Button (Bottom Left) */}
-      <div className={`fixed bottom-20 lg:bottom-6 ${aiSide} z-40 flex items-center gap-2`}>
-        <button
-          onClick={() => setIsOpen(!isOpen)}
-          aria-label="Ouvrir le conseiller en ligne PEXEN"
-          className="relative h-14 pl-1.5 pr-4 rounded-full bg-px-navy hover:bg-slate-900 text-white flex items-center gap-2.5 shadow-2xl border border-white/10 hover:scale-105 active:scale-95 transition-all duration-200 group"
-        >
-          <div className="relative shrink-0">
-            <img
-              src="/images/terrain/avatar_conseiller.jpg"
-              alt="Conseiller PEXEN"
-              className="w-11 h-11 rounded-full object-cover border-2 border-px-primary/70"
-            />
-            <span className="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-px-primary-light border-2 border-px-navy" />
-          </div>
-
-          <div className="text-left hidden sm:block pr-1">
-            <div className="text-xs font-semibold text-white leading-tight">
-              Conseil PEXEN
-            </div>
-            <div className="text-[10px] text-px-primary-light font-medium leading-none mt-0.5">
-              En ligne — réponse immédiate
-            </div>
-          </div>
-        </button>
-
-        {/* Desktop hint */}
-        <div className="hidden xl:block bg-white/95 backdrop-blur-xs text-px-navy text-xs font-semibold py-1.5 px-3 rounded-full shadow-lg border border-slate-200 pointer-events-none opacity-90 transition-opacity">
-          Posez vos questions techniques
-        </div>
-      </div>
-
-      {/* Modern AI Chat Drawer / Modal */}
-      {isOpen && (
-        <div className={`fixed bottom-24 lg:bottom-24 ${aiSide} z-50 w-[92vw] sm:w-[420px] max-h-[80vh] h-[600px] bg-white rounded-3xl shadow-2xl border border-slate-200 flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-5 duration-200`}>
-          {/* Header */}
-          <div className="bg-px-navy text-white p-4 flex items-center justify-between border-b border-slate-800">
-            <div className="flex items-center gap-3">
-              <div className="relative shrink-0">
-                <img
-                  src="/images/terrain/avatar_conseiller.jpg"
-                  alt="Conseiller PEXEN"
-                  className="w-10 h-10 rounded-full object-cover border border-white/20"
-                />
-                <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-px-primary-light border-2 border-px-navy" />
-              </div>
+    <div className={`px-fab ${sideClass}`}>
+      {isOpen ? (
+        <div className="px-fab__panel px-fab__panel--ai" role="dialog" aria-label={panelTitle}>
+          <div className="px-fab__panel-head">
+            <div className="d-flex align-items-center gap-3">
               <div>
-                <div className="text-sm font-semibold text-white">
-                  Conseiller PEXEN®
-                </div>
-                <div className="text-[11px] text-slate-400">
-                  En ligne · répond en quelques secondes
-                </div>
+                <strong>{panelTitle}</strong>
+                <span>{statusLabel}</span>
               </div>
             </div>
-
-            <button
-              onClick={() => setIsOpen(false)}
-              className="p-1.5 rounded-full text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
-            >
-              <X className="w-5 h-5" />
+            <button type="button" className="px-fab__close" onClick={() => setIsOpen(false)} aria-label="Fermer">
+              ×
             </button>
           </div>
 
-          {/* Quick Suggestions Chips */}
-          <div className="px-4 py-2.5 bg-px-surface border-b border-slate-200 overflow-x-auto whitespace-nowrap scrollbar-none flex gap-2">
-            {quickQuestions.map((q, idx) => (
-              <button
-                key={idx}
-                type="button"
-                onClick={() => handleSend(q)}
-                className="text-[11px] bg-white hover:bg-slate-50 text-slate-700 px-3 py-1 rounded-full border border-slate-200 shrink-0 transition-colors shadow-2xs"
-              >
+          <div className="px-fab__chips">
+            {quickQuestions.map((q) => (
+              <button key={q} type="button" onClick={() => handleSend(q)}>
                 {q}
               </button>
             ))}
           </div>
 
-          {/* Messages Stream */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-3.5 bg-slate-50/50">
+          <div className="px-fab__msgs">
             {messages.map((m) => (
-              <div
-                key={m.id}
-                className={`flex gap-2.5 ${m.sender === 'user' ? 'justify-end' : 'justify-start'}`}
-              >
-                {m.sender === 'ai' && (
-                  <img
-                    src="/images/terrain/avatar_conseiller.jpg"
-                    alt=""
-                    aria-hidden="true"
-                    className="w-7 h-7 rounded-full object-cover shrink-0 mt-0.5 shadow-2xs"
-                  />
-                )}
-
-                <div
-                  className={`max-w-[85%] rounded-2xl px-3.5 py-2.5 text-xs leading-relaxed ${
-                    m.sender === 'user'
-                      ? 'bg-px-navy text-white rounded-tr-xs'
-                      : 'bg-white text-slate-800 border border-slate-200/80 shadow-2xs rounded-tl-xs'
-                  }`}
-                >
-                  <p className="whitespace-pre-wrap">{m.text}</p>
-                  <span
-                    className={`block text-[10px] mt-1 text-right ${
-                      m.sender === 'user' ? 'text-slate-400' : 'text-slate-400'
-                    }`}
-                  >
-                    {m.timestamp}
-                  </span>
+              <div key={m.id} className={`px-fab__msg ${m.sender === 'user' ? 'px-fab__msg--user' : 'px-fab__msg--ai'}`}>
+                <div className="px-fab__msg-bubble">
+                  <p style={{ margin: 0, whiteSpace: 'pre-wrap' }}>{m.text}</p>
+                  <time>{m.timestamp}</time>
                 </div>
               </div>
             ))}
-
-            {isLoading && (
-              <div className="flex gap-2.5 items-center text-xs text-slate-500 italic p-2">
-                <RefreshCw className="w-3.5 h-3.5 text-px-primary-dark animate-spin" />
-                <span>Le conseiller rédige sa réponse...</span>
-              </div>
-            )}
-
+            {isLoading ? <div className="px-fab__typing">Le conseiller rédige sa réponse…</div> : null}
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Bottom Chat CTA & Input */}
-          <div className="p-3 bg-white border-t border-slate-200 space-y-2">
-            <div className="flex items-center justify-between text-[11px] text-slate-500 px-1">
-              <span>Besoin d'une étude d'ingénierie ferme ?</span>
-              <button
-                type="button"
-                onClick={() => {
-                  setIsOpen(false);
-                  onNavigateToContact();
-                }}
-                className="text-px-primary-dark hover:underline font-semibold flex items-center gap-1"
-              >
-                <span>Parler à un expert</span>
-                <ChevronRight className="w-3 h-3" />
-              </button>
-            </div>
-
+          <div className="px-fab__panel-foot">
+            <button
+              type="button"
+              className="px-fab__cta"
+              onClick={() => {
+                setIsOpen(false);
+                onNavigateToContact();
+              }}
+            >
+              Parler à un expert →
+            </button>
             <form
+              className="px-ai-form"
               onSubmit={(e) => {
                 e.preventDefault();
                 handleSend();
               }}
-              className="flex items-center gap-2"
             >
               <input
+                className="px-ai-input"
                 type="text"
-                placeholder="Posez votre question (HP flottante, BACS, CEE...)"
+                placeholder="HP flottante, BACS, CEE…"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                className="flex-1 text-xs px-3.5 py-2.5 rounded-full border border-slate-200 focus:outline-hidden focus:border-px-primary bg-slate-50 text-slate-900"
               />
-
-              <button
-                type="submit"
-                disabled={!input.trim() || isLoading}
-                className="w-9 h-9 rounded-full bg-px-navy text-white hover:bg-px-primary hover:text-px-navy flex items-center justify-center shrink-0 disabled:opacity-40 transition-colors cursor-pointer"
-              >
-                <Send className="w-4 h-4" />
+              <button type="submit" className="px-fab__send px-fab__send--ai" disabled={!input.trim() || isLoading} aria-label="Envoyer">
+                <Send className="w-4 h-4" style={{ width: 16, height: 16, margin: '0 auto', display: 'block' }} />
               </button>
             </form>
           </div>
         </div>
-      )}
-    </>
+      ) : null}
+
+      <button
+        type="button"
+        className="px-fab__btn px-fab__btn--ai"
+        onClick={() => setIsOpen((v) => !v)}
+        aria-label={`Ouvrir ${buttonLabel}`}
+        aria-expanded={isOpen}
+      >
+        <span className="px-fab__ai-label">
+          <strong>{buttonLabel}</strong>
+          <em>{statusLabel}</em>
+        </span>
+      </button>
+    </div>
   );
 };

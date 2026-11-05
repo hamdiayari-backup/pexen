@@ -1,15 +1,15 @@
-export type ExpertiseSlug = 
-  | 'froid'
+export type ExpertiseSlug =
+  | 'froid-commercial-industriel'
   | 'recuperation-de-chaleur'
-  | 'chauffage-traitement-air'
-  | 'gtb-gtc'
+  | 'pompe-a-chaleur-tertiaire'
+  | 'gtb-tertiaire-gtc'
   | 'isolation-technique'
-  | 'reglementation-cee';
+  | 'financement-cee-reglementation';
 
 export type SecteurSlug =
-  | 'industrie'
-  | 'tertiaire'
-  | 'residentiel-collectif';
+  | 'efficacite-energetique-industrielle'
+  | 'efficacite-energetique-tertiaire'
+  | 'renovation-energetique-copropriete';
 
 export interface CeeSheet {
   id: string;

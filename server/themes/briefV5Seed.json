@@ -1,0 +1,763 @@
+{
+  "pages": [
+    {
+      "tab": "02_Etudes_ingenierie",
+      "path": "/etudes-ingenierie-energetique/",
+      "title": "Études et ingénierie",
+      "seoTitle": "Ingénierie énergétique : études fluides et audits | PEXEN",
+      "metaDescription": "Ingénierie énergétique PEXEN : études fluides CVC, plomberie, désenfumage, audit énergétique, notes de dimensionnement et calcul du gisement d'économies.",
+      "h1": "Études et ingénierie énergétique",
+      "intro": "",
+      "image": "/themes/ultra-s/images/pexen/centrale-froid.webp",
+      "bodyHtml": "<h2>Ingénierie fluides : dimensionner les installations</h2>\n<p>Remplacer une chaufferie, installer une pompe à chaleur, reprendre un réseau de ventilation : chaque équipement se dimensionne à partir des besoins réels du bâtiment. Nos ingénieurs fluides calculent les puissances, les débits, les températures de départ et les réseaux associés.</p>\n<h2>Ingénierie efficacité énergétique : mesurer et justifier</h2>\n<p>Le thermicien évalue ce que le site consomme, ce qu&#x27;il peut économiser et par quelles actions. Ses calculs fondent la décision d&#x27;investir et la valorisation des travaux.</p>\n<p>Les audits réglementaires sont conduits avec notre bureau d&#x27;études partenaire Leo Energy, qualifié OPQIBI 1905 pour les bâtiments tertiaires et collectifs et OPQIBI 1717 pour l&#x27;industrie.</p>\n<h2>Deux métiers d&#x27;ingénierie énergétique, une seule équipe</h2>\n<p>Un bureau d&#x27;études qui ne réalise pas les travaux sous-estime parfois les contraintes de chantier. Un installateur sans ingénierie dimensionne au catalogue. Chez PEXEN, la note de calcul, le chantier et le suivi répondent à la même logique, portée par la même équipe.</p>\n<h2>Les repères qui orientent nos études</h2>\n<h2>Comment se déroule une étude</h2>\n<ol><li>Visite technique : relevé des équipements, des plaques signalétiques, des températures et des temps de fonctionnement.</li><li>Collecte des consommations sur trois ans et des courbes de charge.</li><li>Modélisation des besoins et calcul du gisement par action.</li><li>Dimensionnement des solutions retenues et note de calcul signée.</li><li>Restitution : scénarios chiffrés, planning, plan de financement.</li></ol>\n<h2>Questions fréquentes sur nos études</h2>\n<h2>Un projet ? Parlons-en.</h2>\n<p>Prise de contact sous 48 h ouvrées par un ingénieur PEXEN, pour qualifier votre besoin et définir les prochaines étapes.</p>",
+      "stats": [],
+      "faqs": [],
+      "noindex": false,
+      "status": "published",
+      "disabled": false,
+      "template": "default"
+    },
+    {
+      "tab": "03_Accompagnement_travaux",
+      "path": "/accompagnement-travaux/",
+      "title": "Accompagnement travaux",
+      "seoTitle": "Assistance à maîtrise d'ouvrage et suivi de chantier | PEXEN",
+      "metaDescription": "Assistance à maîtrise d'ouvrage pour vos travaux énergétiques : faisabilité, planification, suivi de chantier, documents de fin de travaux et contrôle COFRAC.",
+      "h1": "Accompagnement travaux, de la faisabilité au contrôle",
+      "intro": "",
+      "image": "/themes/ultra-s/images/pexen/professionnel-pac.webp",
+      "bodyHtml": "<h2>Le parcours en 5 étapes</h2>\n<h2>Avant les travaux : faisabilité et éligibilité</h2>\n<h2>Pendant les travaux : planification et suivi de chantier</h2>\n<h2>Après les travaux : documents, contrôle et valorisation</h2>\n<ol><li>Édition des documents de fin de travaux : procès-verbal de réception, attestation de fin de travaux, notes techniques.</li><li>Contrôle par un organisme accrédité COFRAC : analyse des études avant, pendant et après travaux, visite sur site, enquête auprès du client.</li><li>Rapport de contrôle transmis au délégataire, condition de la valorisation des travaux.</li><li>Suivi des consommations et bilan d&#x27;économies d&#x27;énergie.</li></ol>\n<h2>Pourquoi confier l&#x27;accompagnement travaux à PEXEN</h2>\n<p>Un contrôle non conforme peut remettre en cause la valorisation d&#x27;un projet entier. Parce que nous réalisons l&#x27;étude, les travaux et le dossier, chaque pièce est cohérente avec les suivantes : la puissance installée correspond à la note de dimensionnement, la photo à l&#x27;équipement, le procès-verbal au planning.</p>\n<h2>Ce que nous suivons sur chaque chantier</h2>\n<h2>Travailler en site occupé</h2>\n<p>Un supermarché ne ferme pas, une ligne de production ne s&#x27;arrête qu&#x27;à date fixe, un bâtiment collectif reste habité. Chaque planning est construit avec l&#x27;exploitant : interventions de nuit ou en dehors des heures d&#x27;ouverture, phasage par circuit frigorifique, solutions de chauffage provisoires, consignation des installations et plans de prévention.</p>\n<h2>Questions fréquentes sur l&#x27;assistance à maîtrise d&#x27;ouvrage</h2>\n<h2>Un projet ? Parlons-en.</h2>\n<p>Prise de contact sous 48 h ouvrées par un ingénieur PEXEN, pour qualifier votre besoin et définir les prochaines étapes.</p>",
+      "stats": [],
+      "faqs": [],
+      "noindex": false,
+      "status": "published",
+      "disabled": false,
+      "template": "default"
+    },
+    {
+      "tab": "04_CPE",
+      "path": "/contrat-de-performance-energetique/",
+      "title": "Contrat de performance énergétique",
+      "seoTitle": "Contrat de performance énergétique (CPE) tertiaire | PEXEN",
+      "metaDescription": "Contrat de performance énergétique : un objectif d'économies fixé par contrat, puis mesuré. PEXEN conçoit, réalise et suit des CPE tertiaires et industriels.",
+      "h1": "Contrat de performance énergétique",
+      "intro": "",
+      "image": "/themes/ultra-s/images/pexen/centrale-froid.webp",
+      "bodyHtml": "<h2>Le principe d&#x27;un contrat de performance énergétique</h2>\n<ol><li>Une situation de référence : les consommations du périmètre avant travaux, corrigées du climat et de l&#x27;activité.</li><li>Un objectif : un pourcentage de réduction des consommations, sur une durée de plusieurs années.</li><li>Un programme de travaux dimensionné pour atteindre cet objectif.</li><li>Un plan de mesure et de vérification qui compare chaque année les consommations à la référence.</li></ol>\n<h2>Un exemple : −40 % sur 10 ans en grande distribution</h2>\n<p>Dans un supermarché d&#x27;Île-de-France, PEXEN a combiné récupération de chaleur sur le froid commercial, régulation du froid, isolation de la toiture-terrasse et fermeture des meubles, dans un contrat qui vise −40 % de consommation sur le périmètre traité pendant 10 ans*.</p>\n<p class=\"text-sm text-slate-500\">* Objectif contractuel de réduction des consommations, sur le périmètre et la durée du contrat de performance énergétique, à conditions d&#x27;exploitation comparables.</p>\n<h2>Ce que change un CPE pour vos équipes</h2>\n<h2>Les conditions d&#x27;un CPE réussi</h2>\n<p>Des compteurs fiables, une année de référence documentée, un périmètre clair et des règles d&#x27;ajustement écrites à l&#x27;avance (changement d&#x27;horaires, extension, climat exceptionnel). Notre étude d&#x27;ingénierie pose ces bases avant la signature.</p>\n<h2>Mesurer la performance dans le temps</h2>\n<p>Le plan de mesure et de vérification fixe les compteurs utilisés, la fréquence des relevés et les ajustements : degrés-jours pour le climat, chiffre d&#x27;activité ou heures d&#x27;ouverture pour l&#x27;usage. Chaque année, un rapport compare les consommations ajustées à la situation de référence et identifie les écarts.</p>\n<h2>Quels travaux intégrer à un contrat de performance énergétique</h2>\n<h2>Questions fréquentes sur le contrat de performance énergétique</h2>\n<h2>Un projet ? Parlons-en.</h2>\n<p>Prise de contact sous 48 h ouvrées par un ingénieur PEXEN, pour qualifier votre besoin et définir les prochaines étapes.</p>",
+      "stats": [],
+      "faqs": [],
+      "noindex": false,
+      "status": "published",
+      "disabled": false,
+      "template": "default"
+    },
+    {
+      "tab": "05_Reglementation_financement",
+      "path": "/decret-tertiaire-decret-bacs/",
+      "title": "Réglementation et financement",
+      "seoTitle": "Décret tertiaire et décret BACS : obligations | PEXEN",
+      "metaDescription": "Décret tertiaire (−40 % en 2030), décret BACS, audit énergétique obligatoire : vos obligations, leurs échéances et le financement de vos travaux.",
+      "h1": "Réglementation et financement des travaux énergétiques",
+      "intro": "",
+      "image": "/themes/ultra-s/images/pexen/cee-tertiaire.webp",
+      "bodyHtml": "<h2>Décret tertiaire : −40 % en 2030</h2>\n<p>Tout bâtiment ou ensemble de bâtiments accueillant des activités tertiaires sur 1 000 m² ou plus doit réduire sa consommation d&#x27;énergie finale de 40 % en 2030, 50 % en 2040 et 60 % en 2050, par rapport à une année de référence comprise entre 2010 et 2019, ou atteindre un seuil en valeur absolue. Les consommations se déclarent chaque année sur la plateforme OPERAT de l&#x27;ADEME, avant le 30 septembre. Le défaut de déclaration expose à une amende administrative jusqu&#x27;à 7 500 € pour une personne morale et à une publication.</p>\n<h2>Décret BACS : le pilotage devient obligatoire</h2>\n<p>Les bâtiments tertiaires dont le système de chauffage ou de climatisation dépasse 290 kW doivent être équipés d&#x27;un système d&#x27;automatisation et de contrôle depuis le 1er janvier 2025. Pour les bâtiments existants entre 70 et 290 kW, l&#x27;échéance est fixée au 1er janvier 2030 (décret n° 2025-1343). Le système doit suivre et analyser les consommations par zone et permettre leur ajustement.</p>\n<h2>Audit énergétique obligatoire</h2>\n<p>Les entreprises dont la consommation annuelle moyenne d&#x27;énergie atteint 2,75 GWh, sans système de management de l&#x27;énergie certifié, réalisent un audit énergétique tous les quatre ans. Nos audits sont conduits avec notre partenaire Leo Energy, qualifié OPQIBI 1905 et 1717.</p>\n<h2>Le financement CEE, un levier intégré au projet</h2>\n<p>Les fournisseurs d&#x27;énergie ont l&#x27;obligation de financer des économies d&#x27;énergie chez leurs clients. Chaque action conforme à une opération standardisée, publiée par arrêté ministériel, ouvre droit à une valorisation qui réduit le reste à charge. Des bonifications s&#x27;ajoutent pour la sortie des énergies fossiles et pour les économies fixées par contrat de performance énergétique. Le financement accompagne le projet : il ne remplace ni le relevé, ni le dimensionnement.</p>\n<h2>Les opérations standardisées que nous réalisons</h2>\n<h2>Déclarer sur OPERAT : ce qu&#x27;il faut préparer</h2>\n<h2>Questions fréquentes sur le décret tertiaire et le financement</h2>\n<h2>Un projet ? Parlons-en.</h2>\n<p>Prise de contact sous 48 h ouvrées par un ingénieur PEXEN, pour qualifier votre besoin et définir les prochaines étapes.</p>",
+      "stats": [],
+      "faqs": [],
+      "noindex": false,
+      "status": "published",
+      "disabled": false,
+      "template": "default"
+    },
+    {
+      "tab": "06_Estimation_financement",
+      "path": "/estimation-financement/",
+      "title": "Estimer le financement (outil)",
+      "seoTitle": "Financement des travaux énergétiques : estimation | PEXEN",
+      "metaDescription": "Estimez le financement de vos travaux énergétiques : type de site, travaux envisagés, puissance. Première estimation indicative, établie ensuite après analyse du site.",
+      "h1": "Estimez le financement de votre projet",
+      "intro": "",
+      "image": "/themes/ultra-s/images/pexen/centrale-froid.webp",
+      "bodyHtml": "<p>Décrivez votre site et les travaux envisagés : vous obtenez un premier ordre de grandeur du financement des travaux énergétiques mobilisable. Il ne remplace ni la visite technique, ni les relevés, ni la note de calcul : un ingénieur PEXEN l&#x27;établit ensuite à partir de votre installation réelle.</p>\n<p class=\"text-sm text-slate-500\">* Première estimation indicative, sans valeur contractuelle : le dimensionnement et le montant définitif sont établis après analyse du site.</p>\n<h2>Comment le financement des travaux énergétiques est-il estimé ?</h2>\n<p>Chaque action correspond à une opération standardisée qui fixe un volume d&#x27;économies selon le secteur, la zone climatique et la puissance installée. Ce volume est valorisé au prix du marché ; des bonifications s&#x27;appliquent pour la sortie des énergies fossiles ou un contrat de performance énergétique.</p>\n<h2>Un projet ? Parlons-en.</h2>\n<p>Prise de contact sous 48 h ouvrées par un ingénieur PEXEN, pour qualifier votre besoin et définir les prochaines étapes.</p>",
+      "stats": [],
+      "faqs": [],
+      "noindex": false,
+      "status": "published",
+      "disabled": false,
+      "template": "default"
+    },
+    {
+      "tab": "07_Solutions",
+      "path": "/solutions/",
+      "title": "Solutions (page générale)",
+      "seoTitle": "Efficacité énergétique : nos solutions techniques | PEXEN",
+      "metaDescription": "Efficacité énergétique des sites professionnels : froid, récupération de chaleur, pompes à chaleur, GTB, isolation, rénovation globale, éclairage LED.",
+      "h1": "Nos solutions de performance énergétique",
+      "intro": "",
+      "image": "/themes/ultra-s/images/pexen/pompes-a-chaleur-toiture.webp",
+      "bodyHtml": "<h2>Efficacité énergétique : cinq expertises et deux offres complémentaires</h2>\n<h2>Plusieurs solutions sur un même site</h2>\n<p>Les gains se cumulent quand les actions sont conçues ensemble. Sur un supermarché, nous associons souvent régulation du froid, récupération de chaleur, fermeture des meubles et pilotage : la chaleur récupérée remplace une partie du chauffage, la GTB coordonne l&#x27;ensemble. Le site fait l&#x27;objet d&#x27;une étude commune et d&#x27;un chantier coordonné.</p>\n<h2>Des travaux valorisés dès l&#x27;étude</h2>\n<p>La plupart de ces solutions correspondent à des opérations standardisées publiées par arrêté ministériel. Nous les identifions dès l&#x27;étude et engageons leur valorisation avant la signature du devis.</p>\n<h2>Comment nous priorisons les solutions</h2>\n<p>Chaque solution est classée selon trois critères : le gisement réel mesuré sur site, la contrainte d&#x27;exploitation (arrêt possible ou non) et le temps de retour une fois le financement intégré. Sur un même site, l&#x27;ordre change d&#x27;un bâtiment à l&#x27;autre : c&#x27;est le rôle du relevé et de la note de calcul.</p>\n<h2>Questions fréquentes</h2>\n<h2>Un projet ? Parlons-en.</h2>\n<p>Prise de contact sous 48 h ouvrées par un ingénieur PEXEN, pour qualifier votre besoin et définir les prochaines étapes.</p>",
+      "stats": [],
+      "faqs": [],
+      "noindex": false,
+      "status": "published",
+      "disabled": false,
+      "template": "default"
+    },
+    {
+      "tab": "08_Decarbonation_chaleur",
+      "path": "/solutions/pompe-a-chaleur-tertiaire/",
+      "title": "Chauffage et traitement d'air",
+      "seoTitle": "Pompe à chaleur tertiaire et sortie du fioul | PEXEN",
+      "metaDescription": "Pompe à chaleur tertiaire en remplacement du fioul ou du gaz, et déstratification des grands volumes. Étude, pose et mise en service par PEXEN.",
+      "h1": "Chauffage et traitement d'air : décarboner la production de chaleur",
+      "intro": "",
+      "image": "/themes/ultra-s/images/pexen/pompes-a-chaleur-toiture.webp",
+      "bodyHtml": "<h2>Pompe à chaleur tertiaire : remplacer une chaudière fossile</h2>\n<p>Depuis le 1er janvier 2026, trois opérations standardisées encadrent les pompes à chaleur tertiaires. Lorsque la pompe à chaleur remplace une chaudière au fioul, au charbon ou au gaz hors condensation, l&#x27;État bonifie la valorisation des travaux :</p>\n<h2>Remplacer une chaudière fioul : les étapes</h2>\n<ol><li>Relevé : consommations des trois dernières années, puissance installée, températures de départ, émetteurs.</li><li>Choix de la technologie : air/eau, eau/eau ou géothermie.</li><li>Engagement de la valorisation avant la signature du devis.</li><li>Dépose de la chaudière, neutralisation ou dépose de la cuve.</li><li>Pose, raccordement hydraulique, régulation, mise en service.</li><li>Suivi de la première saison de chauffe.</li></ol>\n<h2>Déstratification d&#x27;air des bâtiments de grande hauteur</h2>\n<p>Dans un local de plus de 5 mètres sous plafond, la température gagne environ 1,5 °C par mètre de hauteur (EDF). Le chauffage réchauffe surtout la toiture, loin de la zone occupée. Des déstratificateurs renvoient l&#x27;air chaud vers le sol : jusqu&#x27;à 30 % d&#x27;économies sur le chauffage selon EDF.<br/>Opérations standardisées : BAT-TH-142 (tertiaire), IND-BA-110 (industrie).</p>\n<h2>Chaufferies industrielles : brûleur micro-modulant</h2>\n<p>Sur une chaudière vapeur ou eau chaude industrielle, un brûleur micro-modulant ajuste en continu la puissance à la demande et limite les cycles marche-arrêt.<br/>Opération standardisée : IND-UT-105.</p>\n<h2>Réalisations liées</h2>\n<h2>Raccordement à un réseau de chaleur</h2>\n<p>Lorsqu&#x27;un réseau de chaleur passe à proximité, le raccordement peut être une alternative à la pompe à chaleur. L&#x27;étude compare les deux scénarios : puissance disponible, température du réseau, coût de raccordement, contenu carbone et consommation électrique.</p>\n<h2>Questions fréquentes sur la pompe à chaleur tertiaire</h2>\n<h2>Un projet ? Parlons-en.</h2>\n<p>Prise de contact sous 48 h ouvrées par un ingénieur PEXEN, pour qualifier votre besoin et définir les prochaines étapes.</p>",
+      "stats": [],
+      "faqs": [],
+      "noindex": false,
+      "status": "published",
+      "disabled": false,
+      "template": "default"
+    },
+    {
+      "tab": "09_Recuperation_chaleur",
+      "path": "/solutions/recuperation-de-chaleur/",
+      "title": "Récupération de chaleur",
+      "seoTitle": "Récupération de chaleur sur groupe froid et process | PEXEN",
+      "metaDescription": "Récupération de chaleur sur groupe froid, compresseur d'air et chaleur fatale : chauffez vos locaux et votre eau avec l'énergie que vous rejetez.",
+      "h1": "Récupérer la chaleur disponible",
+      "intro": "",
+      "image": "/themes/ultra-s/images/pexen/installation-technique.webp",
+      "bodyHtml": "<h2>D&#x27;où vient la chaleur récupérable</h2>\n<h2>Nos solutions de valorisation de la chaleur</h2>\n<h2>Où réutiliser la chaleur récupérée</h2>\n<h2>Dimensionner l&#x27;échangeur et le stockage</h2>\n<p>La puissance valorisable dépend de la température de condensation et du mode de captage. La désurchauffe capte une fraction de la chaleur à haute température, adaptée à l&#x27;eau chaude sanitaire ; la condensation totale capte l&#x27;essentiel des rejets à plus basse température, adaptée au chauffage. Un ballon tampon lisse l&#x27;écart entre production et besoin. La régulation donne toujours la priorité à la production de froid.</p>\n<h2>Réalisations liées</h2>\n<h2>Les conditions d&#x27;un projet rentable</h2>\n<p>Le projet tient si trois conditions sont réunies : des besoins de chaleur simultanés aux rejets, une distance courte entre source et usage, une régulation du froid qui reste prioritaire. Notre étude croise les courbes de rejet et de besoin heure par heure avant de dimensionner l&#x27;échangeur et le stockage.</p>\n<h2>Questions fréquentes sur la récupération de chaleur</h2>\n<h2>Un projet ? Parlons-en.</h2>\n<p>Prise de contact sous 48 h ouvrées par un ingénieur PEXEN, pour qualifier votre besoin et définir les prochaines étapes.</p>",
+      "stats": [],
+      "faqs": [],
+      "noindex": false,
+      "status": "published",
+      "disabled": false,
+      "template": "default"
+    },
+    {
+      "tab": "10_Froid",
+      "path": "/solutions/froid-commercial-industriel/",
+      "title": "Froid commercial et industriel",
+      "seoTitle": "Froid commercial et industriel : groupes froids | PEXEN",
+      "metaDescription": "Froid commercial et industriel : régulation haute et basse pression flottante, condenseurs haute efficacité, variation de vitesse, fermeture des meubles.",
+      "h1": "Froid commercial et industriel : régulation et modernisation des centrales",
+      "intro": "",
+      "image": "/themes/ultra-s/images/pexen/centrale-froid.webp",
+      "bodyHtml": "<h2>Pourquoi vos groupes froids consomment trop</h2>\n<h2>Nos solutions pour le froid commercial et industriel</h2>\n<h2>Froid et chaleur : un même projet</h2>\n<p>La chaleur rejetée au condenseur peut chauffer la surface de vente ou l&#x27;eau chaude sanitaire. Régulation du froid et récupération de chaleur s&#x27;étudient ensemble : les réglages de l&#x27;une conditionnent le rendement de l&#x27;autre.</p>\n<h2>Les indicateurs que nous suivons</h2>\n<h2>Réalisations liées</h2>\n<p class=\"text-sm text-slate-500\">* Objectif contractuel de réduction des consommations, sur le périmètre et la durée du contrat de performance énergétique, à conditions d&#x27;exploitation comparables.</p>\n<h2>Questions fréquentes sur le froid commercial</h2>\n<h2>Un projet ? Parlons-en.</h2>\n<p>Prise de contact sous 48 h ouvrées par un ingénieur PEXEN, pour qualifier votre besoin et définir les prochaines étapes.</p>",
+      "stats": [],
+      "faqs": [],
+      "noindex": false,
+      "status": "published",
+      "disabled": false,
+      "template": "default"
+    },
+    {
+      "tab": "11_Pilotage_BACS",
+      "path": "/solutions/pilotage-gtb-decret-bacs/",
+      "title": "Pilotage GTB / GTC et décret BACS",
+      "seoTitle": "Décret BACS et GTB : piloter vos consommations | PEXEN",
+      "metaDescription": "Décret BACS : GTB obligatoire au-delà de 290 kW depuis 2025, de 70 kW en 2030. PEXEN installe des GTB de classe A ou B pour piloter vos consommations.",
+      "h1": "Piloter les consommations et respecter le décret BACS",
+      "intro": "",
+      "image": "/themes/ultra-s/images/pexen/climatisation-toiture.webp",
+      "bodyHtml": "<h2>Décret BACS : qui est concerné et quand</h2>\n<p>Le système doit suivre, enregistrer et analyser les consommations par zone, conserver les données au pas horaire et permettre l&#x27;arrêt manuel et la gestion autonome. Une dérogation est possible si le temps de retour dépasse 10 ans, sur étude justificative.</p>\n<h2>La GTB, outil de conformité au décret BACS</h2>\n<p>La norme NF EN ISO 52120-1 classe les systèmes de A (haute performance) à D. Dans un immeuble de bureaux, passer de la classe C à la classe A réduit d&#x27;environ 30 % la consommation thermique et de 13 % la consommation électrique. Seules les classes A et B ouvrent droit à la valorisation des travaux (opération standardisée BAT-TH-116).</p>\n<h2>Notre méthode</h2>\n<ol><li>Audit de l&#x27;existant : équipements, automates, protocoles (BACnet, Modbus, KNX), classe visée.</li><li>Installation et programmation : comptages, sondes, automates, supervision.</li><li>Formation des équipes et réglages à chaque saison.</li><li>Indicateurs en industrie : mesure par atelier ou par machine (opération IND-UT-134).</li></ol>\n<h2>Réalisation liée</h2>\n<h2>Après l&#x27;installation</h2>\n<p>Une GTB perd son efficacité si personne ne l&#x27;exploite. Nous formons vos équipes techniques, ajustons les réglages à chaque saison et remettons un bilan comparant les consommations avant et après mise en service. Les données sont prêtes pour la déclaration annuelle du décret tertiaire.</p>\n<h2>Questions fréquentes sur le décret BACS</h2>\n<h2>Un projet ? Parlons-en.</h2>\n<p>Prise de contact sous 48 h ouvrées par un ingénieur PEXEN, pour qualifier votre besoin et définir les prochaines étapes.</p>",
+      "stats": [],
+      "faqs": [],
+      "noindex": false,
+      "status": "published",
+      "disabled": false,
+      "template": "default"
+    },
+    {
+      "tab": "12_Isolation",
+      "path": "/solutions/isolation-technique/",
+      "title": "Isolation technique",
+      "seoTitle": "Isolation technique : réseaux et toitures-terrasses | PEXEN",
+      "metaDescription": "Isolation technique des réseaux et des bâtiments : calorifugeage industriel, matelas isolants sur vannes, isolation des toitures-terrasses.",
+      "h1": "Isolation technique des réseaux et des toitures",
+      "intro": "",
+      "image": "/themes/ultra-s/images/pexen/renovation-energetique.webp",
+      "bodyHtml": "<h2>Où se perd la chaleur d&#x27;un site</h2>\n<h2>Nos solutions d&#x27;isolation technique</h2>\n<h2>Les réseaux à isoler en priorité</h2>\n<p>Plus le fluide est chaud et plus la ligne fonctionne longtemps, plus l&#x27;isolation rapporte : vapeur et eau surchauffée d&#x27;abord, puis eau chaude de chauffage et de process. Sur les réseaux d&#x27;eau glacée, l&#x27;isolation limite aussi la condensation et la corrosion.</p>\n<h2>Toiture-terrasse : ce que vérifie notre relevé</h2>\n<h2>Réalisation liée</h2>\n<h2>Repérer les pertes invisibles</h2>\n<p>Une thermographie infrarouge localise les points singuliers dénudés, les ponts thermiques et les isolants dégradés. Associée au relevé de chaque tronçon (diamètre, longueur, température du fluide, ambiance), elle permet de classer les actions par temps de retour.</p>\n<h2>Questions fréquentes sur l&#x27;isolation technique</h2>\n<h2>Un projet ? Parlons-en.</h2>\n<p>Prise de contact sous 48 h ouvrées par un ingénieur PEXEN, pour qualifier votre besoin et définir les prochaines étapes.</p>",
+      "stats": [],
+      "faqs": [],
+      "noindex": false,
+      "status": "published",
+      "disabled": false,
+      "template": "default"
+    },
+    {
+      "tab": "13_Renovation_globale",
+      "path": "/solutions/renovation-globale-tertiaire/",
+      "title": "Rénovation globale",
+      "seoTitle": "Rénovation globale tertiaire : bouquet de travaux | PEXEN",
+      "metaDescription": "Rénovation globale tertiaire et des bâtiments collectifs : audit, bouquet de travaux, chauffage, isolation, pilotage. PEXEN réalise et suit le projet.",
+      "h1": "Rénovation globale tertiaire et des bâtiments collectifs",
+      "intro": "",
+      "image": "/themes/ultra-s/images/pexen/renovation-energetique.webp",
+      "bodyHtml": "<h2>Pourquoi une rénovation globale tertiaire</h2>\n<p>Régulation, réglages et éclairage réduisent souvent les consommations de 20 à 30 %. Atteindre −40 % en 2030, puis −60 % en 2050, suppose de traiter le bâtiment comme un système : chaque lot dimensionné en fonction des autres, une performance mesurée sur l&#x27;ensemble.</p>\n<h2>Un bouquet de travaux adapté au bâtiment</h2>\n<h2>Notre méthode</h2>\n<ol><li>Audit énergétique avec notre partenaire Leo Energy (OPQIBI 1905).</li><li>Scénarios de travaux chiffrés : économies, coûts, financement, temps de retour.</li><li>Plan de travaux phasé selon l&#x27;exploitation.</li><li>Réalisation des lots froid, chaleur, pilotage et isolation.</li><li>Suivi des consommations, éventuellement dans un contrat de performance énergétique.</li></ol>\n<h2>Le financement de la rénovation globale</h2>\n<p>Chaque lot conforme à une opération standardisée est valorisé. Une opération dédiée à la rénovation globale des bâtiments tertiaires est annoncée par les pouvoirs publics : nous la mobiliserons dès sa parution.</p>\n<h2>Une trajectoire 2030, 2040, 2050</h2>\n<p>La rénovation globale tertiaire se planifie souvent en plusieurs phases : actions de pilotage et de régulation à court terme, production de chaleur et de froid à moyen terme, enveloppe à plus long terme. Chaque phase est dimensionnée pour ne pas pénaliser la suivante : une pompe à chaleur se dimensionne sur les besoins après isolation, pas avant.</p>\n<h2>Rénovation globale des bâtiments collectifs</h2>\n<p>Pour les copropriétés et les bailleurs, la rénovation globale d&#x27;un bâtiment collectif d&#x27;habitation fait l&#x27;objet d&#x27;une opération standardisée dédiée (BAR-TH-177). Elle demande un gain d&#x27;au moins 35 % sur la consommation d&#x27;énergie avant travaux, à partir d&#x27;un audit énergétique réalisé sur site avant les travaux.</p>\n<h2>Questions fréquentes sur la rénovation globale</h2>\n<h2>Un projet ? Parlons-en.</h2>\n<p>Prise de contact sous 48 h ouvrées par un ingénieur PEXEN, pour qualifier votre besoin et définir les prochaines étapes.</p>",
+      "stats": [],
+      "faqs": [],
+      "noindex": true,
+      "status": "draft",
+      "disabled": true,
+      "template": "default"
+    },
+    {
+      "tab": "14_Eclairage_LED",
+      "path": "/solutions/eclairage-led/",
+      "title": "Éclairage LED",
+      "seoTitle": "Éclairage LED tertiaire et industriel | PEXEN",
+      "metaDescription": "Éclairage LED des sites tertiaires et industriels : luminaires LED, détection de présence, gradation. Souvent plus de 50 % d'économies sur l'éclairage.",
+      "h1": "Éclairage LED des sites professionnels",
+      "intro": "",
+      "image": "/themes/ultra-s/images/pexen/performance-energetique.webp",
+      "bodyHtml": "<h2>Nos solutions d&#x27;éclairage LED</h2>\n<h2>Les sites où l&#x27;éclairage LED rapporte le plus</h2>\n<p>Entrepôts et ateliers éclairés de longues heures, surfaces de vente ouvertes tard, parkings, bureaux à forte occupation. L&#x27;étude compare la puissance installée, les heures de fonctionnement et le niveau d&#x27;éclairement requis par poste de travail.</p>\n<h2>Économies et confort visuel</h2>\n<p>Un éclairage bien dimensionné respecte les niveaux d&#x27;éclairement réglementaires, limite l&#x27;éblouissement et réduit la chaleur dégagée par les luminaires, ce qui allège aussi la climatisation en été.</p>\n<h2>Notre méthode éclairage</h2>\n<ol><li>Relevé des luminaires, puissances et heures de fonctionnement par zone.</li><li>Mesure des niveaux d&#x27;éclairement existants.</li><li>Étude d&#x27;éclairage et choix des luminaires.</li><li>Installation par zone, sans interrompre l&#x27;activité.</li><li>Réglage des détections et de la gradation, puis suivi des consommations.</li></ol>\n<h2>Questions fréquentes sur l&#x27;éclairage LED</h2>\n<h2>Un projet ? Parlons-en.</h2>\n<p>Prise de contact sous 48 h ouvrées par un ingénieur PEXEN, pour qualifier votre besoin et définir les prochaines étapes.</p>",
+      "stats": [],
+      "faqs": [],
+      "noindex": true,
+      "status": "draft",
+      "disabled": true,
+      "template": "default"
+    },
+    {
+      "tab": "15_Secteurs",
+      "path": "/secteurs/",
+      "title": "Secteurs (page générale)",
+      "seoTitle": "Efficacité énergétique des bâtiments : 100 % B2B | PEXEN",
+      "metaDescription": "Efficacité énergétique des bâtiments tertiaires, des sites industriels et des bâtiments collectifs : obligations, gisements et solutions PEXEN, 100 % B2B.",
+      "h1": "Une approche 100 % B2B",
+      "intro": "",
+      "image": "/themes/ultra-s/images/pexen/installation-technique.webp",
+      "bodyHtml": "<h2>Efficacité énergétique des bâtiments : nos secteurs</h2>\n<h2>Les obligations par secteur</h2>\n<h2>Une seule méthode, des priorités différentes</h2>\n<p>Dans l&#x27;industrie, la priorité va aux utilités qui tournent en continu. Dans le tertiaire, au froid commercial, au chauffage des grands volumes et au pilotage exigé par le décret BACS. Dans les bâtiments collectifs, à la chaufferie et à la répartition de la chaleur. Dans tous les cas, chaque action est chiffrée en kWh, en euros et en financement mobilisable avant d&#x27;être proposée.</p>\n<h2>Ce qui ne change pas d&#x27;un secteur à l&#x27;autre</h2>\n<h2>Questions fréquentes</h2>\n<h2>Un projet ? Parlons-en.</h2>\n<p>Prise de contact sous 48 h ouvrées par un ingénieur PEXEN, pour qualifier votre besoin et définir les prochaines étapes.</p>",
+      "stats": [],
+      "faqs": [],
+      "noindex": false,
+      "status": "published",
+      "disabled": false,
+      "template": "default"
+    },
+    {
+      "tab": "16_Tertiaire",
+      "path": "/secteurs/efficacite-energetique-tertiaire/",
+      "title": "Tertiaire",
+      "seoTitle": "Efficacité énergétique tertiaire et décret tertiaire | PEXEN",
+      "metaDescription": "Efficacité énergétique tertiaire : grande distribution, bureaux, hôtels, entrepôts, santé. Tenez −40 % en 2030 avec le froid, la GTB et le chauffage.",
+      "h1": "Efficacité énergétique des bâtiments tertiaires",
+      "intro": "",
+      "image": "/themes/ultra-s/images/pexen/installation-technique.webp",
+      "bodyHtml": "<h2>Vos enjeux dans le tertiaire</h2>\n<h2>Nos interventions par type de bâtiment tertiaire</h2>\n<h2>Construire votre trajectoire décret tertiaire</h2>\n<p>Nous partons de votre année de référence déclarée sur OPERAT, chiffrons l&#x27;écart avec l&#x27;objectif 2030 et classons les actions par gain et par temps de retour, financement déduit. Le décret engage le propriétaire et l&#x27;occupant : le plan sépare clairement les deux périmètres.</p>\n<h2>Réalisations dans le tertiaire</h2>\n<h2>Propriétaires et exploitants : qui décide quoi</h2>\n<p>Les équipements de l&#x27;exploitant, comme le froid commercial, relèvent souvent du locataire ; l&#x27;enveloppe et la chaufferie, du propriétaire. Notre plan d&#x27;actions sépare clairement les deux périmètres, pour que chacun déclare ses consommations et engage ses travaux.</p>\n<h2>Questions fréquentes sur l&#x27;efficacité énergétique tertiaire</h2>\n<h2>Un projet ? Parlons-en.</h2>\n<p>Prise de contact sous 48 h ouvrées par un ingénieur PEXEN, pour qualifier votre besoin et définir les prochaines étapes.</p>",
+      "stats": [],
+      "faqs": [],
+      "noindex": false,
+      "status": "published",
+      "disabled": false,
+      "template": "default"
+    },
+    {
+      "tab": "17_Industrie",
+      "path": "/secteurs/efficacite-energetique-industrielle/",
+      "title": "Industrie",
+      "seoTitle": "Efficacité énergétique industrielle : froid, chaleur | PEXEN",
+      "metaDescription": "Efficacité énergétique industrielle : froid process, chaleur fatale, vapeur, air comprimé, calorifugeage. Études et travaux sans arrêt de production.",
+      "h1": "Efficacité énergétique des sites industriels",
+      "intro": "",
+      "image": "/themes/ultra-s/images/pexen/centrale-froid.webp",
+      "bodyHtml": "<h2>Vos enjeux industriels</h2>\n<h2>Utilités industrielles : où se trouve le gisement</h2>\n<h2>L&#x27;audit énergétique réglementaire</h2>\n<p>Mené avec notre partenaire Leo Energy, qualifié OPQIBI 1717 pour l&#x27;industrie, l&#x27;audit se prolonge au-delà du rapport. Les actions recommandées sont chiffrées, dimensionnée par notre ingénierie fluides et réalisable par PEXEN.</p>\n<h2>Référence industrielle</h2>\n<h2>Air comprimé, vapeur, moteurs : nos points de contrôle</h2>\n<h2>Questions fréquentes sur l&#x27;efficacité énergétique industrielle</h2>\n<h2>Un projet ? Parlons-en.</h2>\n<p>Prise de contact sous 48 h ouvrées par un ingénieur PEXEN, pour qualifier votre besoin et définir les prochaines étapes.</p>",
+      "stats": [],
+      "faqs": [],
+      "noindex": false,
+      "status": "published",
+      "disabled": false,
+      "template": "default"
+    },
+    {
+      "tab": "18_Batiments_collectifs",
+      "path": "/secteurs/batiments-collectifs/",
+      "title": "Bâtiments collectifs",
+      "seoTitle": "Bâtiments collectifs : chaufferie et sortie du fioul | PEXEN",
+      "metaDescription": "Bâtiments collectifs : chaufferie, pompes à chaleur en remplacement du fioul, équilibrage, rénovation globale. Pour bailleurs, syndics et gestionnaires.",
+      "h1": "Performance énergétique des bâtiments collectifs",
+      "intro": "",
+      "image": "/themes/ultra-s/images/pexen/pompes-a-chaleur-toiture.webp",
+      "bodyHtml": "<h2>Vos enjeux de gestionnaire</h2>\n<h2>Les obligations des copropriétés</h2>\n<p>Les copropriétés de plus de 15 ans doivent disposer d&#x27;un projet de plan pluriannuel de travaux et d&#x27;un diagnostic de performance énergétique collectif. Depuis le 1er janvier 2026, toutes les copropriétés sont concernées. Ces documents chiffrent les travaux ; notre étude les traduit en scénarios finançables.</p>\n<h2>Nos solutions pour les bâtiments collectifs</h2>\n<h2>Sortir du fioul en chaufferie collective</h2>\n<ol><li>Relevé des consommations, de la puissance installée et des températures de départ.</li><li>Scénarios : pompe à chaleur seule, hybride avec appoint, géothermie.</li><li>Dossier pour l&#x27;assemblée générale ou le comité d&#x27;engagement, plan de financement inclus.</li><li>Travaux hors saison de chauffe ou avec production provisoire.</li><li>Réglage, équilibrage et suivi de la première saison.</li></ol>\n<h2>Un dossier adapté à chaque gestionnaire</h2>\n<p>Pour un syndic, nous préparons les éléments que le conseil syndical présentera en assemblée générale. Pour un gestionnaire, nous suivons les consommations après travaux et ajustons les réglages de la chaufferie.</p>\n<h2>Questions fréquentes sur la chaufferie collective</h2>\n<h2>Un projet ? Parlons-en.</h2>\n<p>Prise de contact sous 48 h ouvrées par un ingénieur PEXEN, pour qualifier votre besoin et définir les prochaines étapes.</p>",
+      "stats": [],
+      "faqs": [],
+      "noindex": false,
+      "status": "published",
+      "disabled": false,
+      "template": "default"
+    },
+    {
+      "tab": "19_Partenaires",
+      "path": "/partenaires/",
+      "title": "Partenaires professionnels",
+      "seoTitle": "Partenaire installateur des délégataires | PEXEN",
+      "metaDescription": "Partenaire installateur et bureau d'ingénierie pour délégataires, mandataires, fabricants et bureaux d'études : opérations conformes et contrôlées.",
+      "h1": "Partenaires professionnels",
+      "intro": "",
+      "image": "/themes/ultra-s/images/pexen/professionnel-pac.webp",
+      "bodyHtml": "<h2>Un partenaire installateur pour délégataires et mandataires</h2>\n<h2>Fabricants et fournisseurs</h2>\n<p>Vos équipements, dimensionnés et posés pour tenir leurs promesses de performance : pompes à chaleur, groupes froids, déstratificateurs, GTB, isolants. Nous respectons vos préconisations de pose et remontons les retours d&#x27;exploitation.</p>\n<h2>Bureaux d&#x27;études et maîtres d&#x27;œuvre</h2>\n<p>Nous réalisons les lots fluides, froid, pilotage et isolation de vos projets, en coordination avec votre mission, et partageons nos relevés et nos notes de calcul.</p>\n<h2>Qualifications et assurances</h2>\n<h2>Notre méthode avec nos partenaires</h2>\n<ol><li>Visite technique et vérification de l&#x27;éligibilité de l&#x27;opération.</li><li>Note de dimensionnement et devis conformes aux exigences.</li><li>Travaux, photos horodatées et procès-verbal de réception.</li><li>Transmission du dossier complet et accompagnement du contrôle sur site.</li></ol>\n<h2>Questions fréquentes</h2>\n<h2>Un projet ? Parlons-en.</h2>\n<p>Prise de contact sous 48 h ouvrées par un ingénieur PEXEN, pour qualifier votre besoin et définir les prochaines étapes.</p>",
+      "stats": [],
+      "faqs": [],
+      "noindex": false,
+      "status": "published",
+      "disabled": false,
+      "template": "default"
+    },
+    {
+      "tab": "20_Realisations",
+      "path": "/realisations/",
+      "title": "Réalisations (liste)",
+      "seoTitle": "Projets de performance énergétique : réalisations | PEXEN",
+      "metaDescription": "Projets de performance énergétique PEXEN : sortie du fioul, récupération de chaleur, déstratification. Chiffres clés et photos avant / après.",
+      "h1": "Nos réalisations",
+      "intro": "",
+      "image": "/themes/ultra-s/images/pexen/performance-energetique.webp",
+      "bodyHtml": "<p>Des projets de performance énergétique menés de l&#x27;étude à la mise en service : une installation, un enjeu d&#x27;exploitation, des solutions dimensionnées, des chiffres clés. Chaque réalisation montre l&#x27;état avant et après travaux.</p>\n<h2>Intermarché<br/>Bourgogne-Franche-Comté · Grande distribution<br/>1 650 m² chauffés et sortis du fioul<br/>240 kW récupérés · 14,8 GWh cumac*</h2>\n<h2>Carrefour Market<br/>Île-de-France · Grande distribution<br/>535 kW de chaleur récupérée sur le froid commercial<br/>30,6 GWh cumac* · objectif −40 %* sur 10 ans</h2>\n<h2>CEDIM<br/>Centre-Val de Loire · Négoce et entrepôt<br/>9 m de hauteur traitée par déstratification<br/>1 213 m² · 2,1 GWh cumac*</h2>\n<h2>Colorcon<br/>Île-de-France · Industrie pharmaceutique<br/>Relevé technique réalisé : chaufferie vapeur, groupe de production de froid, réseaux calorifugés. Étude en cours.</h2>\n<h2>Comment lire les chiffres de nos projets de performance énergétique</h2>\n<p>Les caractéristiques techniques (surfaces, puissances, équipements) sont relevées sur site. Les économies d&#x27;énergie sont des estimations établies à partir des équipements installés, ou des objectifs fixés par contrat de performance énergétique ; elles sont signalées par un astérisque et précisées sous chaque chiffre.</p>\n<h2>Ce que nos projets ont en commun</h2>\n<h2>Un projet ? Parlons-en.</h2>\n<p>Prise de contact sous 48 h ouvrées par un ingénieur PEXEN, pour qualifier votre besoin et définir les prochaines étapes.</p>",
+      "stats": [],
+      "faqs": [],
+      "noindex": false,
+      "status": "published",
+      "disabled": false,
+      "template": "default"
+    },
+    {
+      "tab": "21_Ref_Intermarche",
+      "path": "/realisations/intermarche-sortie-du-fioul/",
+      "title": "Réalisation : Intermarché",
+      "seoTitle": "Sortie du fioul chez Intermarché : PAC et chaleur | PEXEN",
+      "metaDescription": "Sortie du fioul d'un supermarché Intermarché : 1 650 m² chauffés par pompes à chaleur et 240 kW de chaleur récupérée sur la production de froid.",
+      "h1": "Intermarché : sortie du fioul et chaleur récupérée sur le froid",
+      "intro": "Bourgogne-Franche-Comté · Grande distribution · Supermarché",
+      "image": "/themes/ultra-s/images/pexen/pompes-a-chaleur-toiture.webp",
+      "bodyHtml": "<h2>Le site avant la sortie du fioul</h2>\n<p>Le magasin était chauffé par deux chaudières fioul vétustes, alors que sa centrale de froid rejetait sa chaleur à l&#x27;extérieur. Objectif : sortir du fioul, valoriser cette chaleur et maîtriser les consommations électriques, en hausse de 22 % entre 2024 et 2025.</p>\n<h2>Ce que PEXEN a installé</h2>\n<ul><li>Deux pompes à chaleur air/eau en cascade, en remplacement de la chaudière fioul.</li><li>Récupération de chaleur sur le groupe de production de froid commercial.</li><li>Contrat de performance énergétique sur 10 ans.</li><li>Régulation du froid et fermeture des meubles frigorifiques.</li></ul>\n<h2>Le chantier étape par étape</h2>\n<ol><li>Étude : relevé de la chaufferie fioul et de la centrale froid, besoins de chauffage du magasin.</li><li>Dimensionnement : deux pompes à chaleur de 30 kW en cascade, échangeur sur la centrale froid.</li><li>Travaux en magasin ouvert, mise en service avant la saison de chauffe.</li><li>Contrôle de conformité et suivi des consommations dans le cadre du contrat de performance.</li></ol>\n<h2>Avant et après travaux</h2>\n<h2>Les chiffres du projet</h2>\n<ul><li>Fioul supprimé pour le chauffage du magasin.</li><li>Chaleur des groupes froids réutilisée pour le chauffage.</li><li>Objectif de −40 % de consommation sur 10 ans, suivi par contrat de performance énergétique*.</li></ul>\n<p class=\"text-sm text-slate-500\">* Volume d&#x27;économies d&#x27;énergie estimé selon les fiches d&#x27;opérations standardisées mobilisées : le kWh cumac cumule et actualise les économies sur la durée de vie conventionnelle des équipements. Il ne constitue pas une mesure des consommations réelles.<br/>* Objectif contractuel de réduction des consommations, sur le périmètre et la durée du contrat de performance énergétique (10 ans), à conditions d&#x27;exploitation comparables.</p>\n<h2>Un projet ? Parlons-en.</h2>\n<p>Prise de contact sous 48 h ouvrées par un ingénieur PEXEN, pour qualifier votre besoin et définir les prochaines étapes.</p>",
+      "stats": [
+        {
+          "value": "1 650 m²",
+          "label": "chauffés et sortis du fioul"
+        },
+        {
+          "value": "240 kW",
+          "label": "de chaleur récupérée sur la production de froid"
+        },
+        {
+          "value": "14,8 GWh cumac*",
+          "label": "d'économies d'énergie estimées sur 6 opérations"
+        },
+        {
+          "value": "3 432 h",
+          "label": "par an d'utilisation de la chaleur récupérée"
+        },
+        {
+          "value": "40 %*",
+          "label": "d'économie d'énergie visée sur 10 ans par contrat de performance"
+        }
+      ],
+      "faqs": [],
+      "noindex": false,
+      "status": "published",
+      "disabled": false,
+      "template": "project"
+    },
+    {
+      "tab": "22_Ref_Carrefour",
+      "path": "/realisations/carrefour-market-recuperation-de-chaleur/",
+      "title": "Réalisation : Carrefour Market",
+      "seoTitle": "Récupération de chaleur chez Carrefour Market | PEXEN",
+      "metaDescription": "Récupération de chaleur sur le froid commercial d'un Carrefour Market, toiture-terrasse isolée et contrat de performance énergétique visant −40 % sur 10 ans.",
+      "h1": "Carrefour Market : récupération de chaleur et contrat de performance",
+      "intro": "Île-de-France · Grande distribution · Supermarché",
+      "image": "/themes/ultra-s/images/pexen/installation-technique.webp",
+      "bodyHtml": "<h2>Le site avant travaux</h2>\n<p>Une centrale de froid commercial de sept compresseurs, premier poste électrique du magasin, et un chauffage au gaz. Objectif : réduire durablement les consommations et l&#x27;inscrire dans un contrat de performance énergétique.</p>\n<h2>Récupération de chaleur : ce que PEXEN a installé</h2>\n<ul><li>Récupération de chaleur sur le groupe de production de froid, pour le chauffage et l&#x27;eau chaude sanitaire.</li><li>Régulation haute pression flottante de la centrale froid.</li><li>Isolation de la toiture-terrasse.</li><li>Régulation de la production de chaleur.</li><li>Modernisation des meubles frigorifiques à température positive et négative.</li></ul>\n<h2>Le chantier étape par étape</h2>\n<ol><li>Étude : situation de référence énergétique du magasin et gisement par action.</li><li>Dimensionnement : échangeur et ballon tampon sur la centrale froid, isolant de toiture.</li><li>Travaux phasés, livraison et pose de l&#x27;isolant sur la toiture-terrasse.</li><li>Contrôle de conformité et suivi annuel du contrat de performance.</li></ol>\n<h2>Avant et après travaux</h2>\n<h2>Les chiffres du projet</h2>\n<ul><li>Chaleur des groupes froids réutilisée pour le chauffage et l&#x27;eau chaude.</li><li>Toiture-terrasse conforme aux exigences thermiques actuelles.</li><li>Objectif de −40 % de consommation sur le périmètre traité, sur 10 ans*.</li></ul>\n<p class=\"text-sm text-slate-500\">* Volume d&#x27;économies d&#x27;énergie estimé selon les fiches d&#x27;opérations standardisées mobilisées : le kWh cumac cumule et actualise les économies sur la durée de vie conventionnelle des équipements. Il ne constitue pas une mesure des consommations réelles.<br/>* Objectif contractuel de réduction des consommations, sur le périmètre et la durée du contrat de performance énergétique (10 ans), à conditions d&#x27;exploitation comparables.</p>\n<h2>Un projet ? Parlons-en.</h2>\n<p>Prise de contact sous 48 h ouvrées par un ingénieur PEXEN, pour qualifier votre besoin et définir les prochaines étapes.</p>",
+      "stats": [
+        {
+          "value": "535 kW",
+          "label": "de chaleur récupérée sur la production de froid"
+        },
+        {
+          "value": "30,6 GWh cumac*",
+          "label": "d'économies d'énergie estimées sur 5 opérations"
+        },
+        {
+          "value": "3 375 h",
+          "label": "par an d'utilisation de la chaleur récupérée"
+        },
+        {
+          "value": "7",
+          "label": "compresseurs raccordés à la régulation haute pression flottante"
+        },
+        {
+          "value": "40 %*",
+          "label": "d'économie d'énergie visée sur 10 ans par contrat de performance"
+        }
+      ],
+      "faqs": [],
+      "noindex": false,
+      "status": "published",
+      "disabled": false,
+      "template": "project"
+    },
+    {
+      "tab": "23_Ref_CEDIM",
+      "path": "/realisations/cedim-destratification/",
+      "title": "Réalisation : CEDIM",
+      "seoTitle": "Déstratification chez CEDIM : grande hauteur | PEXEN",
+      "metaDescription": "Déstratification chez CEDIM : déstratificateurs installés à 9 m de hauteur dans un magasin de 1 213 m² chauffé au gaz, chaleur ramenée vers la zone occupée.",
+      "h1": "CEDIM : déstratification d'un magasin de grande hauteur",
+      "intro": "Centre-Val de Loire · Négoce et entrepôt",
+      "image": "/themes/ultra-s/images/pexen/climatisation-toiture.webp",
+      "bodyHtml": "<h2>Le site avant travaux</h2>\n<p>Un magasin de grande hauteur chauffé par cinq aérothermes gaz : l&#x27;air chaud s&#x27;accumule sous la toiture, le sol reste froid et les aérothermes compensent.</p>\n<h2>Déstratification : ce que PEXEN a installé</h2>\n<p>Des déstratificateurs d&#x27;air installés à 9 m, sous la toiture, asservis à une sonde de température haute, ramènent la chaleur déjà produite vers la zone occupée. La chaleur déjà produite est mieux répartie, sans augmenter la puissance de chauffage.</p>\n<h2>Le chantier étape par étape</h2>\n<ol><li>Étude : relevé des aérothermes gaz et de la hauteur sous plafond.</li><li>Dimensionnement : note de calcul de la déstratification, maillage des appareils.</li><li>Installation en site ouvert et réglage des seuils de déclenchement.</li><li>Contrôle de conformité et suivi du fonctionnement des aérothermes.</li></ol>\n<h2>Avant et après travaux</h2>\n<h2>Les chiffres du projet</h2>\n<ul><li>Température plus homogène entre le sol et la toiture.</li><li>Temps de fonctionnement des aérothermes réduit.</li><li>Meilleur confort des équipes et des clients.</li></ul>\n<p class=\"text-sm text-slate-500\">* Volume d&#x27;économies d&#x27;énergie estimé selon les fiches d&#x27;opérations standardisées mobilisées : le kWh cumac cumule et actualise les économies sur la durée de vie conventionnelle des équipements. Il ne constitue pas une mesure des consommations réelles.</p>\n<h2>Un projet ? Parlons-en.</h2>\n<p>Prise de contact sous 48 h ouvrées par un ingénieur PEXEN, pour qualifier votre besoin et définir les prochaines étapes.</p>",
+      "stats": [
+        {
+          "value": "9 m",
+          "label": "de hauteur sous toiture traitée"
+        },
+        {
+          "value": "1 213 m²",
+          "label": "de magasin chauffé"
+        },
+        {
+          "value": "3",
+          "label": "déstratificateurs d'air asservis à la température"
+        },
+        {
+          "value": "2,1 GWh cumac*",
+          "label": "d'économies d'énergie estimées"
+        }
+      ],
+      "faqs": [],
+      "noindex": false,
+      "status": "published",
+      "disabled": false,
+      "template": "project"
+    },
+    {
+      "tab": "23b_Ref_Colorcon",
+      "path": "/realisations/colorcon-efficacite-energetique-industrielle/",
+      "title": "Réalisation Colorcon",
+      "seoTitle": "Efficacité énergétique industrielle chez Colorcon | PEXEN",
+      "metaDescription": "Efficacité énergétique industrielle sur un site pharmaceutique Colorcon : chaufferie vapeur, production de froid et réseaux calorifugés, relevés et étude PEXEN.",
+      "h1": "Colorcon : efficacité énergétique industrielle d'un site pharmaceutique",
+      "intro": "Île-de-France · Industrie pharmaceutique · [À compléter par Abdou : statut : étude, travaux en cours ou réalisé]",
+      "image": "/themes/ultra-s/images/pexen/centrale-froid.webp",
+      "bodyHtml": "<h2>Le site avant travaux</h2>\n<p>Un site de production pharmaceutique qui fonctionne en continu, avec une chaufferie vapeur, une production de froid process et des réseaux de distribution. Le relevé de PEXEN a porté sur la chaudière vapeur et son brûleur, le groupe de production de froid, les ballons, les pompes et les réseaux de tuyauterie.<br/>[À compléter par Abdou : consommations de référence sur 12 mois : gaz ou vapeur, électricité du froid]</p>\n<h2>Efficacité énergétique industrielle : ce que PEXEN a installé</h2>\n<ul><li>[À compléter par Abdou : opération 1, par exemple récupération de chaleur fatale par pompe à chaleur (IND-UT-137)]</li><li>[À compléter par Abdou : opération 2, par exemple calorifugeage des réseaux et matelas isolants (IND-UT-131, IND-UT-121)]</li><li>[À compléter par Abdou : opération 3, par exemple brûleur micro-modulant ou pilotage (IND-UT-105, IND-UT-134)]</li></ul>\n<h2>Le chantier étape par étape</h2>\n<ol><li>Relevé sur site : chaufferie vapeur, production de froid, réseaux (réalisé).</li><li>[À compléter par Abdou : étude et dimensionnement : notes de calcul, date]</li><li>[À compléter par Abdou : travaux : période, contraintes de production]</li><li>[À compléter par Abdou : mise en service, contrôle et suivi des consommations]</li></ol>\n<h2>Avant et après travaux</h2>\n<h2>Les chiffres du projet</h2>\n<ul><li>[À compléter par Abdou : économies d&#x27;énergie estimées (GWh cumac* ou % sur le poste traité)]</li><li>[À compléter par Abdou : heures de fonctionnement annuelles des équipements traités]</li></ul>\n<p class=\"text-sm text-slate-500\">* Volume d&#x27;économies d&#x27;énergie estimé selon les fiches d&#x27;opérations standardisées mobilisées : le kWh cumac cumule et actualise les économies sur la durée de vie conventionnelle des équipements. Il ne constitue pas une mesure des consommations réelles.</p>\n<h2>Un projet ? Parlons-en.</h2>\n<p>Prise de contact sous 48 h ouvrées par un ingénieur PEXEN, pour qualifier votre besoin et définir les prochaines étapes.</p>",
+      "stats": [],
+      "faqs": [],
+      "noindex": true,
+      "status": "published",
+      "disabled": false,
+      "template": "project"
+    },
+    {
+      "tab": "24_Notre_approche",
+      "path": "/notre-approche/",
+      "title": "Notre approche",
+      "seoTitle": "Ingénierie et performance énergétique : méthode | PEXEN",
+      "metaDescription": "Ingénierie et performance énergétique de l'étude au suivi : dimensionnement, travaux, mise en service, contrôle et suivi des consommations.",
+      "h1": "Notre approche",
+      "intro": "",
+      "image": "/themes/ultra-s/images/pexen/professionnel-pac.webp",
+      "bodyHtml": "<h2>Notre mission</h2>\n<p>Rendre la performance énergétique des sites industriels et tertiaires mesurable et durable, de la note de calcul au suivi des consommations.</p>\n<h2>Ingénierie et performance énergétique : 5 étapes, de l&#x27;étude au suivi</h2>\n<p>PEXEN dimensionne, réalise et suit le projet après l&#x27;étude.</p>\n<h2>Les livrables, étape par étape</h2>\n<h2>Nos valeurs</h2>\n<h2>Ingénierie, travaux et suivi réunis</h2>\n<p>Un bureau d&#x27;études s&#x27;arrête au rapport. Un installateur dimensionne au catalogue. PEXEN porte la note de calcul, le chantier et le suivi : le froid, la chaleur, le pilotage et l&#x27;isolation traités dans un même projet, par la même équipe. Le financement CEE y est intégré lorsqu&#x27;il est applicable.</p>\n<h2>Qualifiés, assurés, contrôlés</h2>\n<h2>Questions fréquentes sur notre approche</h2>\n<h2>Un projet ? Parlons-en.</h2>\n<p>Prise de contact sous 48 h ouvrées par un ingénieur PEXEN, pour qualifier votre besoin et définir les prochaines étapes.</p>",
+      "stats": [],
+      "faqs": [],
+      "noindex": false,
+      "status": "published",
+      "disabled": false,
+      "template": "default"
+    },
+    {
+      "tab": "25_Contact",
+      "path": "/contact/",
+      "title": "Contact",
+      "seoTitle": "Contact : parler de votre projet | PEXEN",
+      "metaDescription": "Contact PEXEN : décrivez votre site et votre projet de performance énergétique. Prise de contact sous 48 h ouvrées par un ingénieur pour qualifier votre besoin.",
+      "h1": "Parlons de votre projet",
+      "intro": "",
+      "image": "/themes/ultra-s/images/pexen/centrale-froid.webp",
+      "bodyHtml": "<p>Décrivez votre site, vos installations et vos échéances. Prise de contact sous 48 h ouvrées par un ingénieur PEXEN, pour qualifier votre besoin et définir les prochaines étapes.</p>\n<h2>Ce qui se passe après votre demande</h2>\n<ol><li>Un ingénieur étudie votre demande.</li><li>Il prend contact avec vous pour qualifier le besoin.</li><li>Nous organisons la visite technique de votre site.</li></ol>",
+      "stats": [],
+      "faqs": [],
+      "noindex": false,
+      "status": "published",
+      "disabled": false,
+      "template": "default"
+    },
+    {
+      "tab": "26_Merci",
+      "path": "/contact/merci/",
+      "title": "Merci",
+      "seoTitle": "Merci | PEXEN",
+      "metaDescription": "Confirmation d'envoi de votre demande.",
+      "h1": "Merci, votre demande a bien été envoyée.",
+      "intro": "Elle sera traitée dans les meilleurs délais par un ingénieur PEXEN.",
+      "image": "/themes/ultra-s/images/pexen/centrale-froid.webp",
+      "bodyHtml": "<p>Elle sera traitée dans les meilleurs délais par un ingénieur PEXEN.</p>",
+      "stats": [],
+      "faqs": [],
+      "noindex": true,
+      "status": "published",
+      "disabled": false,
+      "template": "default"
+    },
+    {
+      "tab": "26_404",
+      "path": "/404/",
+      "title": "Page introuvable",
+      "seoTitle": "Page introuvable | PEXEN",
+      "metaDescription": "Page introuvable.",
+      "h1": "Cette page n'existe pas ou a été déplacée.",
+      "intro": "Le site PEXEN a évolué : certaines adresses ont changé. Voici les pages les plus consultées.",
+      "image": "/themes/ultra-s/images/pexen/centrale-froid.webp",
+      "bodyHtml": "<p>Le site PEXEN a évolué : certaines adresses ont changé.</p><ul><li><a href=\"/solutions/\">Solutions</a></li><li><a href=\"/realisations/\">Réalisations</a></li><li><a href=\"/contact/\">Contact</a></li></ul>",
+      "stats": [],
+      "faqs": [],
+      "noindex": true,
+      "status": "published",
+      "disabled": false,
+      "template": "default"
+    },
+    {
+      "tab": "27_Mentions_legales",
+      "path": "/mentions-legales/",
+      "title": "Mentions légales",
+      "seoTitle": "Mentions légales | PEXEN",
+      "metaDescription": "Mentions légales du site pexen.fr : éditeur, directeur de la publication, hébergeur, qualifications et assurances.",
+      "h1": "Mentions légales",
+      "intro": "Dernière mise à jour : 22 octobre 2026",
+      "image": "/themes/ultra-s/images/pexen/centrale-froid.webp",
+      "bodyHtml": "<p><em>Dernière mise à jour : 22 octobre 2026</em></p>\n<h2>1. Éditeur du site</h2>\n<p>Le site pexen.fr (ci-après « le Site ») est édité par la société PEXEN, société par actions simplifiée au capital de 30 000 euros, immatriculée au registre du commerce et des sociétés de Bobigny sous le numéro 922 217 336, dont le siège social est situé 111 AVENUE VICTOR HUGO 93300 AUBERVILLIERS (SIRET : 922 217 336 00028).</p>\n<p>Numéro de TVA intracommunautaire : FR75922217336</p>\n<p>Téléphone : 01 41 93 52 80</p>\n<p>Adresse électronique : contact@pexen.fr</p>\n<p>PEXEN® est une marque de la société PEXEN.</p>\n<h2>2. Directeur de la publication</h2>\n<p>Monsieur Jamel Yacouben, en sa qualité de Président de la société PEXEN.</p>\n<h2>3. Hébergement</h2>\n<p>Le Site est hébergé par IONOS.</p>\n<h2>4. Qualifications et assurances</h2>\n<p>PEXEN est titulaire des qualifications RGE QualiPAC (pompes à chaleur, chauffage et eau chaude sanitaire), certificat n° QPAC/70449, et RGE Qualisol CESI, certificat n° QS/70449, délivrées par Qualit&#x27;EnR. Leur validité peut être vérifiée sur l&#x27;annuaire officiel France Rénov&#x27;.</p>\n<p>Les audits énergétiques mentionnés sur le Site sont réalisés par le bureau d&#x27;études partenaire Leo Energy, titulaire de qualifications OPQIBI. Ces qualifications appartiennent à Leo Energy et non à PEXEN.</p>\n<p>PEXEN a souscrit une assurance de responsabilité civile professionnelle et une assurance de responsabilité civile décennale auprès de MIC Insurance Company (police n° PTF N-3898616), couvrant les travaux réalisés en France métropolitaine.</p>\n<h2>5. Propriété intellectuelle</h2>\n<p>L&#x27;ensemble des éléments composant le Site, notamment les textes, visuels, photographies, illustrations, schémas, vidéos, éléments graphiques, chartes graphiques, logiciels, bases de données, la marque déposée PEXEN®, ainsi que la structure, l&#x27;agencement et la présentation du Site, sont la propriété exclusive et intégrale de la société PEXEN ou font l&#x27;objet d&#x27;autorisations d&#x27;utilisation spécifiques accordées à celle-ci.</p>\n<p>Toute reproduction, représentation, modification, adaptation, altération, traduction, extraction, réutilisation, diffusion ou exploitation, totale ou partielle, de ces éléments, de la marque PEXEN® ou de tout ou partie du contenu du Site, par quelque procédé que ce soit, sur quel que support que ce soit, sans l&#x27;autorisation écrite, préalable et expresse de la société PEXEN, est strictement interdite. Tout manquement constitue une contrefaçon sanctionnée par les articles L. 335-2 et suivants ainsi que L. 716-1 et suivants du Code de la propriété intellectuelle, susceptible d&#x27;engager la responsabilité civile et pénale de son auteur. PEXEN se réserve le droit d&#x27;engager toute poursuite judiciaire nécessaire à la préservation de ses droits.</p>\n<p>Les noms et logos des clients figurant sur le Site sont reproduits avec leur accord. Les logos des organismes de qualification appartiennent à ces organismes.</p>\n<h2>6. Informations techniques, chiffres et estimations</h2>\n<p>Les informations, éléments graphiques, données techniques et outils de simulation publiés sur le Site sont fournis exclusivement à titre informatif et indicatif. Ils ne constituent en aucun cas une offre contractuelle, un conseil juridique, financier ou technique engagé, ni une garantie de résultat ou d&#x27;éligibilité. Seule une étude de faisabilité sur site réalisée par nos équipes et la signature d&#x27;un devis ou d&#x27;un contrat ferme engagent PEXEN.</p>\n<p>Les estimations d&#x27;économies d&#x27;énergie (exprimées en kWh cumac, GWh cumac ou pourcentages) sont établies à titre théorique et indicatif selon les fiches d&#x27;opérations standardisées de certificats d&#x27;économies d&#x27;énergie (CEE) ou des modèles de simulation. Elles ne constituent en aucun cas un engagement ferme ou une mesure des consommations réelles. PEXEN exclut toute responsabilité en cas d&#x27;écart entre les estimations affichées et les économies réellement constatées ultérieurement.</p>\n<p>Les pourcentages de réduction des consommations associés à un contrat de performance énergétique correspondent à des objectifs contractuels, définis sur un périmètre, une durée et des conditions d&#x27;exploitation déterminés dans le contrat concerné.</p>\n<p>Les informations réglementaires (décret tertiaire, décret BACS, dispositif des certificats d&#x27;économies d&#x27;énergie) sont à jour à la date indiquée sur chaque page. Elles peuvent évoluer ; seuls les textes publiés au Journal officiel font foi.</p>\n<h2>7. Responsabilité</h2>\n<p>PEXEN s&#x27;efforce de maintenir le Site à jour et accessible, sans toutefois pouvoir garantir l&#x27;absence totale d&#x27;erreurs, de virus, d&#x27;interruptions techniques ou d&#x27;inexactitudes. Dans les limites autorisées par la loi, PEXEN décline toute responsabilité pour tout dommage direct ou indirect, matériel ou immatériel (incluant notamment les pertes de données, de chiffre d&#x27;affaires, de bénéfices ou d&#x27;opportunités) résultant de l&#x27;accès au Site, de son indisponibilité, ou de l&#x27;utilisation des informations et simulations qui y figurent.</p>\n<h2>8. Liens hypertextes</h2>\n<p>Le Site peut contenir des liens vers des sites tiers, notamment des sites institutionnels. PEXEN n&#x27;exerce aucun contrôle sur ces sites et décline toute responsabilité quant à leur contenu.</p>\n<p>La création d&#x27;un lien vers le Site est libre, à condition qu&#x27;il ne porte pas atteinte à l&#x27;image de PEXEN et qu&#x27;il ouvre le Site dans une nouvelle fenêtre. PEXEN peut demander la suppression de tout lien à tout moment.</p>\n<h2>9. Données personnelles et cookies</h2>\n<p>Le traitement des données personnelles collectées sur le Site et l&#x27;utilisation des cookies sont décrits dans la <a href=\"/politique-de-confidentialite/\">politique de confidentialité</a>, accessible depuis chaque page du Site.</p>\n<h2>10. Droit applicable et juridiction</h2>\n<p>Les présentes mentions légales sont régies par le droit français. Tout litige relatif au Site relève, à défaut de résolution amiable et sous réserve des règles de compétence impératives, des juridictions compétentes du ressort du siège social de PEXEN.</p>",
+      "stats": [],
+      "faqs": [],
+      "noindex": true,
+      "status": "published",
+      "disabled": false,
+      "template": "legal"
+    },
+    {
+      "tab": "28_Confidentialite",
+      "path": "/politique-de-confidentialite/",
+      "title": "Politique de confidentialité",
+      "seoTitle": "Politique de confidentialité | PEXEN",
+      "metaDescription": "Comment PEXEN collecte, utilise et protège vos données personnelles.",
+      "h1": "Politique de confidentialité",
+      "intro": "Dernière mise à jour : 22 octobre 2026",
+      "image": "/themes/ultra-s/images/pexen/centrale-froid.webp",
+      "bodyHtml": "<p><em>Dernière mise à jour : 22 octobre 2026</em></p>\n<p>La présente politique informe les visiteurs du Site et les personnes qui contactent PEXEN de la manière dont leurs données personnelles sont traitées, conformément au règlement (UE) 2016/679 du 27 avril 2016 (« RGPD ») et à la loi n° 78-17 du 6 janvier 1978 relative à l&#x27;informatique, aux fichiers et aux libertés.</p>\n<h2>1. Responsable du traitement</h2>\n<p>Le responsable du traitement est la société PEXEN, société par actions simplifiée au capital de 30 000 euros, immatriculée au RCS de Bobigny sous le numéro 922 217 336 (SIRET : 922 217 336 00028), dont le siège social est situé 111 AVENUE VICTOR HUGO 93300 AUBERVILLIERS, représentée par son Président, Monsieur Jamel Yacouben.</p>\n<p>Pour toute question relative à vos données : contact@pexen.fr. PEXEN n&#x27;a pas désigné de délégué à la protection des données, cette désignation n&#x27;étant pas obligatoire au regard de son activité.</p>\n<h2>2. Données collectées</h2>\n<p>Formulaire de contact : nom et prénom, société, fonction (facultatif), adresse électronique professionnelle, numéro de téléphone, profil (entreprise, bailleur ou syndic, partenaire professionnel), type de site et description du projet. Les champs obligatoires sont signalés par un astérisque ; sans eux, PEXEN ne peut pas traiter la demande.</p>\n<p>Outil « Estimer le financement » : type de site, nature des travaux envisagés et caractéristiques techniques saisies. Ces données ne sont rattachées à une personne que si celle-ci transmet ensuite ses coordonnées.</p>\n<p>Échanges via WhatsApp : numéro de téléphone, nom de profil et contenu des messages, lorsque vous choisissez ce canal.</p>\n<p>Assistant « Conseil PXN » : questions saisies dans l&#x27;assistant. Il est demandé de n&#x27;y saisir aucune donnée personnelle.</p>\n<p>Navigation : avec votre consentement uniquement, données de mesure d&#x27;audience (pages consultées, durée de visite, type d&#x27;appareil et de navigateur, localisation approximative déduite de l&#x27;adresse IP tronquée).</p>\n<h2>3. Finalités et bases légales</h2>\n<div class=\"table-responsive\"><table class=\"table\"><thead><tr><th scope=\"col\">Finalité</th><th scope=\"col\">Base légale</th></tr></thead><tbody><tr><td>Répondre à votre demande, organiser la visite technique et établir une proposition</td><td>Mesures précontractuelles prises à votre demande (article 6.1.b du RGPD)</td></tr><tr><td>Gérer la relation commerciale et l&#x27;exécution des contrats</td><td>Exécution du contrat (article 6.1.b)</td></tr><tr><td>Adresser aux professionnels des informations sur les offres de PEXEN en rapport avec leur activité</td><td>Intérêt légitime de PEXEN (article 6.1.f), avec faculté d&#x27;opposition à tout moment</td></tr><tr><td>Constituer les dossiers de financement et répondre aux contrôles lorsque l&#x27;opération relève du dispositif des certificats d&#x27;économies d&#x27;énergie</td><td>Obligation légale et exécution du contrat (articles 6.1.c et 6.1.b)</td></tr><tr><td>Mesurer l&#x27;audience du Site et en améliorer le contenu</td><td>Consentement (article 6.1.a), recueilli par le bandeau cookies</td></tr><tr><td>Assurer la sécurité du Site et prévenir les envois abusifs du formulaire</td><td>Intérêt légitime de PEXEN (article 6.1.f)</td></tr><tr><td>Respecter les obligations comptables et fiscales</td><td>Obligation légale (article 6.1.c)</td></tr></tbody></table></div>\n<h2>4. Destinataires</h2>\n<p>Les données sont destinées aux seules personnes habilitées de PEXEN, dans la limite de leurs attributions. Elles peuvent être communiquées à des prestataires agissant pour le compte de PEXEN en qualité de sous-traitants : l&#x27;hébergeur du Site IONOS, Google Ireland Limited (messagerie professionnelle et, avec votre accord, Google Analytics) et Meta Platforms Ireland Limited (WhatsApp), pour les échanges que vous initiez sur ce canal.</p>\n<p>Lorsqu&#x27;un projet relève du dispositif des certificats d&#x27;économies d&#x27;énergie, les données nécessaires au dossier sont transmises au partenaire financeur de l&#x27;opération et à l&#x27;organisme de contrôle accrédité, dans le cadre prévu par la réglementation. Vous en êtes informé au moment de la constitution du dossier.</p>\n<p>Les données ne sont ni vendues, ni louées, ni cédées à des tiers à des fins commerciales.</p>\n<h2>5. Transferts hors de l&#x27;Union européenne</h2>\n<p>L&#x27;utilisation de Google Analytics et de WhatsApp peut entraîner un transfert de données vers les États-Unis. Ces transferts sont encadrés par la décision d&#x27;adéquation de la Commission européenne relative au cadre de protection des données UE–États-Unis (Data Privacy Framework), à laquelle ces sociétés ont adhéré, et, à défaut, par les clauses contractuelles types de la Commission européenne.</p>\n<h2>6. Durées de conservation</h2>\n<div class=\"table-responsive\"><table class=\"table\"><thead><tr><th scope=\"col\">Données</th><th scope=\"col\">Durée</th></tr></thead><tbody><tr><td>Demande de contact sans suite</td><td>3 ans à compter du dernier contact émanant de la personne</td></tr><tr><td>Données des clients</td><td>Durée de la relation contractuelle, puis 3 ans à des fins de prospection ; durée de la prescription applicable pour la gestion d&#x27;un éventuel contentieux</td></tr><tr><td>Pièces des dossiers de travaux et de financement</td><td>Durée imposée par la réglementation applicable à l&#x27;opération</td></tr><tr><td>Pièces comptables</td><td>10 ans (article L. 123-22 du Code de commerce)</td></tr><tr><td>Cookies de mesure d&#x27;audience</td><td>13 mois au maximum à compter de leur dépôt</td></tr><tr><td>Données de mesure d&#x27;audience</td><td>14 mois</td></tr><tr><td>Choix exprimé dans le bandeau cookies</td><td>6 mois, au terme desquels votre choix est de nouveau demandé</td></tr></tbody></table></div>\n<h2>7. Vos droits</h2>\n<p>Vous disposez d&#x27;un droit d&#x27;accès, de rectification, d&#x27;effacement, de limitation du traitement, d&#x27;opposition, notamment à la prospection, et à la portabilité de vos données, ainsi que du droit de définir des directives relatives au sort de vos données après votre décès. Lorsque le traitement repose sur votre consentement, vous pouvez le retirer à tout moment, sans que cela remette en cause la licéité du traitement effectué avant ce retrait.</p>\n<p>Pour exercer ces droits, écrivez à contact@pexen.fr. Une réponse vous est apportée dans un délai d&#x27;un mois, prolongeable de deux mois compte tenu de la complexité ou du nombre de demandes. Un justificatif d&#x27;identité peut vous être demandé en cas de doute raisonnable sur votre identité.</p>\n<p>Si vous estimez, après avoir contacté PEXEN, que vos droits ne sont pas respectés, vous pouvez introduire une réclamation auprès de la Commission nationale de l&#x27;informatique et des libertés (CNIL), 3 place de Fontenoy, TSA 80715, 75334 Paris Cedex 07, <a href=\"https://www.cnil.fr/\" target=\"_blank\" rel=\"noopener\">www.cnil.fr</a>.</p>\n<h2>8. Sécurité</h2>\n<p>PEXEN met en œuvre des mesures techniques et organisationnelles renforcées et adaptées au risque pour préserver la sécurité, l&#x27;intégrité et la confidentialité des données personnelles et empêcher toute altération, perte ou accès non autorisé : protocole HTTPS chiffré, contrôle strict des accès réservés au seul personnel habilité, politiques de mots de passe renforcées et sélection de sous-traitants présentant des garanties suffisantes de conformité au RGPD.</p>\n<h2>9. Cookies</h2>\n<p>Un cookie est un fichier déposé sur votre terminal lors de la consultation du Site. Le Site utilise :</p>\n<div class=\"table-responsive\"><table class=\"table\"><thead><tr><th scope=\"col\">Catégorie</th><th scope=\"col\">Finalité</th><th scope=\"col\">Consentement</th><th scope=\"col\">Durée</th></tr></thead><tbody><tr><td>Cookies nécessaires</td><td>Fonctionnement et sécurité du Site, mémorisation de votre choix en matière de cookies</td><td>Non requis</td><td>6 mois au maximum</td></tr><tr><td>Mesure d&#x27;audience (Google Analytics 4 : _ga, _ga_GRR10GDECY)</td><td>Statistiques de fréquentation et amélioration des contenus</td><td>Requis</td><td>13 mois au maximum</td></tr></tbody></table></div>\n<p>Lors de votre première visite, un bandeau vous permet d&#x27;accepter, de refuser ou de paramétrer les cookies soumis à consentement. Refuser est aussi simple qu&#x27;accepter. Aucun cookie de mesure d&#x27;audience n&#x27;est déposé avant votre choix. Vous pouvez modifier ce choix à tout moment grâce au lien « Gérer mes cookies » présent en bas de chaque page.</p>\n<p>Vous pouvez également configurer votre navigateur pour bloquer les cookies. Les cookies nécessaires restant indispensables au fonctionnement du Site, leur blocage peut en limiter certaines fonctionnalités.</p>\n<h2>10. Modification de la politique</h2>\n<p>PEXEN peut modifier la présente politique pour tenir compte des évolutions légales, réglementaires ou techniques. La date de dernière mise à jour figure en tête de page.</p>",
+      "stats": [],
+      "faqs": [],
+      "noindex": true,
+      "status": "published",
+      "disabled": false,
+      "template": "legal"
+    },
+    {
+      "tab": "28_Cookies",
+      "path": "/cookies/",
+      "title": "Cookies",
+      "seoTitle": "Cookies | PEXEN",
+      "metaDescription": "Les cookies utilisés sur pexen.fr : cookies nécessaires et mesure d’audience Google Analytics 4.",
+      "h1": "Cookies",
+      "intro": "Dernière mise à jour : 22 octobre 2026",
+      "image": "/themes/ultra-s/images/pexen/centrale-froid.webp",
+      "bodyHtml": "<p><em>Dernière mise à jour : 22 octobre 2026</em></p>\n<p>Cette page détaille l’utilisation des cookies sur pexen.fr. Pour l’ensemble du traitement des données personnelles, consultez la <a href=\"/politique-de-confidentialite/\">politique de confidentialité</a>.</p>\n<h2>Cookies</h2>\n<p>Un cookie est un fichier déposé sur votre terminal lors de la consultation du Site. Le Site utilise :</p>\n<div class=\"table-responsive\"><table class=\"table\"><thead><tr><th scope=\"col\">Catégorie</th><th scope=\"col\">Finalité</th><th scope=\"col\">Consentement</th><th scope=\"col\">Durée</th></tr></thead><tbody><tr><td>Cookies nécessaires</td><td>Fonctionnement et sécurité du Site, mémorisation de votre choix en matière de cookies</td><td>Non requis</td><td>6 mois au maximum</td></tr><tr><td>Mesure d&#x27;audience (Google Analytics 4 : _ga, _ga_GRR10GDECY)</td><td>Statistiques de fréquentation et amélioration des contenus</td><td>Requis</td><td>13 mois au maximum</td></tr></tbody></table></div>\n<p>Lors de votre première visite, un bandeau vous permet d&#x27;accepter, de refuser ou de paramétrer les cookies soumis à consentement. Refuser est aussi simple qu&#x27;accepter. Aucun cookie de mesure d&#x27;audience n&#x27;est déposé avant votre choix. Vous pouvez modifier ce choix à tout moment grâce au lien « Gérer mes cookies » présent en bas de chaque page.</p>\n<p>Vous pouvez également configurer votre navigateur pour bloquer les cookies. Les cookies nécessaires restant indispensables au fonctionnement du Site, leur blocage peut en limiter certaines fonctionnalités.</p>",
+      "stats": [],
+      "faqs": [],
+      "noindex": true,
+      "status": "published",
+      "disabled": false,
+      "template": "legal"
+    }
+  ],
+  "redirects": [
+    [
+      "/expertises/",
+      "/solutions/"
+    ],
+    [
+      "/expertises/froid/",
+      "/solutions/froid-commercial-industriel/"
+    ],
+    [
+      "/expertises/recuperation-de-chaleur/",
+      "/solutions/recuperation-de-chaleur/"
+    ],
+    [
+      "/expertises/chauffage-traitement-air/",
+      "/solutions/decarbonation-chaleur/"
+    ],
+    [
+      "/expertises/gtb-gtc/",
+      "/solutions/pilotage-gtb-decret-bacs/"
+    ],
+    [
+      "/expertises/isolation-technique/",
+      "/solutions/isolation-technique/"
+    ],
+    [
+      "/expertises/reglementation-cee/",
+      "/reglementation-financement/"
+    ],
+    [
+      "/secteurs/residentiel-collectif/",
+      "/secteurs/batiments-collectifs/"
+    ],
+    [
+      "/expertises/froid-commercial-industriel/",
+      "/solutions/froid-commercial-industriel/"
+    ],
+    [
+      "/expertises/pompe-a-chaleur-tertiaire/",
+      "/solutions/pompe-a-chaleur-tertiaire/"
+    ],
+    [
+      "/expertises/gtb-tertiaire-gtc/",
+      "/solutions/pilotage-gtb-decret-bacs/"
+    ],
+    [
+      "/expertises/financement-cee-reglementation/",
+      "/decret-tertiaire-decret-bacs/"
+    ],
+    [
+      "/secteurs/renovation-energetique-copropriete/",
+      "/secteurs/batiments-collectifs/"
+    ],
+    [
+      "/realisations/carrefour-market/",
+      "/realisations/carrefour-market-recuperation-de-chaleur/"
+    ],
+    [
+      "/realisations/intermarche-trevenans/",
+      "/realisations/intermarche-sortie-du-fioul/"
+    ],
+    [
+      "/realisations/colorcon-bazainville/",
+      "/realisations/colorcon-efficacite-energetique-industrielle/"
+    ]
+  ],
+  "formFields": [
+    {
+      "name": "Nom et prénom",
+      "type": "Texte",
+      "required": true,
+      "placeholder": "Ex. : Claire Martin",
+      "error": "Indiquez votre nom et prénom."
+    },
+    {
+      "name": "Société",
+      "type": "Texte",
+      "required": true,
+      "placeholder": "Ex. : Groupe Martin Distribution",
+      "error": "Indiquez le nom de votre société."
+    },
+    {
+      "name": "Fonction",
+      "type": "Liste : Direction technique · Responsable de site · Services généraux · Direction générale · Bureau d'études · Autre",
+      "required": false,
+      "placeholder": "Sélectionnez",
+      "error": "—"
+    },
+    {
+      "name": "E-mail professionnel",
+      "type": "E-mail (format vérifié)",
+      "required": true,
+      "placeholder": "prenom.nom@societe.fr",
+      "error": "Indiquez une adresse e-mail valide."
+    },
+    {
+      "name": "Téléphone",
+      "type": "Téléphone (format français vérifié)",
+      "required": true,
+      "placeholder": "01 23 45 67 89",
+      "error": "Indiquez un numéro de téléphone valide."
+    },
+    {
+      "name": "Vous êtes",
+      "type": "Liste : Entreprise ou gestionnaire de site · Bailleur, syndic ou gestionnaire de bâtiments collectifs · Partenaire professionnel (délégataire, mandataire, fabricant, bureau d'études)",
+      "required": true,
+      "placeholder": "Sélectionnez",
+      "error": "Sélectionnez votre profil."
+    },
+    {
+      "name": "Type de site",
+      "type": "Liste : Industrie · Tertiaire · Bâtiment collectif",
+      "required": true,
+      "placeholder": "Sélectionnez",
+      "error": "Sélectionnez le type de site."
+    },
+    {
+      "name": "Votre projet",
+      "type": "Zone de texte, 4 lignes",
+      "required": true,
+      "placeholder": "Site, installations concernées, échéance…",
+      "error": "Décrivez votre projet en quelques mots."
+    },
+    {
+      "name": "Consentement RGPD",
+      "type": "Case à cocher",
+      "required": true,
+      "placeholder": "J'accepte que PEXEN utilise ces informations pour répondre à ma demande, conformément à la politique de confidentialité.",
+      "error": "Votre accord est nécessaire pour traiter votre demande."
+    }
+  ],
+  "llmsTxt": "# PEXEN\n> PEXEN est une entreprise d'ingénierie et de performance énergétique pour les sites industriels et tertiaires, basée en Île-de-France. Elle étudie, dimensionne, réalise avec ses équipes et suit des projets de froid commercial et industriel, récupération de chaleur, chauffage et traitement d'air, pilotage GTB / GTC et isolation technique. Elle réalise des travaux financés par les CEE lorsque l'opération y est éligible, et des travaux hors de ce dispositif.\n\n## Expertises\n- [Études et ingénierie](https://pexen.fr/etudes-ingenierie-energetique/)\n- [Accompagnement travaux](https://pexen.fr/accompagnement-travaux/)\n- [Contrat de performance énergétique](https://pexen.fr/contrat-de-performance-energetique/)\n- [Réglementation et financement](https://pexen.fr/decret-tertiaire-decret-bacs/)\n\n## Solutions\n- [Froid commercial et industriel](https://pexen.fr/solutions/froid-commercial-industriel/)\n- [Récupération de chaleur](https://pexen.fr/solutions/recuperation-de-chaleur/)\n- [Chauffage et traitement d'air](https://pexen.fr/solutions/pompe-a-chaleur-tertiaire/)\n- [Pilotage GTB / GTC et décret BACS](https://pexen.fr/solutions/pilotage-gtb-decret-bacs/)\n- [Isolation technique](https://pexen.fr/solutions/isolation-technique/)\n\n## Réalisations\n- [Intermarché, sortie du fioul : 1 650 m² chauffés par pompes à chaleur, 240 kW récupérés sur le froid, 14,8 GWh cumac estimés](https://pexen.fr/realisations/intermarche-sortie-du-fioul/)\n- [Carrefour Market : 535 kW de chaleur récupérée sur la production de froid, 30,6 GWh cumac estimés, objectif −40 % sur 10 ans par CPE](https://pexen.fr/realisations/carrefour-market-recuperation-de-chaleur/)\n- [CEDIM : déstratification d'un magasin de 9 m de hauteur, 2,1 GWh cumac estimés](https://pexen.fr/realisations/cedim-destratification/)\n\n## Contact\n- [Parler de votre projet](https://pexen.fr/contact/) · 01 41 93 52 80\n",
+  "orgJsonLd": "{\n \"@context\": \"https://schema.org\",\n \"@type\": \"Organization\",\n \"name\": \"PEXEN\",\n \"legalName\": \"PEXEN SAS\",\n \"url\": \"https://pexen.fr/\",\n \"slogan\": \"Optimiser aujourd'hui. Performer demain.\",\n \"description\": \"Ingénierie et performance énergétique des sites industriels et tertiaires : étude, dimensionnement, travaux, mise en service et suivi des consommations.\",\n \"telephone\": \"+33141935280\",\n \"sameAs\": [\"https://www.linkedin.com/company/pexen/\"],\n \"areaServed\": \"FR\",\n \"address\": {\"@type\": \"PostalAddress\", \"addressRegion\": \"Île-de-France\", \"addressCountry\": \"FR\"},\n \"knowsAbout\": [\"froid commercial et industriel\", \"récupération de chaleur\", \"pompe à chaleur tertiaire\", \"GTB et décret BACS\", \"isolation technique\", \"décret tertiaire\"]\n}",
+  "imgFallback": {
+    "performance-energetique-centrale-froid-pexen.webp": "centrale-froid.webp",
+    "froid-commercial-industriel-centrale-pexen.webp": "centrale-froid.webp",
+    "recuperation-de-chaleur-groupe-froid-pexen.webp": "installation-technique.webp",
+    "pompe-a-chaleur-tertiaire-pexen.webp": "pompes-a-chaleur-toiture.webp",
+    "pilotage-gtb-decret-bacs-pexen.webp": "climatisation-toiture.webp",
+    "isolation-technique-calorifugeage-pexen.webp": "cee-tertiaire.webp",
+    "renovation-globale-tertiaire-pexen.webp": "renovation-energetique.webp",
+    "eclairage-led-tertiaire-pexen.webp": "performance-energetique.webp",
+    "recuperation-de-chaleur-sur-la-centrale-froid-de-carrefour-market.webp": "installation-technique.webp",
+    "pompes-a-chaleur-installees-par-pexen-chez-intermarche.webp": "pompes-a-chaleur-toiture.webp",
+    "destratificateurs-d-air-installes-par-pexen-chez-cedim.webp": "climatisation-toiture.webp",
+    "efficacite-energetique-industrielle-pexen.webp": "centrale-froid.webp",
+    "efficacite-energetique-tertiaire-pexen.webp": "installation-technique.webp",
+    "batiments-collectifs-chaufferie-pexen.webp": "pompes-a-chaleur-toiture.webp",
+    "partenaires-installateur-pexen.webp": "professionnel-pac.webp",
+    "schema-d-ingenierie-fluides-cvc.webp": "schema-energy.svg",
+    "assistance-a-maitrise-d-ouvrage-pexen-livraison-de-materiel-sur.webp": "professionnel-pac.webp",
+    "suivi-de-chantier-pexen-dans-un-supermarche-en-activite.webp": "audit-batiment.webp",
+    "contrat-de-performance-energetique-sur-une-centrale-de-froid-commercial.webp": "centrale-froid.webp",
+    "travaux-realises-dans-le-cadre-d-un-contrat-de-performance.webp": "installation-technique.webp",
+    "echeances-du-decret-tertiaire-et-du-decret-bacs.webp": "cee-tertiaire.webp",
+    "pompe-a-chaleur-tertiaire-efficacite-energetique.webp": "pompes-a-chaleur-toiture.webp",
+    "pompe-a-chaleur-tertiaire-air-eau-installee-par-pexen.webp": "pompes-a-chaleur-toiture.webp",
+    "destratificateur-d-air-installe-dans-un-magasin-de-grande-hauteur.webp": "climatisation-toiture.webp",
+    "recuperation-de-chaleur-sur-groupe-froid-installee-par-pexen.webp": "installation-technique.webp",
+    "schema-de-recuperation-de-chaleur-sur-groupe-de-production-de.webp": "schema-energy.svg",
+    "centrale-de-froid-commercial-optimisee-par-pexen.webp": "centrale-froid.webp",
+    "regulation-haute-pression-flottante-sur-groupe-de-froid-commercial.webp": "centrale-froid.webp",
+    "fermeture-de-meubles-frigorifiques-en-froid-commercial.webp": "installation-technique.webp",
+    "supervision-d-un-batiment-conforme-au-decret-bacs.webp": "climatisation-toiture.webp",
+    "isolation-technique-d-une-toiture-terrasse-par-pexen.webp": "renovation-energetique.webp",
+    "matelas-isolant-demontable-isolation-technique.webp": "cee-tertiaire.webp",
+    "chantier-de-renovation-globale-tertiaire.webp": "renovation-energetique.webp",
+    "renovation-globale-batiment-collectif-chaufferie-pexen.webp": "pompes-a-chaleur-toiture.webp",
+    "eclairage-led-d-un-entrepot-pexen.webp": "performance-energetique.webp",
+    "efficacite-energetique-des-batiments-tertiaires.webp": "installation-technique.webp",
+    "efficacite-energetique-d-un-site-industriel.webp": "centrale-froid.webp",
+    "chaufferie-d-un-batiment-collectif.webp": "pompes-a-chaleur-toiture.webp",
+    "supermarche-accompagne-par-pexen-en-efficacite-energetique-tertiaire.webp": "installation-technique.webp",
+    "chaufferie-vapeur-d-un-site-industriel-efficacite-energetique-industrielle.webp": "centrale-froid.webp",
+    "site-industriel-pharmaceutique-colorcon.webp": "centrale-froid.webp",
+    "chaufferie-de-batiments-collectifs-modernisee-par-pexen.webp": "pompes-a-chaleur-toiture.webp",
+    "pexen-partenaire-installateur-livraison-d-equipements-sur-chantier.webp": "professionnel-pac.webp",
+    "projets-de-performance-energetique-realises-par-pexen.webp": "performance-energetique.webp",
+    "intermarche-sortie-du-fioul-par-pompes-a-chaleur-projet-de.webp": "pompes-a-chaleur-toiture.webp",
+    "carrefour-market-recuperation-de-chaleur-sur-le-froid-commercial.webp": "installation-technique.webp",
+    "cedim-destratificateurs-d-air-installes-par-pexen.webp": "climatisation-toiture.webp",
+    "colorcon-groupe-froid-industrie-pharmaceutique-pexen.webp": "centrale-froid.webp",
+    "pompes-a-chaleur-air-eau-sortie-du-fioul-chez-intermarche.webp": "pompes-a-chaleur-toiture.webp",
+    "destratification-d-air-chez-cedim.webp": "climatisation-toiture.webp",
+    "magasin-cedim-avant-et-apres-destratification.webp": "climatisation-toiture.webp",
+    "colorcon-groupe-froid-efficacite-energetique-industrielle.webp": "centrale-froid.webp",
+    "colorcon-reseaux-calorifuges-industrie.webp": "installation-technique.webp",
+    "ingenieur-pexen-sur-site-ingenierie-et-performance-energetique.webp": "professionnel-pac.webp",
+    "livraison-de-l-isolant-de-toiture-terrasse-toiture-isolee-apres.webp": "renovation-energetique.webp"
+  }
+}

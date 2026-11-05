@@ -1,20 +1,22 @@
-import type { CmsSnapshot, MenuConfig } from './types';
+import type { CmsSnapshot, MenuConfig, SystemSettings } from './types';
+import { createDefaultRoles } from './permissions';
+import { defaultAppearance } from '../themes/registry';
 
 const now = () => new Date().toISOString();
 
 export function createDefaultMenus(): MenuConfig[] {
   const expertisesChildren = [
-    { id: 'm-exp-froid', label: 'Froid commercial & industriel', path: '/expertises/froid/' },
+    { id: 'm-exp-froid', label: 'Froid commercial & industriel', path: '/expertises/froid-commercial-industriel/' },
     { id: 'm-exp-recup', label: 'Récupération de chaleur', path: '/expertises/recuperation-de-chaleur/' },
-    { id: 'm-exp-cvc', label: 'Chauffage & traitement d\'air', path: '/expertises/chauffage-traitement-air/' },
-    { id: 'm-exp-gtb', label: 'GTB / GTC & BACS', path: '/expertises/gtb-gtc/' },
+    { id: 'm-exp-cvc', label: 'Chauffage & traitement d\'air', path: '/expertises/pompe-a-chaleur-tertiaire/' },
+    { id: 'm-exp-gtb', label: 'Pilotage GTB / GTC', path: '/expertises/gtb-tertiaire-gtc/' },
     { id: 'm-exp-iso', label: 'Isolation technique', path: '/expertises/isolation-technique/' },
-    { id: 'm-exp-cee', label: 'Réglementation & CEE', path: '/expertises/reglementation-cee/' },
+    { id: 'm-exp-cee', label: 'Réglementation & financement CEE', path: '/expertises/financement-cee-reglementation/' },
   ];
   const secteursChildren = [
-    { id: 'm-sec-ind', label: 'Industrie', path: '/secteurs/industrie/' },
-    { id: 'm-sec-ter', label: 'Tertiaire', path: '/secteurs/tertiaire/' },
-    { id: 'm-sec-res', label: 'Résidentiel collectif', path: '/secteurs/residentiel-collectif/' },
+    { id: 'm-sec-ind', label: 'Industrie', path: '/secteurs/efficacite-energetique-industrielle/' },
+    { id: 'm-sec-ter', label: 'Tertiaire', path: '/secteurs/efficacite-energetique-tertiaire/' },
+    { id: 'm-sec-res', label: 'Résidentiel collectif', path: '/secteurs/renovation-energetique-copropriete/' },
   ];
 
   const primary: MenuConfig = {
@@ -55,6 +57,7 @@ export function createEmptySnapshot(): CmsSnapshot {
   const t = now();
   return {
     version: 1,
+    appearance: defaultAppearance(),
     general: {
       legalName: 'PEXEN SAS',
       baseline: 'Ingénierie & Performance Énergétique',
@@ -63,25 +66,27 @@ export function createEmptySnapshot(): CmsSnapshot {
       phoneClean: '+33141935280',
       contactEmail: 'contact@pexen.fr',
       slaHours: '48 h ouvrées',
-      address: 'Paris & Déploiement partout en France',
+      address: '111 avenue Victor Hugo, 93300 Aubervilliers',
       timezone: 'Europe/Paris',
       locale: 'fr-FR',
     },
     branding: {
       siteName: 'PEXEN®',
       tagline: 'Ingénierie & Performance Énergétique',
-      logoUrl: '/logo-pexen.svg',
+      logoUrl: '/brand/logo-sans-baseline-couleur.svg',
+      logoDarkUrl: '/brand/logo-principal-blanc.svg',
+      faviconUrl: '/favicon.svg',
       colors: {
-        primary: '#00C6BA',
-        primaryHover: '#00A89D',
-        accent: '#0066EE',
-        navy: '#0B1528',
-        background: '#F5F7FA',
-        text: '#0B1528',
-        muted: '#64748B',
-        border: '#E3E8EE',
+        primary: '#009FCC',
+        primaryHover: '#00769A',
+        accent: '#01CDF3',
+        navy: '#082D4A',
+        background: '#F4F8F9',
+        text: '#0B1B2B',
+        muted: '#5A6B7B',
+        border: '#D5E1E6',
       },
-      fonts: { heading: 'Poppins', body: 'Poppins' },
+      fonts: { heading: 'Sora', body: 'Figtree' },
     },
     pages: [],
     posts: [],
@@ -123,6 +128,9 @@ export function createEmptySnapshot(): CmsSnapshot {
       maxSessionsPerDayPerIp: 20,
       maxTokensPerDayGlobal: 500_000,
       showOnPages: '*',
+      buttonLabel: 'Conseiller PEXEN',
+      statusLabel: 'En ligne',
+      panelTitle: 'Conseiller PEXEN',
     },
     newsletter: {
       enabled: false,
@@ -142,12 +150,73 @@ export function createEmptySnapshot(): CmsSnapshot {
       analyticsEnabled: true,
       sitemapAuto: true,
       seo: createDefaultSeoGlobal(),
+      footerLegalNotes: [
+        '* Volume d’économies d’énergie estimé selon les fiches d’opérations standardisées mobilisées : le kWh cumac cumule et actualise les économies sur la durée de vie conventionnelle des équipements. Il ne constitue pas une mesure des consommations réelles.',
+        '* Objectif contractuel de réduction des consommations, sur le périmètre et la durée du contrat de performance énergétique (10 ans), à conditions d’exploitation comparables.',
+      ],
     },
     google: { connected: false },
     media: [],
     redirects: [],
     users: [],
+    roles: createDefaultRoles(),
+    system: createDefaultSystemSettings(),
   };
+}
+
+export function createDefaultSystemSettings(): SystemSettings {
+  return {
+    smtp: {
+      enabled: false,
+      host: '',
+      port: 587,
+      security: 'starttls',
+      username: '',
+      fromName: 'PEXEN',
+      fromEmail: '',
+      replyTo: '',
+      timeoutSec: 20,
+      allowSelfSigned: false,
+    },
+    notifications: { securityAlerts: true, accountChanges: true, adminEmails: [] },
+    security: {
+      passwordMinLength: 10,
+      requireUppercase: false,
+      requireNumber: true,
+      requireSymbol: false,
+      passwordExpiryDays: 0,
+      sessionHours: 12,
+      rememberDays: 30,
+      idleMinutes: 0,
+      maxLoginAttempts: 8,
+      lockoutMinutes: 15,
+      twoFactor: 'optional',
+      adminIpAllowlist: [],
+      hsts: false,
+    },
+    limits: {
+      publicApiPerMinute: 300,
+      adminApiPerMinute: 600,
+      formSubmissions: { max: 5, windowMinutes: 10 },
+      newsletter: { max: 5, windowMinutes: 10 },
+      passwordReset: { max: 5, windowMinutes: 60 },
+    },
+    uploads: { maxSizeMb: 15, allowImages: true, allowSvg: true, allowVideo: true, allowPdf: true },
+    privacy: { analyticsRetentionDays: 400, submissionsRetentionDays: 0, auditRetentionDays: 365, mailLogRetentionDays: 90, storeSubmitterIp: true },
+    performance: { publicCacheSeconds: 30 },
+  };
+}
+
+/** Complète récursivement `value` avec les clés manquantes de `defaults` (les tableaux sont pris tels quels). */
+export function withDefaults<T>(defaults: T, value: unknown): T {
+  if (Array.isArray(defaults)) return (Array.isArray(value) ? value : defaults) as T;
+  if (defaults && typeof defaults === 'object') {
+    const src = value && typeof value === 'object' && !Array.isArray(value) ? (value as Record<string, unknown>) : {};
+    const out: Record<string, unknown> = { ...src };
+    for (const [k, d] of Object.entries(defaults as Record<string, unknown>)) out[k] = withDefaults(d, src[k]);
+    return out as T;
+  }
+  return (value === undefined || value === null || typeof value !== typeof defaults ? defaults : value) as T;
 }
 
 export function createDefaultSeoGlobal(): import('./types').SeoGlobalSettings {
@@ -156,6 +225,7 @@ export function createDefaultSeoGlobal(): import('./types').SeoGlobalSettings {
     titleSuffix: 'PEXEN',
     organizationName: 'PEXEN SAS',
     socialProfiles: [],
+    gaMeasurementId: '',
   };
 }
 

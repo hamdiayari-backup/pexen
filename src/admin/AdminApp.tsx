@@ -9,6 +9,8 @@ import { ConfirmProvider } from './ui/overlays';
 import { EmptyState, PageSkeleton, Spinner } from './ui/primitives';
 
 const LoginPage = lazy(() => import('./pages/LoginPage'));
+const ResetPasswordPage = lazy(() => import('./pages/ResetPasswordPage'));
+const AccountSetupPage = lazy(() => import('./pages/AccountSetupPage'));
 const DashboardPage = lazy(() => import('./pages/DashboardPage'));
 const AnalyticsPage = lazy(() => import('./pages/AnalyticsPage'));
 const PagesListPage = lazy(() => import('./pages/PagesListPage'));
@@ -22,7 +24,9 @@ const NewsletterPage = lazy(() => import('./pages/NewsletterPage'));
 const EngagementPage = lazy(() => import('./pages/EngagementPage'));
 const AiPage = lazy(() => import('./pages/AiPage'));
 const SeoPage = lazy(() => import('./pages/SeoPage'));
+const PerformancePage = lazy(() => import('./pages/PerformancePage'));
 const BrandingPage = lazy(() => import('./pages/BrandingPage'));
+const ThemesPage = lazy(() => import('./pages/ThemesPage'));
 const GeneralPage = lazy(() => import('./pages/GeneralPage'));
 const MaintenancePage = lazy(() => import('./pages/MaintenancePage'));
 const SettingsPage = lazy(() => import('./pages/SettingsPage'));
@@ -42,15 +46,22 @@ function RequireAuth() {
   const location = useLocation();
   if (!ready) return <FullScreenSpinner />;
   if (!user) return <Navigate to="/login" replace state={{ from: location.pathname }} />;
+  if (user.mustChangePassword || user.mustSetup2fa) {
+    return (
+      <Suspense fallback={<FullScreenSpinner />}>
+        <AccountSetupPage />
+      </Suspense>
+    );
+  }
   return <AdminShell />;
 }
 
-/** Applique les restrictions de rôle définies dans la navigation. */
+/** Applique les permissions définies dans la navigation. */
 function Guard({ path, children }: { path: string; children: React.ReactNode }) {
   const { can } = useAuth();
   const item = ALL_NAV.find((n) => n.to === path);
-  if (item?.roles && !can(...item.roles)) {
-    return <EmptyState icon={Lock} title="Accès restreint" description="Votre rôle ne permet pas d’accéder à cette section. Contactez un super administrateur." />;
+  if (item?.perms && !can(...item.perms)) {
+    return <EmptyState icon={Lock} title="Accès restreint" description="Votre rôle ne donne pas accès à cette section. Contactez un administrateur si vous en avez besoin." />;
   }
   return <Suspense fallback={<PageSkeleton />}>{children}</Suspense>;
 }
@@ -64,6 +75,14 @@ const router = createBrowserRouter(
       element: (
         <Suspense fallback={<FullScreenSpinner />}>
           <LoginPage />
+        </Suspense>
+      ),
+    },
+    {
+      path: '/reset-password',
+      element: (
+        <Suspense fallback={<FullScreenSpinner />}>
+          <ResetPasswordPage />
         </Suspense>
       ),
     },
@@ -83,6 +102,8 @@ const router = createBrowserRouter(
         { path: 'engagement', element: g('/engagement', <EngagementPage />) },
         { path: 'ai', element: g('/ai', <AiPage />) },
         { path: 'seo', element: g('/seo', <SeoPage />) },
+        { path: 'performance', element: g('/performance', <PerformancePage />) },
+        { path: 'themes', element: g('/themes', <ThemesPage />) },
         { path: 'branding', element: g('/branding', <BrandingPage />) },
         { path: 'general', element: g('/general', <GeneralPage />) },
         { path: 'maintenance', element: g('/maintenance', <MaintenancePage />) },

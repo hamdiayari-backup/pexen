@@ -4,9 +4,9 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import { Header } from './components/Header';
-import { Footer } from './components/Footer';
+import { useTheme } from './themes/ThemeProvider';
 import { CookieBanner } from './components/CookieBanner';
+import { Ga4Loader } from './components/Ga4Loader';
 import { NotFoundView } from './views/NotFoundView';
 import { WhatsAppButton } from './components/WhatsAppButton';
 import { AiAssistantButton } from './components/AiAssistantButton';
@@ -25,6 +25,7 @@ const DEFAULT_DESCRIPTION =
   'Réduisez la facture énergétique de vos sites industriels, tertiaires et résidentiels collectifs : audit, travaux, financement CEE et suivi des économies. Partout en France.';
 
 export default function App() {
+  const theme = useTheme();
   const siteConfig = useSiteConfig();
   const preview = usePreviewState();
   const [currentPath, setCurrentPath] = useState(() => normalize(window.location.pathname));
@@ -49,19 +50,51 @@ export default function App() {
   }, []);
 
   useEffect(() => {
+    const rule = siteConfig?.redirects?.find((r) => r.from === currentPath);
+    if (!rule) return;
+    const next = normalize(rule.to.split('#')[0]);
+    const hash = rule.to.includes('#') ? rule.to.slice(rule.to.indexOf('#')) : '';
+    if (next === currentPath) return;
+    try {
+      window.history.replaceState({}, '', `${next}${hash}`);
+    } catch {
+      /* navigation bloquée */
+    }
+    setCurrentPath(next);
+  }, [siteConfig, currentPath]);
+
+  useEffect(() => {
     if (currentPath.startsWith('/blog/')) return;
     let alive = true;
+    const isHome = currentPath === '/' || currentPath === '';
+    /* Invalide tout de suite l’ancienne page → skeleton visible (sauf home). */
+    if (!isHome && !IS_PREVIEW) setLoaded(null);
+    const started = performance.now();
+    const MIN_SK_MS = isHome || IS_PREVIEW ? 0 : 550;
     fetch(`/api/public/pages/by-path?path=${encodeURIComponent(currentPath)}`)
       .then((r) => (r.ok ? r.json() : null))
       .catch(() => null)
-      .then((page: CmsPage | null) => alive && setLoaded({ path: currentPath, page }));
+      .then(async (page: CmsPage | null) => {
+        if (!alive) return;
+        const wait = Math.max(0, MIN_SK_MS - (performance.now() - started));
+        if (wait) await new Promise((r) => setTimeout(r, wait));
+        if (alive) setLoaded({ path: currentPath, page });
+      });
     return () => {
       alive = false;
     };
   }, [currentPath]);
 
-  const previewPage = IS_PREVIEW ? preview?.page ?? null : null;
-  const page = previewPage ?? (loaded?.path === currentPath ? loaded.page : undefined);
+  /* En aperçu éditeur : toujours la page postMessage (non enregistrée), jamais le cache API */
+  const page = IS_PREVIEW
+    ? preview?.page !== undefined && preview?.page !== null
+      ? preview.page
+      : loaded?.path === currentPath
+        ? loaded.page
+        : undefined
+    : loaded?.path === currentPath
+      ? loaded.page
+      : undefined;
 
   useEffect(() => {
     if (page === undefined) return;
@@ -69,37 +102,79 @@ export default function App() {
     document.querySelector('meta[name="description"]')?.setAttribute('content', page?.seo?.metaDescription || DEFAULT_DESCRIPTION);
   }, [page]);
 
+  /* Après chargement CMS : scroll vers #ancre (301 / entrée directe / redirect client). */
+  useEffect(() => {
+    if (!page) return;
+    const hash = window.location.hash;
+    if (!hash || hash.length < 2) return;
+    const tryScroll = () => document.querySelector(hash)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    const t1 = window.setTimeout(tryScroll, 120);
+    const t2 = window.setTimeout(tryScroll, 450);
+    return () => {
+      window.clearTimeout(t1);
+      window.clearTimeout(t2);
+    };
+  }, [page, currentPath]);
+
   const navigate = (newPath: string) => {
     // L'aperçu d'une page en cours d'édition reste figé sur cette page.
-    if (previewPage) return;
-    let clean = normalize(newPath);
-    const rule = (siteConfig?.redirects || []).find((r) => r.from === clean || r.from === newPath);
-    if (rule) clean = normalize(rule.to);
+    if (IS_PREVIEW && preview?.page) return;
+    const hashIndex = newPath.indexOf('#');
+    const hash = hashIndex >= 0 ? newPath.slice(hashIndex) : '';
+    const withoutHash = hashIndex >= 0 ? newPath.slice(0, hashIndex) : newPath;
+    let clean = normalize(withoutHash || '/');
+    const rule = (siteConfig?.redirects || []).find((r) => r.from === clean || r.from === withoutHash);
+    if (rule) {
+      const targetHash = rule.to.includes('#') ? rule.to.slice(rule.to.indexOf('#')) : '';
+      clean = normalize(rule.to.split('#')[0]);
+      if (!hash && targetHash) {
+        try {
+          window.history.pushState({}, '', `${clean}${targetHash}`);
+        } catch {
+          /* navigation bloquée */
+        }
+        setCurrentPath(clean);
+        window.setTimeout(() => document.querySelector(targetHash)?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
+        return;
+      }
+    }
     try {
-      window.history.pushState({}, '', IS_PREVIEW ? `${clean}?cms-preview=1` : clean);
+      window.history.pushState({}, '', `${IS_PREVIEW ? `${clean}?cms-preview=1` : clean}${hash}`);
     } catch {
       /* navigation bloquée par le navigateur */
     }
     setCurrentPath(clean);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (hash) {
+      window.setTimeout(() => document.querySelector(hash)?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
 
   const renderCurrentView = () => {
-    if (!previewPage && currentPath.startsWith('/blog/')) {
+    if (!(IS_PREVIEW && preview?.page) && currentPath.startsWith('/blog/')) {
       const slug = currentPath.split('/').filter(Boolean)[1];
       if (slug) return <BlogPostView slug={slug} onNavigate={navigate} />;
     }
-    if (page === undefined) return <div className="min-h-[60vh]" aria-busy="true" />;
+    if (page === undefined) {
+      /* Accueil : pas de skeleton (demande métier). Pages internes : skeleton Ultra adapté. */
+      const isHome = currentPath === '/' || currentPath === '';
+      if (isHome || IS_PREVIEW) return <div className="min-h-[60vh]" aria-busy="true" />;
+      const Sk = theme.PageSkeleton;
+      return Sk ? <Sk path={currentPath} /> : <div className="min-h-[60vh]" aria-busy="true" />;
+    }
     if (!page) return <NotFoundView onNavigate={navigate} />;
     return <CmsPageView page={page} onNavigate={navigate} selectedBlockId={preview?.selectedBlockId} scrollToBlockId={preview?.scrollToBlockId} scrollNonce={preview?.scrollNonce} />;
   };
 
+  const Shell = theme.Shell;
   const shell = (
-    <div className="min-h-screen flex flex-col bg-px-surface text-px-navy selection:bg-px-primary/20 selection:text-px-navy">
+    <>
       {!IS_PREVIEW && (siteConfig?.settings.analyticsEnabled ?? true) && <SiteAnalytics path={currentPath} />}
-      <Header currentPath={previewPage?.path ?? currentPath} onNavigate={navigate} />
-      <main className="flex-1">{renderCurrentView()}</main>
-      <Footer onNavigate={navigate} onOpenCookies={() => setCookieBannerOpen(true)} />
+      {!IS_PREVIEW && <Ga4Loader />}
+      <Shell currentPath={preview?.page?.path ?? currentPath} onNavigate={navigate} onOpenCookies={() => setCookieBannerOpen(true)}>
+        {renderCurrentView()}
+      </Shell>
 
       {!IS_PREVIEW && (siteConfig?.settings.cookieBannerEnabled ?? true) && (
         <CookieBanner
@@ -117,7 +192,7 @@ export default function App() {
       )}
 
       {(siteConfig?.whatsapp.enabled ?? true) && <WhatsAppButton />}
-    </div>
+    </>
   );
 
   return IS_PREVIEW ? shell : <MaintenanceGate>{shell}</MaintenanceGate>;

@@ -10,7 +10,7 @@ import { ALL_NAV, NAV, type NavItem } from './nav';
 
 function useAllowed() {
   const { can } = useAuth();
-  return (item: NavItem) => !item.roles || can(...item.roles);
+  return (item: NavItem) => !item.perms || can(...item.perms);
 }
 
 function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
@@ -232,7 +232,7 @@ function ShellBody() {
                   </span>
                   <span className="hidden text-left leading-tight md:block">
                     <span className="block text-[13px] font-medium text-slate-800">{user?.name || user?.email}</span>
-                    <span className="block text-[11px] text-slate-500">{ROLE_LABELS[user?.role || '']}</span>
+                    <span className="block text-[11px] text-slate-500">{user?.roleName || ROLE_LABELS[user?.role || ''] || user?.role}</span>
                   </span>
                   <ChevronDown className="h-4 w-4 text-slate-400" />
                 </button>

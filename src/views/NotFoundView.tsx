@@ -20,7 +20,7 @@ export const NotFoundView: React.FC<NotFoundViewProps> = ({ onNavigate }) => {
           Cette page n'existe pas ou a été déplacée.
         </h1>
         <p className="text-base text-slate-600 leading-relaxed max-w-lg mx-auto">
-          Retrouvez nos expertises, nos réalisations ou contactez-nous directement.
+          Le site PEXEN a été refondu : certaines adresses ont changé. Voici les pages les plus consultées.
         </p>
       </div>
 

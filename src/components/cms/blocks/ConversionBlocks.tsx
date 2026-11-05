@@ -25,20 +25,38 @@ export function CtaBlock({ d, style }: { d: CtaData; style: BlockStyle }) {
         <div className={cx('relative overflow-hidden rounded-[1.75rem] p-8 sm:p-10 lg:px-14', centered && 'px-6 py-14 text-center sm:p-16 lg:p-20', box)}>
           {d.variant === 'gradient' ? (
             <>
-              <div className="absolute -right-10 -top-16 h-72 w-72 rounded-full border-[28px] border-white/10" />
-              <div className="absolute -bottom-24 right-40 h-56 w-56 rounded-full bg-white/10 blur-2xl" />
+              <div className="absolute -right-10 -top-16 h-72 w-72 rounded-full border-[28px] border-white/10 px-spin-slow" />
+              <div className="absolute -bottom-24 right-40 h-56 w-56 rounded-full bg-white/10 blur-2xl px-drift" />
+              <div className="absolute inset-0 px-beam opacity-70" />
+              <div className="absolute inset-0 px-noise opacity-[0.08]" />
             </>
           ) : null}
           {d.variant === 'dark' || d.variant === 'image' ? (
             <>
-              {d.backgroundImage ? <img src={d.backgroundImage} alt="" aria-hidden="true" loading="lazy" className="absolute inset-0 h-full w-full object-cover opacity-20" /> : null}
+              {d.backgroundImage ? (
+                <img
+                  src={d.backgroundImage}
+                  alt=""
+                  aria-hidden="true"
+                  loading="lazy"
+                  className="absolute inset-0 h-full w-full object-cover opacity-25 px-kenburns"
+                />
+              ) : null}
               {d.backgroundImage ? <div className="absolute inset-0 bg-gradient-to-r from-px-navy via-px-navy/85 to-px-navy/60" /> : null}
-              {centered ? <div className="absolute inset-0 px-grid-bg opacity-40 [filter:invert(1)]" /> : null}
-              <div className="absolute -bottom-24 -left-24 h-80 w-80 rounded-full bg-px-primary/25 blur-[90px]" />
-              <div className="absolute right-0 top-0 h-96 w-96 rounded-full bg-px-accent/20 blur-[100px]" />
+              {centered ? <div className="absolute inset-0 px-grid-bg px-grid-drift opacity-40 [filter:invert(1)]" /> : null}
+              <div className="absolute -bottom-24 -left-24 h-80 w-80 rounded-full bg-px-primary/30 blur-[90px] px-drift" />
+              <div className="absolute right-0 top-0 h-96 w-96 rounded-full bg-px-accent/25 blur-[100px] px-drift [animation-delay:-8s]" />
+              <div className="absolute left-1/2 top-1/2 h-40 w-40 -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/10 px-pulse-ring" />
+              <div className="absolute inset-0 px-aurora opacity-40 mix-blend-soft-light" />
             </>
           ) : null}
-          {d.variant === 'light' ? <div className="absolute -right-16 -top-16 h-64 w-64 rounded-full bg-px-primary/10 blur-3xl" /> : null}
+          {d.variant === 'light' ? (
+            <>
+              <div className="absolute -right-16 -top-16 h-64 w-64 rounded-full bg-px-primary/12 blur-3xl px-blob" />
+              <div className="absolute -left-10 bottom-0 h-48 w-48 rounded-full bg-px-accent/10 blur-3xl px-drift" />
+              <div className="absolute inset-0 px-mesh-soft opacity-80" />
+            </>
+          ) : null}
 
           {centered ? (
             <div className="relative mx-auto max-w-3xl space-y-6">
@@ -175,6 +193,34 @@ export function ProjectsBlock({ d, style }: { d: ProjectsData; style: BlockStyle
     <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
       {[0, 1, 2].map((i) => (
         <div key={i} className="h-72 animate-pulse rounded-[1.25rem] bg-px-surface" />
+      ))}
+    </div>
+  ) : d.layout === 'cards' ? (
+    <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+      {projects.map((p, i) => (
+        <Reveal key={p.id} delay={i * 70}>
+          <button type="button" onClick={() => go(p.path)} className="group flex h-full w-full flex-col overflow-hidden rounded-2xl border border-px-border bg-white text-left shadow-sm transition hover:border-px-primary/40 hover:shadow-lg">
+            <div className="aspect-[16/10] overflow-hidden bg-px-surface">
+              <img src={p.image} alt={p.solution} loading="lazy" className="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
+            </div>
+            <div className="flex flex-1 flex-col p-5">
+              <div className="text-[11px] font-bold uppercase tracking-wider text-px-primary">{p.client}</div>
+              <h3 className="mt-2 text-lg font-semibold leading-snug text-px-navy">{p.solution}</h3>
+              <ul className="mt-3 flex-1 space-y-1.5 text-xs text-slate-600">
+                {p.results.slice(0, 3).map((r) => (
+                  <li key={r} className="flex gap-2">
+                    <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-px-primary" />
+                    {t(r)}
+                  </li>
+                ))}
+              </ul>
+              <div className="mt-4 flex items-end justify-between border-t border-px-border pt-3">
+                <span className="text-xs text-slate-500">Prime CEE</span>
+                <span className="font-mono text-sm font-bold text-px-navy">{p.ceeSheet || 'Sur devis'}</span>
+              </div>
+            </div>
+          </button>
+        </Reveal>
       ))}
     </div>
   ) : d.layout === 'featured' ? (
@@ -339,7 +385,7 @@ export function SimulatorBlock({ d, style }: { d: SimulatorData; style: BlockSty
     <Section style={style}>
       <SectionHeading h={{ ...d, align: d.align ?? 'center' }} className="mb-10" />
       <Reveal delay={100}>
-        <CeeSimulator onNavigateToContact={() => go('/contact/')} />
+        <CeeSimulator config={d} onNavigate={go} />
       </Reveal>
     </Section>
   );
@@ -362,6 +408,10 @@ export function ContactFormBlock({ d, style }: { d: ContactFormData; style: Bloc
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitError, setSubmitError] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [progressStep, setProgressStep] = useState(1);
+  const progressive = d.variant === 'progressive';
+  const privacyPath = d.privacyPath || '/politique-de-confidentialite/';
+  const step1Names = new Set(['vousEtes', 'entreprise', 'nomPrenom', 'email', 'telephone']);
 
   useEffect(() => {
     fetch(`/api/public/forms/${encodeURIComponent(d.formId || 'contact-main')}`)
@@ -425,7 +475,7 @@ export function ContactFormBlock({ d, style }: { d: ContactFormData; style: Bloc
               </div>
               <div>
                 <div className="text-xs font-medium text-slate-500">{t(d.phoneLabel) || 'Ligne directe'}</div>
-                <a href={`tel:${tokens.phoneClean}`} className="font-mono text-base font-bold text-px-navy transition-colors hover:text-px-primary-dark sm:text-lg">
+                <a href={`tel:${tokens.phoneClean}`} className="px-phone text-base font-bold text-px-navy transition-colors hover:text-px-primary-dark sm:text-lg">
                   {tokens.phone}
                 </a>
               </div>
@@ -467,7 +517,13 @@ export function ContactFormBlock({ d, style }: { d: ContactFormData; style: Bloc
               </div>
             ) : (
               <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-                {form.fields.map((f) => {
+                {form.fields
+                  .filter((f) => {
+                    if (!progressive) return true;
+                    if (progressStep === 1) return step1Names.has(f.name);
+                    return !step1Names.has(f.name);
+                  })
+                  .map((f) => {
                   const full = f.width === 'full' || f.type === 'textarea' || f.type === 'checkbox';
                   const err = errors[f.name];
                   if (f.type === 'checkbox') {
@@ -476,10 +532,10 @@ export function ContactFormBlock({ d, style }: { d: ContactFormData; style: Bloc
                       <div key={f.id} className="pt-2 sm:col-span-2">
                         <label className="flex cursor-pointer select-none items-start gap-3">
                           <input type="checkbox" checked={!!values[f.name]} onChange={(e) => set(f.name, e.target.checked)} className="mt-0.5 h-4 w-4 cursor-pointer rounded border-slate-300 text-px-primary focus:ring-px-primary" />
-                          <span className="text-xs leading-relaxed text-slate-600">
+                          <span className={cx('leading-relaxed text-slate-600', progressive ? 'text-[11px] italic' : 'text-xs')}>
                             {parts.map((p, i) =>
                               /politique de confidentialité/i.test(p) ? (
-                                <button key={i} type="button" onClick={() => go('/politique-de-confidentialite/')} className="font-medium text-px-primary-dark underline hover:text-px-navy">
+                                <button key={i} type="button" onClick={() => go(privacyPath)} className="font-medium not-italic text-px-primary-dark underline hover:text-px-navy">
                                   {p}
                                 </button>
                               ) : (
@@ -527,11 +583,30 @@ export function ContactFormBlock({ d, style }: { d: ContactFormData; style: Bloc
             ) : null}
 
             <div className="flex flex-col justify-between gap-4 border-t border-slate-100 pt-4 sm:flex-row sm:items-center">
-              <span className="order-2 text-[11px] text-slate-400 sm:order-1">* Champs obligatoires</span>
-              <button type="submit" disabled={submitting || !form} className="btn-primary-pexen order-1 w-full! justify-center sm:order-2 sm:w-auto!">
-                <span>{submitting ? 'Transmission en cours…' : t(d.submitLabel) || 'Envoyer ma demande'}</span>
-                <ArrowRight className="btn-arrow h-4 w-4" />
-              </button>
+              <span className="order-2 text-[11px] text-slate-400 sm:order-1">
+                {progressive && progressStep === 1 ? 'Étape 1 sur 2 — l’essentiel' : '* Champs obligatoires'}
+              </span>
+              {progressive && progressStep === 1 ? (
+                <button
+                  type="button"
+                  disabled={!form}
+                  className="btn-primary-pexen order-1 w-full! justify-center sm:order-2 sm:w-auto!"
+                  onClick={() => {
+                    const errs = validate();
+                    const stepErrs = Object.fromEntries(Object.entries(errs).filter(([k]) => step1Names.has(k)));
+                    setErrors(stepErrs);
+                    if (Object.keys(stepErrs).length === 0) setProgressStep(2);
+                  }}
+                >
+                  <span>Continuer</span>
+                  <ArrowRight className="btn-arrow h-4 w-4" />
+                </button>
+              ) : (
+                <button type="submit" disabled={submitting || !form} className="btn-primary-pexen order-1 w-full! justify-center sm:order-2 sm:w-auto!">
+                  <span>{submitting ? 'Transmission en cours…' : t(d.submitLabel) || 'Envoyer ma demande'}</span>
+                  <ArrowRight className="btn-arrow h-4 w-4" />
+                </button>
+              )}
             </div>
           </form>
         </Reveal>

@@ -1,0 +1,61 @@
+/* PEXEN — charte graphique exacte */
+:root{
+  --theme-color:#009FCC !important;
+  --theme-color2:#082D4A !important;
+  --color-dark:#082D4A !important;
+  --footer-bg:#082D4A !important;
+  --theme-bg-light:#F4F8F9 !important;
+  --theme-bg-light2:#E8F4F8 !important;
+  --body-text-color:#5A6B7B !important;
+  --body-font:"Figtree",system-ui,sans-serif !important;
+  --heading-font:"Sora",system-ui,sans-serif !important;
+}
+::selection{ background:#009FCC; color:#fff; }
+.navbar-brand img, .offcanvas-brand img{ height:44px; width:auto; }
+.footer-logo img, .footer-widget .logo img{ height:48px; width:auto; }
+.header-top{ background:#082D4A !important; }
+.header-top a:hover{ color:#01CDF3 !important; }
+.preloader{ background:#082D4A !important; }
+.loader-ripple div{ border-color:#01CDF3 !important; }
+.site-title span, .hero-title span{ color:#009FCC; }
+.theme-btn{ background:#009FCC !important; border-color:#009FCC !important; }
+.theme-btn:hover{ background:#00769A !important; border-color:#00769A !important; }
+.theme-btn2{ border-color:#009FCC !important; color:#009FCC !important; }
+.theme-btn2:hover{ background:#009FCC !important; color:#fff !important; }
+.footer-area{ background:#082D4A !important; }
+
+/* Header — espacement menu (labels FR plus longs) */
+@media (min-width: 992px) {
+  .navbar .offcanvas-body{
+    gap: 2rem !important;
+    align-items: center;
+  }
+  .navbar .navbar-nav{
+    gap: .15rem 1.65rem;
+    align-items: center;
+  }
+  .navbar .nav-item .nav-link{
+    margin-right: 0 !important;
+    padding: 1.6rem 0 !important;
+    letter-spacing: -.01em;
+    white-space: nowrap;
+  }
+  .navbar .nav-right{
+    margin-left: 1.75rem !important;
+    gap: 1.1rem;
+    display: flex !important;
+    align-items: center;
+  }
+  .navbar .nav-right .search-btn{
+    margin-right: .15rem;
+  }
+  .navbar .nav-right .nav-btn .theme-btn{
+    padding-left: 1.35rem;
+    padding-right: 1.35rem;
+  }
+}
+@media (min-width: 992px) and (max-width: 1199px) {
+  .navbar .navbar-nav{ gap: .1rem 1.15rem; }
+  .navbar .nav-item .nav-link{ font-size: 15px !important; }
+  .navbar .nav-right{ margin-left: 1.1rem !important; gap: .85rem; }
+}

@@ -38,6 +38,118 @@ export function TextMediaBlock({ d, style }: { d: TextMediaData; style: BlockSty
 function TextMediaInner({ d }: { d: TextMediaData }) {
   const dark = useDark();
   const { t } = useCms();
+
+  if (d.mediaStyle === 'logoMask' && d.image) {
+    const clipId = `pexen-logo-clip-${d.title?.slice(0, 8) || 'm'}`;
+    return (
+      <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:gap-16">
+        <Reveal className="relative mx-auto w-full max-w-xl">
+          <svg viewBox="0 0 1340 420" className="h-auto w-full drop-shadow-xl" role="img" aria-label={d.imageAlt || ''}>
+            <defs>
+              <clipPath id={clipId} clipPathUnits="userSpaceOnUse">
+                <path d="M473.13 236.7C388.33 283.9 298.73 329.6 204.13 353.5C161.83 364.2 110.83 372.2 70.23 351.5C16.63 324.1 26.33 273.2 60.63 234.6C108.73 180.5 185.33 152.5 256.13 146.4C413.23 132.8 537.33 245.9 664.13 319.7C706.63 344.5 751.03 366.5 798.13 381.1C927.13 421.3 1072.23 405.1 1186.13 330.7C1208.13 316.3 1228.93 298.9 1245.73 278.6C1257.33 264.7 1267.03 249.3 1273.83 232.6C1323.03 110.9 1177.23 29 1079.13 7.7C919.23 -27.1 759.03 64.1 635.13 156C652.63 150.9 678.83 134.8 697.13 126C718.03 116 739.53 107.1 761.13 98.8C848.03 65.2 940.33 60.8 1029.13 89.7C1088.83 109.1 1147.43 140.1 1194.33 182.1C1212.73 198.5 1235.83 221.2 1237.43 247.5C1238.93 271.5 1219.73 289.7 1202.23 303C1162.03 333.5 1111.53 351 1062.13 359.1C896.53 386.1 761.13 267.9 629.13 188.5C510.33 117 389.83 78.9 251.13 106.2C201.53 116 152.63 134.3 109.23 160.3C58.53 190.8 -6.27 244.4 0.73 310.5C2.93 331.8 13.83 351.5 29.13 366.3C40.03 377 53.23 384.8 67.13 391C84.63 398.8 104.13 402.6 123.13 403.8C220.93 410.2 311.03 356.1 388.13 302.2C415.53 283 450.23 260.3 473.13 236.7Z" />
+              </clipPath>
+            </defs>
+            <image href={d.image} x="0" y="-40" width="1340" height="500" preserveAspectRatio="xMidYMid slice" clipPath={`url(#${clipId})`} />
+          </svg>
+          <div className="absolute bottom-0 right-4 rounded-2xl bg-px-navy px-4 py-3 text-white shadow-xl sm:right-8">
+            <strong className="block text-2xl font-bold leading-none">30+</strong>
+            <span className="text-xs text-white/75">Fiches CEE</span>
+          </div>
+        </Reveal>
+        <Reveal delay={80} className="space-y-5">
+          {d.eyebrow ? <Eyebrow>{t(d.eyebrow)}</Eyebrow> : null}
+          {d.title ? (
+            <h2 className="text-3xl font-semibold leading-tight tracking-tight text-px-navy sm:text-[2.4rem]">
+              <Highlighted title={d.title} highlight={d.highlight} />
+            </h2>
+          ) : null}
+          {d.html ? <RichHtml html={d.html} /> : null}
+          {d.bullets.length ? (
+            <ul className="grid gap-3 sm:grid-cols-2">
+              {d.bullets.map((b, i) => (
+                <li key={i} className="flex items-center gap-3 text-sm font-semibold text-px-navy">
+                  <span className={cx('flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-white', i % 2 ? 'bg-px-accent' : 'bg-px-navy')}>
+                    <CheckCircle2 className="h-5 w-5" strokeWidth={2.5} />
+                  </span>
+                  {t(b)}
+                </li>
+              ))}
+            </ul>
+          ) : null}
+          <ButtonRow buttons={d.buttons} />
+        </Reveal>
+      </div>
+    );
+  }
+
+  if (d.mediaStyle === 'diagonal' && d.image) {
+    const pool = [
+      d.image,
+      d.poster,
+      '/images/centrale-froid.webp',
+      '/images/cee-tertiaire.webp',
+      '/images/pompes-a-chaleur-toiture.webp',
+      '/images/installation-technique.webp',
+    ].filter(Boolean) as string[];
+    const tiles = [...new Set(pool)].slice(0, 4);
+    while (tiles.length < 4) tiles.push(d.image);
+    return (
+      <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
+        <Reveal>
+          <div className="ultra-diagonal-grid mx-auto max-w-md">
+            {tiles.map((src, i) => (
+              <div
+                key={i}
+                className={cx(
+                  'overflow-hidden rounded-[1.75rem] bg-px-surface shadow-lg ring-1 ring-black/5',
+                  i % 2 === 0 ? 'aspect-[4/5]' : 'aspect-[3/4]'
+                )}
+              >
+                <img src={src} alt="" loading="lazy" className="h-full w-full object-cover" />
+              </div>
+            ))}
+          </div>
+        </Reveal>
+        <Reveal delay={100} className="space-y-5">
+          {d.eyebrow ? <Eyebrow>{t(d.eyebrow)}</Eyebrow> : null}
+          {d.title ? (
+            <h2 className="text-3xl font-semibold leading-tight text-px-navy">
+              <Highlighted title={d.title} highlight={d.highlight} />
+            </h2>
+          ) : null}
+          {d.html ? <RichHtml html={d.html} /> : null}
+          {d.bullets.length ? (
+            <ul className="space-y-3">
+              {d.bullets.map((b, i) => {
+                const m = b.match(/^(.+?)\s*[—–-]\s*(\d+)\s*%$/);
+                if (m) {
+                  return (
+                    <li key={i}>
+                      <div className="mb-1 flex justify-between text-sm font-semibold text-px-navy">
+                        <span>{t(m[1])}</span>
+                        <span>{m[2]}%</span>
+                      </div>
+                      <div className="h-2 overflow-hidden rounded-full bg-slate-100">
+                        <div className="h-full rounded-full bg-px-navy" style={{ width: `${m[2]}%` }} />
+                      </div>
+                    </li>
+                  );
+                }
+                return (
+                  <li key={i} className="text-sm text-slate-600">
+                    {t(b)}
+                  </li>
+                );
+              })}
+            </ul>
+          ) : null}
+          <ButtonRow buttons={d.buttons} />
+        </Reveal>
+      </div>
+    );
+  }
+
   const media = (
     <div className={cx('relative', d.mediaStyle === 'polaroid' && 'mx-auto max-w-md rotate-[-1.5deg]')}>
       <div

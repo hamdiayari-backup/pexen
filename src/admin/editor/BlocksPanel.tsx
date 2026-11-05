@@ -216,11 +216,15 @@ function BlockInspector({
       <div className="min-h-0 flex-1 overflow-y-auto scrollbar-thin">
         {tab === 'content' ? (
           <>
-            {groups.map((g) => (
-              <Collapsible key={`${block.id}-${g.title}`} title={g.title}>
-                <FieldsForm fields={g.fields} value={data} onChange={(p) => onChange({ ...block, data: { ...data, ...p } })} />
-              </Collapsible>
-            ))}
+            {groups.map((g) => {
+              const visibleFields = g.fields.filter((f) => !f.show || f.show(data));
+              if (!visibleFields.length) return null;
+              return (
+                <Collapsible key={`${block.id}-${g.title}`} title={g.title}>
+                  <FieldsForm fields={g.fields} value={data} onChange={(p) => onChange({ ...block, data: { ...data, ...p } })} />
+                </Collapsible>
+              );
+            })}
             {kind === 'projects' ? (
               <p className="px-4 pb-4 text-xs text-slate-500">Les réalisations affichées sont les pages publiées utilisant le modèle « Réalisation » (onglet Page › Modèle).</p>
             ) : null}

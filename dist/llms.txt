@@ -1,0 +1,23 @@
+# PEXEN
+> PEXEN est une entreprise d'ingénierie et de performance énergétique pour les sites industriels et tertiaires, basée en Île-de-France. Elle étudie, dimensionne, réalise avec ses équipes et suit des projets de froid commercial et industriel, récupération de chaleur, chauffage et traitement d'air, pilotage GTB / GTC et isolation technique. Elle réalise des travaux financés par les CEE lorsque l'opération y est éligible, et des travaux hors de ce dispositif.
+
+## Expertises
+- [Études et ingénierie](https://pexen.fr/etudes-ingenierie-energetique/)
+- [Accompagnement travaux](https://pexen.fr/accompagnement-travaux/)
+- [Contrat de performance énergétique](https://pexen.fr/contrat-de-performance-energetique/)
+- [Réglementation et financement](https://pexen.fr/decret-tertiaire-decret-bacs/)
+
+## Solutions
+- [Froid commercial et industriel](https://pexen.fr/solutions/froid-commercial-industriel/)
+- [Récupération de chaleur](https://pexen.fr/solutions/recuperation-de-chaleur/)
+- [Chauffage et traitement d'air](https://pexen.fr/solutions/pompe-a-chaleur-tertiaire/)
+- [Pilotage GTB / GTC et décret BACS](https://pexen.fr/solutions/pilotage-gtb-decret-bacs/)
+- [Isolation technique](https://pexen.fr/solutions/isolation-technique/)
+
+## Réalisations
+- [Intermarché, sortie du fioul : 1 650 m² chauffés par pompes à chaleur, 240 kW récupérés sur le froid, 14,8 GWh cumac estimés](https://pexen.fr/realisations/intermarche-sortie-du-fioul/)
+- [Carrefour Market : 535 kW de chaleur récupérée sur la production de froid, 30,6 GWh cumac estimés, objectif −40 % sur 10 ans par CPE](https://pexen.fr/realisations/carrefour-market-recuperation-de-chaleur/)
+- [CEDIM : déstratification d'un magasin de 9 m de hauteur, 2,1 GWh cumac estimés](https://pexen.fr/realisations/cedim-destratification/)
+
+## Contact
+- [Parler de votre projet](https://pexen.fr/contact/) · 01 41 93 52 80

@@ -1,6 +1,6 @@
 import crypto from 'crypto';
 import { loadSnapshot, updateSnapshot } from '../cms/store';
-import { canSeo, superOnly } from '../middleware/adminAuth';
+import { requirePerm } from '../middleware/adminAuth';
 import { asyncRouter, HttpError } from '../http';
 
 const SCOPES = [
@@ -55,7 +55,7 @@ async function googleFetch<T>(url: string, init?: RequestInit): Promise<T> {
 export function createGoogleOAuthRouter() {
   const router = asyncRouter();
 
-  router.get('/status', canSeo, async (_req, res) => {
+  router.get('/status', requirePerm('seo.edit'), async (_req, res) => {
     const s = await loadSnapshot();
     res.json({
       configured: !!oauthConfig().clientId && !!oauthConfig().clientSecret,
@@ -66,7 +66,7 @@ export function createGoogleOAuthRouter() {
     });
   });
 
-  router.get('/connect', canSeo, async (_req, res) => {
+  router.get('/connect', requirePerm('seo.edit'), async (_req, res) => {
     const { clientId, redirectUri } = oauthConfig();
     if (!clientId) throw new HttpError(503, 'Identifiants OAuth Google non configurés sur le serveur');
     const state = crypto.randomBytes(24).toString('hex');
@@ -109,14 +109,14 @@ export function createGoogleOAuthRouter() {
     res.redirect('/administrator/seo?google=connected');
   });
 
-  router.get('/sites', canSeo, async (_req, res) => {
+  router.get('/sites', requirePerm('seo.edit'), async (_req, res) => {
     const data = await googleFetch<{ siteEntry?: { siteUrl: string; permissionLevel: string }[] }>(
       'https://www.googleapis.com/webmasters/v3/sites'
     );
     res.json(data.siteEntry || []);
   });
 
-  router.get('/performance', canSeo, async (req, res) => {
+  router.get('/performance', requirePerm('seo.edit'), async (req, res) => {
     const s = await loadSnapshot();
     const site = s.google.searchConsoleProperty;
     if (!site) throw new HttpError(400, 'Sélectionnez une propriété Search Console');
@@ -153,7 +153,7 @@ export function createGoogleOAuthRouter() {
     });
   });
 
-  router.post('/disconnect', superOnly, async (_req, res) => {
+  router.post('/disconnect', requirePerm('settings.manage'), async (_req, res) => {
     accessCache = null;
     await updateSnapshot((s) => {
       s.google = { connected: false, searchConsoleProperty: s.google.searchConsoleProperty };

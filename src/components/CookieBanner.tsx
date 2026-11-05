@@ -27,30 +27,29 @@ export const CookieBanner: React.FC<CookieBannerProps> = ({
     }
   }, []);
 
-  const handleRefuseAll = () => {
+  const persist = (analytics: boolean) => {
     localStorage.setItem(
       'pexen_cookie_consent',
-      JSON.stringify({ necessary: true, analytics: false, timestamp: Date.now() })
+      JSON.stringify({ necessary: true, analytics, timestamp: Date.now() })
     );
+    window.dispatchEvent(new CustomEvent('pexen:cookie-consent', { detail: { analytics } }));
+  };
+
+  const handleRefuseAll = () => {
+    persist(false);
     setShowPreferences(false);
     onClose();
   };
 
   const handleAcceptAll = () => {
-    localStorage.setItem(
-      'pexen_cookie_consent',
-      JSON.stringify({ necessary: true, analytics: true, timestamp: Date.now() })
-    );
+    persist(true);
     setAnalyticsConsent(true);
     setShowPreferences(false);
     onClose();
   };
 
   const handleSaveCustom = () => {
-    localStorage.setItem(
-      'pexen_cookie_consent',
-      JSON.stringify({ necessary: true, analytics: analyticsConsent, timestamp: Date.now() })
-    );
+    persist(analyticsConsent);
     setShowPreferences(false);
     onClose();
   };

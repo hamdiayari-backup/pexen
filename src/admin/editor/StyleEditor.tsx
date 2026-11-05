@@ -26,12 +26,34 @@ const MEDIA_FIELDS: FieldDef[] = [
   { t: 'range', key: 'overlay', label: 'Opacité du voile', min: 0, max: 95, step: 5, suffix: ' %' },
 ];
 
+const TEXT_FIELDS: FieldDef[] = [
+  {
+    t: 'segmented',
+    key: 'textAlign',
+    label: 'Placement du texte',
+    options: o(['left', 'Gauche'], ['center', 'Centré'], ['right', 'Droite']),
+    hint: 'Alignement des titres et introductions de ce bloc.',
+  },
+  {
+    t: 'segmented',
+    key: 'titleSize',
+    label: 'Taille du titre',
+    options: o(['sm', 'S'], ['md', 'M'], ['lg', 'L'], ['xl', 'XL']),
+  },
+  {
+    t: 'segmented',
+    key: 'bodySize',
+    label: 'Taille du texte',
+    options: o(['sm', 'S'], ['md', 'M'], ['lg', 'L']),
+  },
+];
+
 const LAYOUT_FIELDS: FieldDef[] = [
   { t: 'segmented', key: 'paddingTop', label: 'Marge en haut', options: SPACING },
   { t: 'segmented', key: 'paddingBottom', label: 'Marge en bas', options: SPACING },
   { t: 'segmented', key: 'width', label: 'Largeur du contenu', options: o(['narrow', 'Étroite'], ['default', 'Normale'], ['wide', 'Large'], ['full', 'Pleine']) },
-  { t: 'select', key: 'decor', label: 'Motif décoratif', options: o(['none', 'Aucun'], ['dots', 'Points'], ['grid', 'Grille'], ['rings', 'Cercles'], ['diagonal', 'Rayures diagonales'], ['glow', 'Halos lumineux']) },
-  { t: 'switch', key: 'borderTop', label: 'Ligne de séparation en haut' },
+  { t: 'select', key: 'decor', label: 'Motif décoratif', options: o(['none', 'Aucun'], ['silk', 'Voile soyeux'], ['dots', 'Points'], ['grid', 'Grille'], ['rings', 'Cercles'], ['diagonal', 'Rayures diagonales'], ['glow', 'Halos lumineux']) },
+  { t: 'switch', key: 'borderTop', label: 'Séparateur moderne en haut (voile + trait)' },
 ];
 
 const ANIMATIONS: { value: BlockStyle['animation']; label: string }[] = [
@@ -79,6 +101,18 @@ export function StyleEditor({ style, onChange }: { style: BlockStyle; onChange: 
           ))}
         </div>
         {withMedia ? <FieldsForm fields={MEDIA_FIELDS} value={value} onChange={set} /> : null}
+      </Group>
+      <Group title="Texte">
+        <FieldsForm
+          fields={TEXT_FIELDS}
+          value={{
+            textAlign: style.textAlign || 'center',
+            titleSize: style.titleSize || 'md',
+            bodySize: style.bodySize || 'md',
+            ...value,
+          }}
+          onChange={set}
+        />
       </Group>
       <Group title="Animation à l’apparition">
         <div className="grid grid-cols-2 gap-1.5">

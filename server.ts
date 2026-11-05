@@ -6,6 +6,10 @@ import { fileURLToPath } from 'url';
 import { createServer as createViteServer } from 'vite';
 import { GoogleGenAI } from '@google/genai';
 import { createAdminCmsRouter } from './server/routes/adminCms';
+import { createAdminThemesRouter } from './server/routes/adminThemes';
+import { createAdminAccountRouter } from './server/routes/adminAccount';
+import { createAdminUsersRouter } from './server/routes/adminUsers';
+import { createAdminSystemRouter } from './server/routes/adminSystem';
 import { createPublicCmsRouter } from './server/routes/publicCms';
 import { createGoogleOAuthRouter } from './server/routes/googleOAuth';
 import { createSeoPublicRouter, injectSeo, redirectMiddleware } from './server/routes/seoPublic';
@@ -15,6 +19,10 @@ import { closeDb } from './server/db/client';
 import { checkAiRateLimit, recordAiUsage } from './server/aiLimits';
 import { PEXEN_SYSTEM_INSTRUCTION } from './server/aiPrompt';
 import { apiErrorHandler } from './server/http';
+import { adminIpGuard } from './server/middleware/adminAuth';
+import { auditMiddleware } from './server/security/audit';
+import { clientIp } from './server/security/ip';
+import { rateLimit } from './server/security/rateLimit';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -42,6 +50,8 @@ async function startServer() {
   app.use(redirectMiddleware);
 
   app.use('/uploads', express.static(path.resolve(__dirname, 'public/uploads'), { maxAge: '30d', immutable: true }));
+  /* Thèmes HTML autonomes (ex. /themes/pexen-pro/) — index.html servi sur le dossier. */
+  app.use('/themes', express.static(path.resolve(__dirname, 'public/themes'), { index: 'index.html', maxAge: '1h' }));
   app.use(express.static(path.resolve(__dirname, 'public'), { index: false }));
 
   const apiKey = process.env.GEMINI_API_KEY;
@@ -56,9 +66,21 @@ async function startServer() {
   })
     : null;
 
+  const publicQuota = rateLimit(
+    'public',
+    async () => ({ max: (await loadSnapshot()).system.limits.publicApiPerMinute, windowMs: 60_000 }),
+    clientIp
+  );
+  app.use('/api/public', publicQuota);
+  app.use('/api/admin', adminIpGuard, auditMiddleware);
+
   app.use('/api/public', createPublicCmsRouter());
   app.use('/api/admin/google', createGoogleOAuthRouter());
+  app.use('/api/admin', createAdminAccountRouter());
+  app.use('/api/admin', createAdminUsersRouter());
+  app.use('/api/admin', createAdminSystemRouter());
   app.use('/api/admin', createAdminCmsRouter());
+  app.use('/api/admin/themes', createAdminThemesRouter());
   app.use(createSeoPublicRouter());
 
   // AI Chat endpoint trained strictly on PEXEN
@@ -122,12 +144,17 @@ async function startServer() {
     app.use('/assets', express.static(path.join(distDir, 'assets'), { maxAge: '1y', immutable: true }));
     app.use(express.static(distDir, { index: false }));
     app.get('*', async (req, res) => {
+      /* Ne pas renvoyer le HTML SPA pour un asset ou média manquant (sinon erreur MIME type strict). */
+      if (req.path.startsWith('/assets/') || /\.(png|jpe?g|webp|avif|gif|svg|mp4|webm|ico|woff2?|ttf|map|css|js|mjs)$/i.test(req.path)) {
+        return res.status(404).type('text').send('Not found');
+      }
       if (isAdminPath(req.path)) {
         res.setHeader('Cache-Control', 'no-store');
         return res.sendFile(path.join(distDir, 'administrator.html'));
       }
       res.setHeader('Cache-Control', 'no-cache');
-      res.type('html').send(await injectSeo(indexHtml, req.path));
+      const latestHtml = await fs.readFile(path.join(distDir, 'index.html'), 'utf-8').catch(() => indexHtml);
+      res.type('html').send(await injectSeo(latestHtml, req.path));
     });
   } else {
     const vite = await createViteServer({

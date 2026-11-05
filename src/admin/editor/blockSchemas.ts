@@ -73,7 +73,7 @@ const heading = (withLink = true): FieldGroup => ({
     { t: 'text', key: 'title', label: 'Titre' },
     { t: 'text', key: 'highlight', label: 'Partie colorée du titre', hint: 'Ajoutée après le titre, dans la couleur principale.' },
     { t: 'textarea', key: 'intro', label: 'Introduction', rows: 2 },
-    { t: 'segmented', key: 'align', label: 'Alignement', options: o(['left', 'Gauche'], ['center', 'Centré']) },
+    { t: 'segmented', key: 'align', label: 'Alignement du titre', options: o(['left', 'Gauche'], ['center', 'Centré'], ['right', 'Droite']), hint: 'Aussi réglable dans Style › Texte (placement).' },
     ...(withLink
       ? ([
           { t: 'text', key: 'headerLinkLabel', label: 'Lien d’en-tête', placeholder: 'Tout voir', half: true },
@@ -111,8 +111,18 @@ export const BLOCK_SCHEMAS: Record<BlockKind, FieldGroup[]> = {
     {
       title: 'Visuel',
       fields: [
-        { t: 'select', key: 'media', label: 'Type de visuel', options: o(['composition', 'Composition animée (images + cartes)'], ['image', 'Image seule'], ['video', 'Vidéo'], ['none', 'Aucun']) },
+        { t: 'select', key: 'media', label: 'Type de visuel', options: o(['composition', 'Composition animée (images + cartes)'], ['image', 'Image / carrousel polaroid'], ['video', 'Vidéo'], ['none', 'Aucun']) },
         { t: 'image', key: 'mainImage', label: 'Image principale', altKey: 'mainImageAlt', show: (d) => d.media === 'image' || d.media === 'composition' },
+        {
+          t: 'list',
+          key: 'galleryImages',
+          item: 'Photo',
+          create: () => ({ image: '' }),
+          summary: (it) => (it.image ? String(it.image).split('/').pop() || 'Photo' : 'Photo à choisir'),
+          hint: 'Choisissez les photos dans la médiathèque. Elles défilent en éventail polaroid ; l’image principale reste la première.',
+          show: (d) => d.media === 'image',
+          fields: [{ t: 'image', key: 'image', label: 'Photo', aspect: 'aspect-[4/5]' }],
+        },
         { t: 'video', key: 'video', label: 'Vidéo (fichier ou YouTube / Vimeo)', show: (d) => d.media === 'video' },
         { t: 'image', key: 'videoPoster', label: 'Image d’attente de la vidéo', show: (d) => d.media === 'video' },
         { t: 'image', key: 'secondaryImage', label: 'Photo secondaire (polaroïd)', altKey: 'secondaryImageAlt', aspect: 'aspect-[4/3]', show: (d) => d.media === 'composition' },
@@ -343,6 +353,7 @@ export const BLOCK_SCHEMAS: Record<BlockKind, FieldGroup[]> = {
           fields: [
             { t: 'icon', key: 'icon', label: 'Icône' },
             { t: 'image', key: 'image', label: 'Photo', aspect: 'aspect-[4/3]' },
+            { t: 'text', key: 'imageAlt', label: 'Texte alternatif (ALT)', hint: 'Brief 00g — description accessible de la photo.' },
             { t: 'text', key: 'title', label: 'Titre' },
             { t: 'textarea', key: 'text', label: 'Texte', rows: 3 },
             { t: 'tags', key: 'tags', label: 'Étiquettes' },
@@ -406,22 +417,102 @@ export const BLOCK_SCHEMAS: Record<BlockKind, FieldGroup[]> = {
   stats: [
     heading(),
     {
-      title: 'Chiffres',
+      title: 'Présentation',
       fields: [
-        { t: 'segmented', key: 'style', label: 'Présentation', options: o(['cards', 'Cartes'], ['inline', 'En ligne'], ['strip', 'Bandeau']) },
-        { t: 'switch', key: 'countUp', label: 'Compteur animé à l’apparition' },
+        {
+          t: 'segmented',
+          key: 'style',
+          label: 'Type de bloc',
+          options: o(['cards', 'Cartes enjeux'], ['strip', 'Bandeau preuves'], ['inline', 'Chiffres en ligne']),
+          hint: 'Cartes enjeux = titres + images + CTA. Bandeau = logos clients + chiffres + qualifications.',
+        },
+        {
+          t: 'switch',
+          key: 'countUp',
+          label: 'Compteur animé à l’apparition',
+          show: (d) => d.style !== 'cards',
+        },
+      ],
+    },
+    {
+      title: 'Cartes / chiffres',
+      fields: [
         {
           t: 'list',
           key: 'items',
-          item: 'Chiffre',
-          create: () => ({ value: '10', suffix: '', label: 'Libellé' }),
-          summary: (it) => `${it.prefix || ''}${it.value || ''}${it.suffix || ''} ${it.label || ''}`,
+          item: 'Carte',
+          create: () => ({
+            value: '',
+            suffix: '',
+            label: 'Nouveau titre',
+            hint: '',
+            image: '',
+            ctaLabel: 'En savoir plus',
+            link: '',
+          }),
+          summary: (it) => String(it.label || it.ctaLabel || `${it.prefix || ''}${it.value || ''}${it.suffix || ''}` || 'Carte'),
           fields: [
-            { t: 'text', key: 'prefix', label: 'Avant', half: true, placeholder: '+' },
-            { t: 'text', key: 'value', label: 'Valeur', half: true },
-            { t: 'text', key: 'suffix', label: 'Après', half: true, placeholder: ' %' },
+            { t: 'text', key: 'label', label: 'Titre' },
+            { t: 'textarea', key: 'hint', label: 'Texte / description', rows: 3 },
+            {
+              t: 'image',
+              key: 'image',
+              label: 'Image de la carte',
+              aspect: 'aspect-video',
+              hint: 'Utilisée en mode « Cartes enjeux ».',
+            },
+            { t: 'text', key: 'imageAlt', label: 'ALT image' },
+            { t: 'text', key: 'ctaLabel', label: 'Texte du bouton CTA', placeholder: 'Optimiser mon froid' },
+            { t: 'link', key: 'link', label: 'Lien de la carte / du CTA' },
+            {
+              t: 'text',
+              key: 'prefix',
+              label: 'Chiffre — avant',
+              half: true,
+              placeholder: '+',
+              hint: 'Bandeau preuves uniquement.',
+            },
+            { t: 'text', key: 'value', label: 'Chiffre — valeur', half: true },
+            { t: 'text', key: 'suffix', label: 'Chiffre — après', half: true, placeholder: ' %' },
+          ],
+        },
+      ],
+    },
+    {
+      title: 'Bandeau preuves (clients & qualifications)',
+      fields: [
+        {
+          t: 'textarea',
+          key: 'footnote',
+          label: 'Mentions astérisque (bas de page)',
+          rows: 3,
+          hint: 'Une mention par ligne. Affichées dans le footer, pas sous les chiffres.',
+          show: (d) => d.style !== 'cards',
+        },
+        {
+          t: 'list',
+          key: 'partners',
+          item: 'Client',
+          create: () => ({ name: 'Client', logo: '' }),
+          summary: (it) => String(it.name || 'Client'),
+          show: (d) => d.style === 'strip' || d.style === 'inline',
+          fields: [
+            { t: 'text', key: 'name', label: 'Nom' },
+            { t: 'image', key: 'logo', label: 'Logo' },
+          ],
+        },
+        {
+          t: 'list',
+          key: 'qualifications',
+          item: 'Qualification',
+          create: () => ({ label: 'RGE', logo: '', caption: '', alt: '' }),
+          summary: (it) => String(it.label || 'Qualif.'),
+          show: (d) => d.style === 'strip' || d.style === 'inline',
+          fields: [
             { t: 'text', key: 'label', label: 'Libellé', half: true },
-            { t: 'text', key: 'hint', label: 'Précision' },
+            { t: 'text', key: 'caption', label: 'Légende (ex. Via notre partenaire)', half: true },
+            { t: 'image', key: 'logo', label: 'Logo' },
+            { t: 'text', key: 'alt', label: 'ALT' },
           ],
         },
       ],
@@ -440,6 +531,7 @@ export const BLOCK_SCHEMAS: Record<BlockKind, FieldGroup[]> = {
           create: () => ({ image: '', title: 'Nouveau panneau', bullets: [] }),
           fields: [
             { t: 'image', key: 'image', label: 'Image de fond' },
+            { t: 'text', key: 'imageAlt', label: 'Texte alternatif (ALT)' },
             { t: 'icon', key: 'icon', label: 'Icône' },
             { t: 'text', key: 'title', label: 'Titre' },
             { t: 'textarea', key: 'text', label: 'Texte', rows: 3 },
@@ -461,11 +553,36 @@ export const BLOCK_SCHEMAS: Record<BlockKind, FieldGroup[]> = {
           t: 'list',
           key: 'cards',
           item: 'Carte',
-          create: () => ({ icon: 'shieldCheck', title: 'Nouvelle carte', entries: [] }),
+          create: () => ({ icon: 'shieldCheck', title: 'Nouvelle carte', logos: [], entries: [] }),
+          summary: (it) => String(it.title || 'Carte'),
           fields: [
-            { t: 'icon', key: 'icon', label: 'Icône', half: true },
-            { t: 'text', key: 'tag', label: 'Étiquette', half: true },
             { t: 'text', key: 'title', label: 'Titre' },
+            { t: 'text', key: 'tag', label: 'Étiquette (optionnel)', half: true },
+            {
+              t: 'icon',
+              key: 'icon',
+              label: 'Icône de secours',
+              half: true,
+              hint: 'Affichée seulement si aucun logo n’est renseigné.',
+            },
+            {
+              t: 'list',
+              key: 'logos',
+              label: 'Logos',
+              item: 'Logo',
+              create: () => ({ src: '', alt: '', size: 'md' }),
+              summary: (it) => String(it.alt || (it.src ? String(it.src).split('/').pop() : 'Logo')),
+              fields: [
+                { t: 'image', key: 'src', label: 'Fichier logo', aspect: 'aspect-[3/1]' },
+                { t: 'text', key: 'alt', label: 'Texte alternatif (ALT)' },
+                {
+                  t: 'segmented',
+                  key: 'size',
+                  label: 'Taille',
+                  options: o(['sm', 'Petit'], ['md', 'Moyen'], ['lg', 'Grand'], ['wide', 'Large (badge)']),
+                },
+              ],
+            },
             {
               t: 'list',
               key: 'entries',
@@ -580,7 +697,110 @@ export const BLOCK_SCHEMAS: Record<BlockKind, FieldGroup[]> = {
     },
   ],
 
-  simulator: [heading(false)],
+  simulator: [
+    heading(false),
+    {
+      title: 'Affichage',
+      fields: [
+        {
+          t: 'segmented',
+          key: 'variant',
+          label: 'Type de bloc',
+          options: o(['teaser', 'Bandeau (lien vers l’outil)'], ['tool', 'Outil 3 étapes']),
+        },
+        { t: 'form', key: 'formId', label: 'Formulaire qui reçoit la demande', hint: 'Les champs se gèrent dans Engagement › Formulaires.' },
+        { t: 'text', key: 'ctaLabel', label: 'Texte du bouton d’envoi', show: (d) => d.variant !== 'teaser' },
+        { t: 'text', key: 'teaserCtaLabel', label: 'Texte du bouton', show: (d) => d.variant === 'teaser', half: true },
+        { t: 'link', key: 'teaserCtaLink', label: 'Destination', show: (d) => d.variant === 'teaser', half: true, placeholder: '/estimation-financement/' },
+        { t: 'text', key: 'teaserNote', label: 'Note sous le bandeau', show: (d) => d.variant === 'teaser' },
+      ],
+    },
+    {
+      title: 'Résultat affiché',
+      fields: [
+        { t: 'text', key: 'resultPrefix', label: 'Libellé du résultat', placeholder: 'Financement estimé' },
+        { t: 'textarea', key: 'resultNote', label: 'Phrase sous la fourchette', rows: 2 },
+        { t: 'textarea', key: 'disclaimer', label: 'Mention * (sans valeur contractuelle)', rows: 2 },
+      ],
+    },
+    {
+      title: 'Après l’estimation',
+      fields: [
+        { t: 'text', key: 'howTitle', label: 'Titre « comment c’est estimé »' },
+        { t: 'textarea', key: 'howText', label: 'Texte explicatif', rows: 4 },
+        { t: 'text', key: 'contactTitle', label: 'Titre du bandeau contact' },
+        { t: 'textarea', key: 'contactText', label: 'Texte du bandeau contact (48 h)', rows: 2 },
+        { t: 'link', key: 'privacyPath', label: 'Politique de confidentialité', placeholder: '/politique-de-confidentialite/' },
+      ],
+    },
+    {
+      title: 'Barème — types de site',
+      fields: [
+        {
+          t: 'list',
+          key: 'siteTypes',
+          item: 'Type de site',
+          create: () => ({ id: `st-${Math.random().toString(36).slice(2, 8)}`, label: 'Nouveau type', factor: 1 }),
+          summary: (it) => `${it.label || 'Type'} × ${it.factor ?? 1}`,
+          fields: [
+            { t: 'text', key: 'label', label: 'Libellé', half: true },
+            { t: 'number', key: 'factor', label: 'Coefficient', min: 0, max: 3, step: 0.01, half: true },
+          ],
+        },
+      ],
+    },
+    {
+      title: 'Barème — régions',
+      fields: [
+        {
+          t: 'list',
+          key: 'regions',
+          item: 'Région',
+          create: () => ({ id: `rg-${Math.random().toString(36).slice(2, 8)}`, label: 'Région', factor: 1 }),
+          summary: (it) => `${it.label || 'Région'} × ${it.factor ?? 1}`,
+          fields: [
+            { t: 'text', key: 'label', label: 'Libellé', half: true },
+            { t: 'number', key: 'factor', label: 'Coefficient', min: 0, max: 3, step: 0.01, half: true },
+          ],
+        },
+      ],
+    },
+    {
+      title: 'Barème — travaux',
+      fields: [
+        {
+          t: 'list',
+          key: 'operations',
+          item: 'Travaux',
+          create: () => ({ id: `op-${Math.random().toString(36).slice(2, 8)}`, label: 'Nouvelle action', minPerM2: 5, maxPerM2: 15 }),
+          summary: (it) => `${it.label || 'Action'} · ${it.minPerM2 ?? 0}–${it.maxPerM2 ?? 0} €/m²`,
+          fields: [
+            { t: 'text', key: 'label', label: 'Libellé' },
+            { t: 'number', key: 'minPerM2', label: 'Min € / m²', min: 0, max: 200, step: 0.5, half: true },
+            { t: 'number', key: 'maxPerM2', label: 'Max € / m²', min: 0, max: 400, step: 0.5, half: true },
+            { t: 'number', key: 'minPerKw', label: 'Min € / kW (facultatif)', min: 0, max: 500, step: 1, half: true },
+            { t: 'number', key: 'maxPerKw', label: 'Max € / kW (facultatif)', min: 0, max: 800, step: 1, half: true },
+          ],
+        },
+      ],
+    },
+    {
+      title: 'Barème — énergies',
+      fields: [
+        {
+          t: 'list',
+          key: 'energies',
+          item: 'Énergie',
+          create: () => ({ id: `en-${Math.random().toString(36).slice(2, 8)}`, label: 'Énergie', factor: 1 }),
+          summary: (it) => `${it.label || 'Énergie'} × ${it.factor ?? 1}`,
+          fields: [
+            { t: 'text', key: 'label', label: 'Libellé', half: true },
+            { t: 'number', key: 'factor', label: 'Coefficient', min: 0, max: 3, step: 0.01, half: true },
+          ],
+        },
+      ],
+    },
+  ],
 
   contactForm: [
     {
@@ -623,16 +843,19 @@ export const BLOCK_SCHEMAS: Record<BlockKind, FieldGroup[]> = {
 
 /** Champs de la fiche réalisation (template « project »). */
 export const PROJECT_FIELDS: FieldDef[] = [
-  { t: 'text', key: 'client', label: 'Client' },
-  { t: 'text', key: 'location', label: 'Ville', half: true },
+  { t: 'text', key: 'client', label: 'Client (ex. CARREFOUR MARKET)' },
+  { t: 'text', key: 'location', label: 'Ville / Région', half: true },
   { t: 'text', key: 'department', label: 'Département', half: true },
   { t: 'select', key: 'sector', label: 'Secteur', options: SECTORS.slice(1), half: true },
-  { t: 'text', key: 'ceeSheet', label: 'Fiche CEE', half: true },
-  { t: 'text', key: 'solution', label: 'Solution' },
-  { t: 'textarea', key: 'summary', label: 'Résumé', rows: 3 },
+  { t: 'text', key: 'badge', label: 'Badge carte (ex. Opération financée CEE)', half: true },
+  { t: 'text', key: 'primeCee', label: 'Prime CEE valorisée (ex. 290 000 €)', half: true },
+  { t: 'text', key: 'cumac', label: 'Volume CEE (ex. 30,6 GWh cumac)', half: true },
+  { t: 'text', key: 'ceeSheet', label: 'Fiches CEE (ex. BAT-TH-134 · BAT-TH-139)' },
+  { t: 'text', key: 'solution', label: 'Titre de l’opération / Solution' },
+  { t: 'textarea', key: 'summary', label: 'Résumé court', rows: 3 },
   { t: 'image', key: 'image', label: 'Image de couverture' },
-  { t: 'tags', key: 'results', label: 'Résultats clés' },
-  { t: 'switch', key: 'featured', label: 'Mettre en avant' },
+  { t: 'tags', key: 'results', label: 'Puces techniques / Résultats clés (affichés sur la carte)' },
+  { t: 'switch', key: 'featured', label: 'Mettre en avant sur l’accueil' },
 ];
 
 export const blockSummary = (d: Data): string => {

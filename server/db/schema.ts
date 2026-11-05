@@ -163,13 +163,85 @@ export const users = pgTable(
     id: text('id').primaryKey(),
     email: text('email').notNull(),
     name: text('name').notNull(),
-    role: text('role', { enum: ['superadmin', 'editor', 'seo', 'viewer'] }).$type<AdminUser['role']>().notNull(),
+    role: text('role').notNull(),
     passwordHash: text('password_hash').notNull(),
     salt: text('salt').notNull(),
+    status: text('status', { enum: ['active', 'invited', 'suspended'] }).$type<AdminUser['status']>().notNull().default('active'),
+    title: text('title'),
+    phone: text('phone'),
+    avatarUrl: text('avatar_url'),
+    totpSecret: text('totp_secret'),
+    totpEnabled: boolean('totp_enabled').notNull().default(false),
+    recoveryCodes: jsonb('recovery_codes').$type<string[]>().notNull().default([]),
+    mustChangePassword: boolean('must_change_password').notNull().default(false),
+    passwordChangedAt: ts('password_changed_at'),
     lastLoginAt: ts('last_login_at'),
+    lastLoginIp: text('last_login_ip'),
+    loginCount: integer('login_count').notNull().default(0),
+    invitedBy: text('invited_by'),
     createdAt: ts('created_at').notNull().defaultNow(),
   },
   (t) => [uniqueIndex('admin_users_email_uq').on(t.email)]
+);
+
+export const adminSessions = pgTable(
+  'admin_sessions',
+  {
+    id: text('id').primaryKey(),
+    userId: text('user_id').notNull(),
+    createdAt: ts('created_at').notNull().defaultNow(),
+    lastSeenAt: ts('last_seen_at').notNull().defaultNow(),
+    expiresAt: ts('expires_at').notNull(),
+    ip: text('ip'),
+    userAgent: text('user_agent'),
+    remember: boolean('remember').notNull().default(false),
+    revokedAt: ts('revoked_at'),
+  },
+  (t) => [index('admin_sessions_user_idx').on(t.userId), index('admin_sessions_expires_idx').on(t.expiresAt)]
+);
+
+export const auditLog = pgTable(
+  'audit_log',
+  {
+    id: bigint('id', { mode: 'number' }).primaryKey().generatedAlwaysAsIdentity(),
+    ts: ts('ts').notNull().defaultNow(),
+    userId: text('user_id'),
+    userEmail: text('user_email'),
+    action: text('action').notNull(),
+    target: text('target'),
+    detail: jsonb('detail').$type<Record<string, unknown>>(),
+    ip: text('ip'),
+    userAgent: text('user_agent'),
+  },
+  (t) => [index('audit_log_ts_idx').on(t.ts), index('audit_log_user_idx').on(t.userId, t.ts), index('audit_log_action_idx').on(t.action)]
+);
+
+export const mailLog = pgTable(
+  'mail_log',
+  {
+    id: bigint('id', { mode: 'number' }).primaryKey().generatedAlwaysAsIdentity(),
+    ts: ts('ts').notNull().defaultNow(),
+    kind: text('kind').notNull(),
+    toAddr: text('to_addr').notNull(),
+    subject: text('subject').notNull(),
+    status: text('status', { enum: ['sent', 'failed', 'skipped'] }).notNull(),
+    error: text('error'),
+  },
+  (t) => [index('mail_log_ts_idx').on(t.ts)]
+);
+
+export const authTokens = pgTable(
+  'auth_tokens',
+  {
+    id: text('id').primaryKey(),
+    userId: text('user_id').notNull(),
+    kind: text('kind', { enum: ['invite', 'reset'] }).notNull(),
+    createdAt: ts('created_at').notNull().defaultNow(),
+    expiresAt: ts('expires_at').notNull(),
+    usedAt: ts('used_at'),
+    createdBy: text('created_by'),
+  },
+  (t) => [index('auth_tokens_user_idx').on(t.userId)]
 );
 
 export const analyticsEvents = pgTable(

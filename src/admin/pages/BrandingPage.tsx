@@ -21,17 +21,32 @@ const COLOR_LABELS: { key: keyof ThemeBranding['colors']; label: string; hint: s
 ];
 
 const DEFAULT_COLORS: ThemeBranding['colors'] = {
-  primary: '#00C6BA',
-  primaryHover: '#00A89D',
-  accent: '#0066EE',
-  navy: '#0B1528',
-  background: '#F5F7FA',
-  text: '#0B1528',
-  muted: '#64748B',
-  border: '#E3E8EE',
+  primary: '#009FCC',
+  primaryHover: '#00769A',
+  accent: '#01CDF3',
+  navy: '#082D4A',
+  background: '#F4F8F9',
+  text: '#0B1B2B',
+  muted: '#5A6B7B',
+  border: '#D5E1E6',
 };
 
-const FONTS = ['Inter', 'Manrope', 'Plus Jakarta Sans', 'DM Sans', 'Poppins', 'Montserrat', 'Roboto', 'Open Sans', 'Lato', 'Source Sans 3', 'Space Grotesk', 'Outfit'].map((f) => ({
+const FONTS = [
+  'Figtree',
+  'Sora',
+  'Inter',
+  'Manrope',
+  'Plus Jakarta Sans',
+  'DM Sans',
+  'Poppins',
+  'Montserrat',
+  'Roboto',
+  'Open Sans',
+  'Lato',
+  'Source Sans 3',
+  'Space Grotesk',
+  'Outfit',
+].map((f) => ({
   value: f,
   label: f,
 }));

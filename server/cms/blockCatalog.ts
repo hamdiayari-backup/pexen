@@ -4,6 +4,7 @@
  */
 import type { BlockDataMap, BlockKind, BlockStyle, TypedBlock } from './blocks';
 import { button, uid } from './blocks';
+import { defaultSimulatorData } from './ceeDefaults';
 
 export type BlockCategory = 'entete' | 'contenu' | 'media' | 'listes' | 'conversion' | 'avance';
 
@@ -49,6 +50,7 @@ export const BLOCK_CATALOG: Catalog = {
       media: 'image',
       mainImage: '',
       mainImageAlt: '',
+      galleryImages: [],
       parallax: true,
       marquee: [],
     }),
@@ -184,18 +186,27 @@ export const BLOCK_CATALOG: Catalog = {
     }),
   },
   stats: {
-    label: 'Chiffres clés',
-    description: 'Chiffres avec compteur animé.',
+    label: 'Chiffres / Enjeux',
+    description: 'Cartes enjeux (image + CTA) ou bandeau preuves (chiffres + logos).',
     category: 'listes',
     icon: 'bar-chart',
     style: {},
     defaults: () => ({
       style: 'cards',
-      countUp: true,
+      countUp: false,
+      eyebrow: 'Vos enjeux',
+      title: 'Vos enjeux énergétiques',
+      footnote: '',
       items: [
-        { id: uid('k'), value: '30', suffix: ' %', label: "d'économies" },
-        { id: uid('k'), value: '48', suffix: ' h', label: 'pour répondre' },
-        { id: uid('k'), value: '100', suffix: ' %', label: 'clients suivis' },
+        {
+          id: uid('k'),
+          value: '',
+          label: 'Nouvel enjeu',
+          hint: 'Description',
+          ctaLabel: 'En savoir plus',
+          image: '',
+          link: '',
+        },
       ],
     }),
   },
@@ -209,11 +220,22 @@ export const BLOCK_CATALOG: Catalog = {
   },
   checklist: {
     label: 'Cartes de garanties',
-    description: 'Cartes titrées contenant des points clés.',
+    description: 'Cartes avec logos (RGE, OPQIBI…) et points clés.',
     category: 'listes',
     icon: 'check-square',
     style: {},
-    defaults: () => ({ title: 'Nos engagements', cards: [{ id: uid('ck'), icon: 'shieldCheck', title: 'Garantie', entries: [{ id: uid('e'), title: 'Point clé', text: '' }] }] }),
+    defaults: () => ({
+      title: 'Nos engagements',
+      cards: [
+        {
+          id: uid('ck'),
+          icon: 'shieldCheck',
+          title: 'Garantie',
+          logos: [],
+          entries: [{ id: uid('e'), title: 'Point clé', text: '' }],
+        },
+      ],
+    }),
   },
   faq: {
     label: 'Questions fréquentes',
@@ -256,12 +278,12 @@ export const BLOCK_CATALOG: Catalog = {
     defaults: () => ({ title: 'Nos réalisations', layout: 'grid', filter: 'all', showFilters: true, limit: 0 }),
   },
   simulator: {
-    label: 'Simulateur CEE',
-    description: 'Simulateur interactif de primes CEE.',
+    label: 'Estimer le financement',
+    description: 'Bandeau d’estimation ou outil 3 étapes, branché au formulaire de contact.',
     category: 'conversion',
     icon: 'calculator',
-    style: { background: 'surface' },
-    defaults: () => ({ title: 'Estimez votre prime CEE', align: 'center' }),
+    style: { background: 'white' },
+    defaults: () => defaultSimulatorData('tool'),
   },
   contactForm: {
     label: 'Formulaire de contact',

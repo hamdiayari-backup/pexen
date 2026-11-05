@@ -56,7 +56,15 @@ export function PreviewFrame({
   clickRef.current = onBlockClick;
 
   const send = useCallback((p: PreviewPayload) => {
-    frame.current?.contentWindow?.postMessage({ type: 'pexen:preview', ...p }, window.location.origin);
+    const win = frame.current?.contentWindow;
+    if (!win) return;
+    try {
+      /* Clone JSON : garantit un snapshot frais (blocs hero/vidéo inclus) pour l’iframe */
+      const page = p.page == null ? p.page : JSON.parse(JSON.stringify(p.page));
+      win.postMessage({ type: 'pexen:preview', ...p, page }, window.location.origin);
+    } catch (err) {
+      console.error('[preview] envoi aperçu impossible', err);
+    }
   }, []);
 
   useEffect(() => {

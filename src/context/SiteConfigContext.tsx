@@ -36,13 +36,22 @@ export interface SiteConfigPayload {
   };
   floatingButtons?: { id: string; label: string; path: string; style: 'primary' | 'outline' | 'ghost'; enabled: boolean }[];
   newsletterEnabled?: boolean;
-  ai: { enabled: boolean; showOnPages: string[] | '*' };
+  ai: {
+    enabled: boolean;
+    showOnPages: string[] | '*';
+    buttonLabel?: string;
+    statusLabel?: string;
+    panelTitle?: string;
+  };
   settings: {
     cookieBannerEnabled: boolean;
     analyticsEnabled: boolean;
     maintenance: { enabled: boolean; title: string; message: string };
+    footerLegalNotes?: string[];
+    seo?: { gaMeasurementId?: string; googleVerification?: string };
   };
   redirects: { from: string; to: string; permanent: boolean }[];
+  appearance?: { activeThemeId: 'default' | 'pexen-ultra' | 'pexen-maquette' };
 }
 
 export interface MenuItemDto {
@@ -61,7 +70,7 @@ export function pathMatches(patterns: string[] | '*', path: string): boolean {
   return patterns.some((pat) => (pat.endsWith('*') ? norm(path).startsWith(pat.slice(0, -1)) : norm(pat) === norm(path)));
 }
 
-/** Correspondance couleurs du backoffice → variables CSS du thème (src/index.css). */
+/** Correspondance couleurs du backoffice → variables CSS du thème Classique (src/index.css). */
 const COLOR_VARS: Record<string, string> = {
   primary: '--px-primary',
   primaryHover: '--px-primary-dark',
@@ -73,7 +82,7 @@ const COLOR_VARS: Record<string, string> = {
   border: '--px-border',
 };
 
-const PRELOADED_FONTS = new Set(['Poppins']);
+const PRELOADED_FONTS = new Set(['Poppins', 'Figtree', 'Sora']);
 
 function ensureFont(family: string) {
   if (!family || PRELOADED_FONTS.has(family)) return;
@@ -82,22 +91,88 @@ function ensureFont(family: string) {
   const link = document.createElement('link');
   link.id = id;
   link.rel = 'stylesheet';
-  link.href = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(family).replace(/%20/g, '+')}:wght@300;400;500;600;700&display=swap`;
+  link.href = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(family).replace(/%20/g, '+')}:wght@300;400;500;600;700;800&display=swap`;
   document.head.appendChild(link);
+}
+
+function hexToRgb(hex: string): string | null {
+  const m = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.exec(hex.trim());
+  if (!m) return null;
+  let h = m[1];
+  if (h.length === 3) h = h.split('').map((c) => c + c).join('');
+  const n = parseInt(h, 16);
+  return `${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}`;
+}
+
+function setVar(root: CSSStyleDeclaration, name: string, value: string) {
+  /* important : bat les !important de pexen-brand.css / Bootstrap du thème Ultra */
+  root.setProperty(name, value, 'important');
 }
 
 export function applyBranding(branding: BrandingPayload | undefined) {
   if (!branding) return;
-  const root = document.documentElement;
+  const root = document.documentElement.style;
+  const c = branding.colors || {};
+
   for (const [key, cssVar] of Object.entries(COLOR_VARS)) {
-    const value = branding.colors?.[key];
-    if (value && /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(value)) root.style.setProperty(cssVar, value);
+    const value = c[key];
+    if (value && /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(value)) setVar(root, cssVar, value);
   }
+
+  /* Thème Ultra (Bizen) + Bootstrap — mêmes jetons que /administrator/branding */
+  const primary = c.primary;
+  const primaryHover = c.primaryHover;
+  const accent = c.accent;
+  const navy = c.navy;
+  const surface = c.background;
+  const text = c.text;
+  const muted = c.muted;
+
+  if (primary && hexToRgb(primary)) {
+    setVar(root, '--primary', primary);
+    setVar(root, '--primary-rgb', hexToRgb(primary)!);
+    setVar(root, '--px-primary-rgb', hexToRgb(primary)!);
+    setVar(root, '--bs-primary', primary);
+    setVar(root, '--bs-primary-rgb', hexToRgb(primary)!);
+  }
+  if (primaryHover && hexToRgb(primaryHover)) {
+    setVar(root, '--hover', primaryHover);
+  }
+  if (accent && hexToRgb(accent)) {
+    setVar(root, '--bs-info', accent);
+    setVar(root, '--bs-info-rgb', hexToRgb(accent)!);
+    setVar(root, '--px-accent-rgb', hexToRgb(accent)!);
+  }
+  if (navy && hexToRgb(navy)) {
+    setVar(root, '--secondary', navy);
+    setVar(root, '--secondary-rgb', hexToRgb(navy)!);
+    setVar(root, '--dark', navy);
+    setVar(root, '--headings-color', navy);
+    setVar(root, '--px-navy-rgb', hexToRgb(navy)!);
+    setVar(root, '--bs-secondary', navy);
+    setVar(root, '--bs-secondary-rgb', hexToRgb(navy)!);
+    setVar(root, '--bs-dark', navy);
+    setVar(root, '--bs-dark-rgb', hexToRgb(navy)!);
+  }
+  if (surface && hexToRgb(surface)) {
+    setVar(root, '--light', surface);
+    setVar(root, '--primary-mute', surface);
+  }
+  if (text && hexToRgb(text)) {
+    setVar(root, '--body-color', text);
+  }
+  if (muted && hexToRgb(muted)) {
+    setVar(root, '--text-muted', muted);
+  }
+
   if (branding.fonts) {
     ensureFont(branding.fonts.body);
     ensureFont(branding.fonts.heading);
-    root.style.setProperty('--px-font-body', `'${branding.fonts.body}'`);
-    root.style.setProperty('--px-font-heading', `'${branding.fonts.heading}'`);
+    setVar(root, '--px-font-body', `'${branding.fonts.body}', system-ui, sans-serif`);
+    setVar(root, '--px-font-heading', `'${branding.fonts.heading}', system-ui, sans-serif`);
+    setVar(root, '--font-family-base', `'${branding.fonts.body}', system-ui, sans-serif`);
+    setVar(root, '--font-family-headings', `'${branding.fonts.heading}', system-ui, sans-serif`);
+    setVar(root, '--font-family-btn', `'${branding.fonts.body}', system-ui, sans-serif`);
   }
   if (branding.faviconUrl) {
     let link = document.querySelector<HTMLLinkElement>('link[rel="icon"]');

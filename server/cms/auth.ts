@@ -1,7 +1,11 @@
+/**
+ * Pexen
+ * © 2026 NOVALABS WEB DESIGN — Tunisie
+ * Contact : contact@novalabs.tn · +216 24 734 647
+ * Tous droits réservés. Toute reproduction, modification ou diffusion sans autorisation écrite est interdite.
+ */
 import crypto from 'crypto';
-import type { AdminUser } from './types';
-
-const TOKEN_TTL_MS = 1000 * 60 * 60 * 12;
+import type { AdminUser, SystemSettings } from './types';
 
 function jwtSecret(): string {
   const secret = process.env.ADMIN_JWT_SECRET;
@@ -26,55 +30,107 @@ export function verifyPassword(password: string, user: AdminUser): boolean {
   return safeEqual(Buffer.from(hash, 'hex'), Buffer.from(user.passwordHash, 'hex'));
 }
 
-export function validatePasswordStrength(password: string): string | null {
-  if (password.length < 10) return 'Le mot de passe doit contenir au moins 10 caractères.';
-  if (!/[A-Za-z]/.test(password) || !/\d/.test(password)) return 'Le mot de passe doit mêler lettres et chiffres.';
+/** Empreinte factice : même coût de calcul quand le compte n'existe pas (pas d'énumération par le temps de réponse). */
+let dummy: AdminUser | null = null;
+export function burnPasswordCheck(password: string) {
+  if (!dummy) {
+    const { hash, salt } = hashPassword(crypto.randomUUID());
+    dummy = { id: '', email: '', name: '', role: '', passwordHash: hash, salt };
+  }
+  verifyPassword(password, dummy);
+}
+
+/** Mot de passe inutilisable (comptes invités, réinitialisés). */
+export function unusablePassword(): { hash: string; salt: string } {
+  return hashPassword(crypto.randomBytes(32).toString('hex'));
+}
+
+type PasswordPolicy = Pick<SystemSettings['security'], 'passwordMinLength' | 'requireUppercase' | 'requireNumber' | 'requireSymbol'>;
+
+export function validatePassword(password: string, policy: PasswordPolicy, user?: { email?: string; name?: string }): string | null {
+  if (password.length < policy.passwordMinLength) return `Le mot de passe doit contenir au moins ${policy.passwordMinLength} caractères.`;
+  if (password.length > 200) return 'Le mot de passe est trop long (200 caractères max).';
+  if (!/[a-zA-Z]/.test(password)) return 'Le mot de passe doit contenir au moins une lettre.';
+  if (policy.requireUppercase && (!/[A-Z]/.test(password) || !/[a-z]/.test(password))) return 'Le mot de passe doit mêler majuscules et minuscules.';
+  if (policy.requireNumber && !/\d/.test(password)) return 'Le mot de passe doit contenir au moins un chiffre.';
+  if (policy.requireSymbol && !/[^a-zA-Z0-9]/.test(password)) return 'Le mot de passe doit contenir au moins un caractère spécial.';
+  const lower = password.toLowerCase();
+  const local = user?.email?.split('@')[0]?.toLowerCase();
+  if (local && local.length >= 4 && lower.includes(local)) return 'Le mot de passe ne doit pas contenir votre adresse e-mail.';
+  if (/^(.)\1+$/.test(password) || /^(?:0123456789|1234567890|azertyuiop|qwertyuiop|password|motdepasse)/i.test(password)) {
+    return 'Ce mot de passe est trop facile à deviner.';
+  }
   return null;
 }
 
-export interface TokenPayload {
-  sub: string;
-  email: string;
-  role: AdminUser['role'];
-  exp: number;
-  /** Empreinte du hash : un changement de mot de passe invalide les sessions existantes. */
-  pv: string;
+/** Le mot de passe a-t-il dépassé la durée de validité de la politique ? */
+export function passwordExpired(user: AdminUser, expiryDays: number): boolean {
+  if (expiryDays <= 0) return false;
+  const since = user.passwordChangedAt || user.createdAt;
+  return !!since && Date.now() - new Date(since).getTime() > expiryDays * 86400_000;
 }
 
-function passwordVersion(user: AdminUser): string {
-  return user.passwordHash.slice(0, 12);
-}
+/* ---------- Jetons signés ---------- */
 
-export function createToken(user: AdminUser): string {
-  const payload: TokenPayload = {
-    sub: user.id,
-    email: user.email,
-    role: user.role,
-    exp: Date.now() + TOKEN_TTL_MS,
-    pv: passwordVersion(user),
-  };
+function sign(payload: object): string {
   const body = Buffer.from(JSON.stringify(payload)).toString('base64url');
   const sig = crypto.createHmac('sha256', jwtSecret()).update(body).digest('base64url');
   return `${body}.${sig}`;
 }
 
-export function verifyToken(token: string): TokenPayload | null {
+function unsign<T extends { exp: number }>(token: string): T | null {
   const parts = token.split('.');
   if (parts.length !== 2) return null;
   const [body, sig] = parts;
   const expected = crypto.createHmac('sha256', jwtSecret()).update(body).digest('base64url');
   if (!safeEqual(Buffer.from(sig), Buffer.from(expected))) return null;
   try {
-    const payload = JSON.parse(Buffer.from(body, 'base64url').toString('utf-8')) as TokenPayload;
-    if (payload.exp < Date.now()) return null;
+    const payload = JSON.parse(Buffer.from(body, 'base64url').toString('utf-8')) as T;
+    if (typeof payload.exp !== 'number' || payload.exp < Date.now()) return null;
     return payload;
   } catch {
     return null;
   }
 }
 
-export function tokenMatchesUser(payload: TokenPayload, user: AdminUser): boolean {
-  return payload.pv === passwordVersion(user);
+export interface TokenPayload {
+  typ: 'session';
+  sub: string;
+  /** Identifiant de session (table admin_sessions), révocable. */
+  sid: string;
+  exp: number;
+  /** Empreinte du hash : un changement de mot de passe invalide les jetons existants. */
+  pv: string;
+}
+
+const passwordVersion = (user: AdminUser) => user.passwordHash.slice(0, 12);
+
+export function createToken(user: AdminUser, sid: string, expiresAt: Date): string {
+  return sign({ typ: 'session', sub: user.id, sid, exp: expiresAt.getTime(), pv: passwordVersion(user) } satisfies TokenPayload);
+}
+
+export function verifyToken(token: string): TokenPayload | null {
+  const p = unsign<TokenPayload>(token);
+  return p?.typ === 'session' && p.sid ? p : null;
+}
+
+export const tokenMatchesUser = (payload: { pv: string }, user: AdminUser) => payload.pv === passwordVersion(user);
+
+/** Étape intermédiaire de connexion : mot de passe validé, code 2FA attendu (5 min). */
+export interface ChallengePayload {
+  typ: '2fa';
+  sub: string;
+  remember: boolean;
+  exp: number;
+  pv: string;
+}
+
+export const createChallenge = (user: AdminUser, remember: boolean) =>
+  sign({ typ: '2fa', sub: user.id, remember, exp: Date.now() + 5 * 60_000, pv: passwordVersion(user) } satisfies ChallengePayload);
+
+export function verifyChallenge(token: string): ChallengePayload | null {
+  const p = unsign<ChallengePayload>(token);
+  return p?.typ === '2fa' ? p : null;
 }
 
 export async function ensureDefaultAdmin(users: AdminUser[]): Promise<AdminUser[]> {
@@ -82,6 +138,7 @@ export async function ensureDefaultAdmin(users: AdminUser[]): Promise<AdminUser[
   const password = process.env.ADMIN_PASSWORD;
   if (!password) throw new Error('ADMIN_PASSWORD requis pour créer le premier compte administrateur');
   const { hash, salt } = hashPassword(password);
+  const now = new Date().toISOString();
   return [
     {
       id: 'admin-1',
@@ -89,30 +146,10 @@ export async function ensureDefaultAdmin(users: AdminUser[]): Promise<AdminUser[
       passwordHash: hash,
       salt,
       role: 'superadmin',
-      name: 'Administrateur PEXEN',
+      name: 'Administrateur Pexen',
+      status: 'active',
+      passwordChangedAt: now,
+      createdAt: now,
     },
   ];
-}
-
-const attempts = new Map<string, { count: number; resetAt: number }>();
-const MAX_ATTEMPTS = 8;
-const WINDOW_MS = 15 * 60_000;
-
-export function checkLoginThrottle(key: string): { ok: boolean; retryInSec?: number } {
-  const now = Date.now();
-  const row = attempts.get(key);
-  if (!row || row.resetAt < now) return { ok: true };
-  if (row.count >= MAX_ATTEMPTS) return { ok: false, retryInSec: Math.ceil((row.resetAt - now) / 1000) };
-  return { ok: true };
-}
-
-export function recordLoginFailure(key: string) {
-  const now = Date.now();
-  const row = attempts.get(key);
-  if (!row || row.resetAt < now) attempts.set(key, { count: 1, resetAt: now + WINDOW_MS });
-  else row.count++;
-}
-
-export function clearLoginFailures(key: string) {
-  attempts.delete(key);
 }

@@ -187,7 +187,20 @@ const userToRow = (u: AdminUser): typeof t.users.$inferInsert => ({
   role: u.role,
   passwordHash: u.passwordHash,
   salt: u.salt,
+  status: u.status ?? 'active',
+  title: u.title ?? null,
+  phone: u.phone ?? null,
+  avatarUrl: u.avatarUrl ?? null,
+  totpSecret: u.totpSecret ?? null,
+  totpEnabled: !!u.totpEnabled,
+  recoveryCodes: u.recoveryCodes ?? [],
+  mustChangePassword: !!u.mustChangePassword,
+  passwordChangedAt: toDate(u.passwordChangedAt),
   lastLoginAt: toDate(u.lastLoginAt),
+  lastLoginIp: u.lastLoginIp ?? null,
+  loginCount: u.loginCount ?? 0,
+  invitedBy: u.invitedBy ?? null,
+  createdAt: u.createdAt ? new Date(u.createdAt) : undefined,
 });
 
 const rowToUser = (r: typeof t.users.$inferSelect): AdminUser =>
@@ -198,7 +211,20 @@ const rowToUser = (r: typeof t.users.$inferSelect): AdminUser =>
     salt: r.salt,
     role: r.role,
     name: r.name,
+    status: r.status,
+    title: r.title ?? undefined,
+    phone: r.phone ?? undefined,
+    avatarUrl: r.avatarUrl ?? undefined,
+    totpSecret: r.totpSecret ?? undefined,
+    totpEnabled: r.totpEnabled,
+    recoveryCodes: r.recoveryCodes,
+    mustChangePassword: r.mustChangePassword,
+    passwordChangedAt: iso(r.passwordChangedAt),
     lastLoginAt: iso(r.lastLoginAt),
+    lastLoginIp: r.lastLoginIp ?? undefined,
+    loginCount: r.loginCount,
+    invitedBy: r.invitedBy ?? undefined,
+    createdAt: iso(r.createdAt),
   });
 
 const menuToRow = (m: MenuConfig): typeof t.menus.$inferInsert => ({ id: m.id, label: m.label, items: m.items });
@@ -207,7 +233,7 @@ const menuToRow = (m: MenuConfig): typeof t.menus.$inferInsert => ({ id: m.id, l
 /* Lecture                                                             */
 /* ------------------------------------------------------------------ */
 
-const SINGLETONS = ['general', 'branding', 'whatsapp', 'floatingButtons', 'ai', 'newsletter', 'settings', 'google'] as const;
+const SINGLETONS = ['general', 'branding', 'whatsapp', 'floatingButtons', 'ai', 'newsletter', 'settings', 'google', 'roles', 'system', 'appearance'] as const;
 type SingletonKey = (typeof SINGLETONS)[number];
 
 /** Charge l'état complet du CMS ; `null` si la base n'a jamais été initialisée. */
@@ -239,6 +265,9 @@ export async function loadFromDatabase(): Promise<CmsSnapshot | null> {
     newsletter: settings.get('newsletter'),
     settings: settings.get('settings'),
     google: settings.get('google') ?? { connected: false },
+    roles: settings.get('roles'),
+    system: settings.get('system'),
+    appearance: settings.get('appearance'),
     pages: pages.map(rowToPage),
     posts: posts.map(rowToPost),
     menus: menus
@@ -301,6 +330,9 @@ export async function persistSnapshot(tx: Tx, prev: CmsSnapshot | null, next: Cm
     newsletter: next.newsletter,
     settings: next.settings,
     google: next.google,
+    roles: next.roles,
+    system: next.system,
+    appearance: next.appearance,
   };
   for (const [key, value] of Object.entries(singletonValues)) {
     const old = prev ? (key === 'version' ? prev.version : prev[key as SingletonKey]) : undefined;

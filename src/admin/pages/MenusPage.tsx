@@ -319,7 +319,7 @@ export default function MenusPage() {
                             onEdit={() => setEditing({ item, isNew: false })}
                             onDelete={() => void remove(item)}
                             onMove={(d) => setItems(arrayMove(items, i, i + d))}
-                            onAddChild={tab !== 'footer' ? () => setEditing({ item: { id: newId(), label: '', path: '' }, parentId: item.id, isNew: true }) : undefined}
+                            onAddChild={() => setEditing({ item: { id: newId(), label: '', path: '' }, parentId: item.id, isNew: true })}
                           />
                           {(item.children || []).map((c, ci, arr) => (
                             <Row

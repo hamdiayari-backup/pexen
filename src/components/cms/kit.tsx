@@ -31,6 +31,15 @@ export function useCms() {
 const DarkContext = createContext(false);
 export const useDark = () => useContext(DarkContext);
 
+/** Typo / placement issus de l’onglet Style de l’éditeur. */
+type TextLayout = {
+  textAlign: NonNullable<BlockStyle['textAlign']>;
+  titleSize: NonNullable<BlockStyle['titleSize']>;
+  bodySize: NonNullable<BlockStyle['bodySize']>;
+};
+const TextLayoutContext = createContext<TextLayout>({ textAlign: 'center', titleSize: 'md', bodySize: 'md' });
+export const useTextLayout = () => useContext(TextLayoutContext);
+
 /* ------------------------------------------------------------------ Liens */
 
 export function useGo() {
@@ -80,34 +89,53 @@ const AnimationContext = createContext<BlockStyle['animation']>('fade-up');
 
 export function Reveal({ children, delay = 0, className = '' }: { children: React.ReactNode; delay?: number; className?: string }) {
   const animation = useContext(AnimationContext);
-  const { ref, inView } = useInView<HTMLDivElement>();
+  const { ref, inView } = useInView<HTMLDivElement>(0.12);
   if (animation === 'none') return <div className={className}>{children}</div>;
   return (
-    <div ref={ref} data-anim={animation} style={{ transitionDelay: `${delay}ms` }} className={cx('px-reveal', inView && 'is-visible', className)}>
+    <div
+      ref={ref}
+      data-anim={animation}
+      style={{ transitionDelay: `${delay}ms` }}
+      className={cx('px-reveal', inView && 'is-visible', className)}
+    >
       {children}
     </div>
   );
 }
 
-export function CountUp({ end, prefix = '', suffix = '', duration = 1800 }: { end: number; prefix?: string; suffix?: string; duration?: number }) {
+export function CountUp({
+  end,
+  prefix = '',
+  suffix = '',
+  duration = 1800,
+  decimals = 0,
+}: {
+  end: number;
+  prefix?: string;
+  suffix?: string;
+  duration?: number;
+  decimals?: number;
+}) {
   const { ref, inView } = useInView<HTMLSpanElement>(0.4);
   const [value, setValue] = useState(0);
   useEffect(() => {
     if (!inView) return;
     let frame = 0;
     const start = performance.now();
+    const factor = 10 ** decimals;
     const tick = (now: number) => {
       const progress = Math.min((now - start) / duration, 1);
-      setValue(Math.round(end * (1 - Math.pow(1 - progress, 4))));
+      const eased = 1 - Math.pow(1 - progress, 4);
+      setValue(Math.round(end * eased * factor) / factor);
       if (progress < 1) frame = requestAnimationFrame(tick);
     };
     frame = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(frame);
-  }, [inView, end, duration]);
+  }, [inView, end, duration, decimals]);
   return (
     <span ref={ref} className="tabular-nums">
       {prefix}
-      {value.toLocaleString('fr-FR')}
+      {value.toLocaleString('fr-FR', { minimumFractionDigits: decimals, maximumFractionDigits: decimals })}
       {suffix}
     </span>
   );
@@ -128,7 +156,7 @@ const BG: Record<BlockStyle['background'], string> = {
   none: '',
   white: 'bg-white',
   surface: 'bg-px-surface',
-  soft: 'bg-gradient-to-br from-px-surface via-px-surface to-px-surface-2',
+  soft: 'bg-gradient-to-br from-px-surface via-white to-px-surface-2',
   navy: 'bg-px-navy text-white',
   brand: 'bg-gradient-to-r from-px-primary-dark via-px-accent-mid to-px-accent px-gradient-pan text-white',
   image: 'bg-px-navy',
@@ -139,50 +167,123 @@ export function isDarkStyle(s: BlockStyle) {
   return s.background === 'navy' || s.background === 'brand' || ((s.background === 'image' || s.background === 'video') && s.overlayTone !== 'light');
 }
 
+/** Voile soyeux : halos doux + léger balayage lumineux (plein cadre, sans couture). */
+function SilkLayer({ dark }: { dark: boolean }) {
+  return (
+    <div className="px-decor inset-0 overflow-hidden" aria-hidden="true">
+      <div className={cx('px-decor inset-0', dark ? 'px-silk-mesh-dark' : 'px-silk-mesh-light')} />
+      <div className={cx('px-decor inset-0', dark ? 'px-silk-glow-dark' : 'px-silk-glow-light')} />
+      <div className={cx('px-decor inset-0 px-silk-sheen', dark && 'opacity-40')} />
+      <div className={cx('px-decor inset-0 px-noise', dark ? 'opacity-[0.04]' : 'opacity-[0.03]')} />
+    </div>
+  );
+}
+
 function Decor({ decor, dark }: { decor: BlockStyle['decor']; dark: boolean }) {
+  /* Toutes les couches restent en inset:0 pour éviter la couture entre sections (overflow clip). */
   switch (decor) {
     case 'dots':
-      return <div className={cx('px-decor inset-y-0 right-0 w-2/3 px-fade-right', dark ? 'px-dots opacity-30 invert' : 'px-dots')} />;
+      return <div className={cx('px-decor inset-0 px-dots-drift', dark ? 'px-dots opacity-25 invert' : 'px-dots opacity-40')} />;
     case 'grid':
-      return <div className={cx('px-decor inset-0 px-grid-bg', dark && 'opacity-40 invert')} />;
+      return <div className={cx('px-decor inset-0 px-grid-bg px-grid-drift', dark && 'opacity-40 invert')} />;
     case 'rings':
-      return <div className="px-decor -top-40 -right-40 w-[720px] h-[720px] px-rings px-fade-mask" />;
+      return <div className="px-decor inset-0 px-rings-alive opacity-50" />;
     case 'diagonal':
-      return <div className="px-decor inset-y-0 left-0 w-1/2 px-diagonal px-fade-left" />;
+      return <div className="px-decor inset-0 px-diagonal px-diagonal-shift opacity-70" />;
     case 'glow':
-      return (
-        <>
-          <div className="px-decor -top-32 right-[10%] w-[480px] h-[480px] rounded-full bg-px-primary/12 blur-[110px] px-drift" />
-          <div className="px-decor -bottom-40 -left-32 w-[460px] h-[460px] rounded-full bg-px-accent/8 blur-[110px] px-drift [animation-delay:-8s]" />
-        </>
-      );
+      return <div className={cx('px-decor inset-0', dark ? 'px-glow-alive-dark' : 'px-glow-alive-light')} />;
+    case 'waves':
+    case 'silk':
+      return <SilkLayer dark={dark} />;
     default:
       return null;
   }
 }
 
-export function Section({ style, children, className, contentClassName }: { style: BlockStyle; children: React.ReactNode; className?: string; contentClassName?: string }) {
+/** Fond vivant : navy/brand (aurora) ; image (voile) ; sections claires via décor silk. */
+function AmbientBackdrop({ background }: { background: BlockStyle['background']; dark: boolean }) {
+  if (background === 'navy' || background === 'brand') {
+    return (
+      <>
+        <div className="px-decor inset-0 px-bg-alive-dark" />
+        <div className="px-decor inset-0 px-aurora-alive opacity-70" />
+        <div className="px-decor inset-0 px-noise opacity-[0.06]" />
+        <div className="px-decor inset-0 px-beam" />
+      </>
+    );
+  }
+  if (background === 'image') {
+    return <div className="px-decor inset-0 px-aurora-alive opacity-40 mix-blend-soft-light" />;
+  }
+  return null;
+}
+
+/** Trait fin dégradé entre deux blocs clairs de fonds différents. */
+export function BlockSeam() {
+  return (
+    <div className="px-seam" aria-hidden="true">
+      <div className="px-seam-line" />
+    </div>
+  );
+}
+
+export function Section({
+  style,
+  children,
+  className,
+  contentClassName,
+  /** Désactive les fonds animés (ex. hero déjà géré à part). */
+  ambient = true,
+}: {
+  style: BlockStyle;
+  children: React.ReactNode;
+  className?: string;
+  contentClassName?: string;
+  ambient?: boolean;
+}) {
   const dark = isDarkStyle(style);
   const overlay = Math.min(Math.max(style.overlay ?? 55, 0), 95) / 100;
   const light = style.overlayTone === 'light';
+  const textLayout: TextLayout = {
+    textAlign: style.textAlign || 'center',
+    titleSize: style.titleSize || 'md',
+    bodySize: style.bodySize || 'md',
+  };
+  /*
+   * Fond animé intelligent :
+   * - navy / brand → glow (sections sombres)
+   * - white / surface / soft → aucun décor auto (calme)
+   * - silk uniquement si demandé explicitement dans le style du bloc
+   */
+  const autoDecor =
+    ambient && style.decor === 'none' && (style.background === 'navy' || style.background === 'brand')
+      ? 'glow'
+      : style.decor;
   return (
     <AnimationContext.Provider value={style.animation}>
       <DarkContext.Provider value={dark}>
+      <TextLayoutContext.Provider value={textLayout}>
+        {style.borderTop ? <BlockSeam /> : null}
         <section
           id={style.anchor || undefined}
+          data-text-align={textLayout.textAlign}
+          data-title-size={textLayout.titleSize}
+          data-body-size={textLayout.bodySize}
           className={cx(
             'px-section scroll-mt-24',
             BG[style.background],
             PAD_TOP[style.paddingTop],
             PAD_BOTTOM[style.paddingBottom],
-            style.borderTop && 'border-t border-px-border-soft',
             style.hideOnMobile && 'hidden md:block',
             style.hideOnDesktop && 'md:hidden',
             className
           )}
         >
           {style.background === 'image' && style.backgroundImage ? (
-            <div className="px-decor inset-0 bg-cover bg-center" style={{ backgroundImage: `url('${style.backgroundImage}')` }} />
+            <div
+              className="px-decor inset-0 bg-cover bg-center px-kenburns"
+              style={{ backgroundImage: `url('${style.backgroundImage}')` }}
+            />
           ) : null}
           {style.background === 'video' && style.backgroundVideo ? (
             <video className="px-decor inset-0 h-full w-full object-cover" src={style.backgroundVideo} poster={style.backgroundImage} autoPlay muted loop playsInline />
@@ -197,13 +298,27 @@ export function Section({ style, children, className, contentClassName }: { styl
               <div className="px-decor inset-0 bg-px-navy" style={{ opacity: overlay }} />
             )
           ) : null}
-          <Decor decor={style.decor} dark={dark} />
+          {ambient ? <AmbientBackdrop background={style.background} dark={dark} /> : null}
+          {ambient ? <Decor decor={autoDecor} dark={dark} /> : null}
           <div className={cx(WIDTH[style.width], contentClassName)}>{children}</div>
         </section>
+      </TextLayoutContext.Provider>
       </DarkContext.Provider>
     </AnimationContext.Provider>
   );
 }
+
+const TITLE_SIZE: Record<NonNullable<BlockStyle['titleSize']>, string> = {
+  sm: 'text-2xl sm:text-3xl',
+  md: 'text-3xl sm:text-[2.6rem]',
+  lg: 'text-4xl sm:text-[3rem]',
+  xl: 'text-4xl sm:text-[3.4rem]',
+};
+const BODY_SIZE: Record<NonNullable<BlockStyle['bodySize']>, string> = {
+  sm: 'text-sm',
+  md: 'text-base',
+  lg: 'text-lg',
+};
 
 /* ------------------------------------------------------------------ Typographie */
 
@@ -237,23 +352,33 @@ export function SectionHeading({ h, className, as = 'h2' }: { h: HeadingData; cl
   const dark = useDark();
   const go = useGo();
   const { t } = useCms();
+  const layout = useTextLayout();
   if (!h.eyebrow && !h.title && !h.intro) return null;
-  const center = h.align === 'center';
+  const align = h.align || layout.textAlign;
+  const center = align === 'center';
+  const right = align === 'right';
   const Tag = as;
   return (
-    <Reveal className={cx('mb-12 flex flex-col gap-6', center ? 'items-center text-center' : 'md:flex-row md:items-end md:justify-between', className)}>
-      <div className={cx('space-y-3', center ? 'max-w-2xl' : 'max-w-2xl')}>
+    <Reveal
+      className={cx(
+        'mb-12 flex flex-col gap-6',
+        center && 'items-center text-center',
+        right && 'items-end text-right',
+        !center && !right && 'md:flex-row md:items-end md:justify-between',
+        className
+      )}
+    >
+      <div className="max-w-2xl space-y-3">
         {h.eyebrow ? <Eyebrow>{t(h.eyebrow)}</Eyebrow> : null}
         {h.title ? (
-          <Tag className={cx('text-3xl sm:text-[2.6rem] font-semibold tracking-tight leading-tight', dark ? 'text-white' : 'text-px-navy')}>
+          <Tag className={cx(TITLE_SIZE[layout.titleSize], 'font-semibold tracking-tight leading-tight', dark ? 'text-white' : 'text-px-navy')}>
             <Highlighted title={h.title} highlight={h.highlight} />
           </Tag>
         ) : null}
-        {h.intro ? <p className={dark ? 'text-white/70' : 'text-slate-600'}>{t(h.intro)}</p> : null}
+        {h.intro ? <p className={cx(BODY_SIZE[layout.bodySize], dark ? 'text-white/70' : 'text-slate-600')}>{t(h.intro)}</p> : null}
       </div>
-      {h.headerLinkLabel && h.headerLink && !center ? (
-        <button type="button" onClick={() => go(h.headerLink)} className={cx('group inline-flex shrink-0 items-center gap-2 text-sm font-semibold', dark ? 'text-white' : 'text-px-navy')}>
-          <span className="border-b-2 border-px-primary pb-0.5 transition-colors group-hover:border-px-accent">{t(h.headerLinkLabel)}</span>
+      {h.headerLinkLabel && h.headerLink && align === 'left' ? (
+        <button type="button" onClick={() => go(h.headerLink)} className={cx('group inline-flex shrink-0 items-center gap-2 text-sm font-semibold', dark ? 'text-white' : 'text-px-navy')}>          <span className="border-b-2 border-px-primary pb-0.5 transition-colors group-hover:border-px-accent">{t(h.headerLinkLabel)}</span>
           <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
         </button>
       ) : null}
@@ -330,10 +455,11 @@ export function CmsButton({ b, size = 'md', className }: { b: ButtonData; size?:
   const accentIcon = lead && ((b.variant === 'secondary' && dark) || b.variant === 'link');
   const iconEl = IconC ? <IconC className={cx('h-4 w-4', !lead && 'btn-arrow transition-transform group-hover:translate-x-1', accentIcon && (dark ? 'text-px-primary-light' : 'text-px-primary-dark'))} /> : null;
   const label = t(b.label);
+  const phoneLabel = b.icon === 'phone' || /^(?:\+33|0)\s*[\d\s.()-]{8,}$/.test(label.replace(/\s/g, ' ').trim());
   return (
     <button type="button" onClick={() => go(b.link, b.newTab)} className={cx(cls, className)}>
       {lead ? iconEl : null}
-      <span>{label}</span>
+      <span className={phoneLabel ? 'px-phone' : undefined}>{label}</span>
       {!lead ? iconEl : null}
     </button>
   );
@@ -390,12 +516,22 @@ export function VideoPlayer({
   if (source === 'embed') {
     const src = toEmbedUrl(url, autoplay);
     if (!src) return null;
-    return <iframe src={src} title={title || 'Vidéo'} className={cx('h-full w-full', className)} allow="autoplay; encrypted-media; picture-in-picture; fullscreen" loading="lazy" />;
+    return (
+      <iframe
+        key={src}
+        src={src}
+        title={title || 'Vidéo'}
+        className={cx('h-full w-full', className)}
+        allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+        loading="lazy"
+      />
+    );
   }
+  /* key=url : force le rechargement quand l’éditeur change la vidéo (sinon le navigateur garde l’ancienne) */
   return autoplay ? (
-    <video src={url} poster={poster} className={cx('h-full w-full object-cover', className)} autoPlay muted loop playsInline />
+    <video key={url} src={url} poster={poster} className={cx('h-full w-full object-cover', className)} autoPlay muted loop playsInline />
   ) : (
-    <video src={url} poster={poster} className={cx('h-full w-full object-cover', className)} controls preload="metadata" />
+    <video key={url} src={url} poster={poster} className={cx('h-full w-full object-cover', className)} controls preload="metadata" />
   );
 }
 

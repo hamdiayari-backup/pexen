@@ -1,0 +1,716 @@
+{
+  "version": 1,
+  "general": {
+    "legalName": "PEXEN SAS",
+    "baseline": "Ingénierie & Performance Énergétique",
+    "slogan": "Optimiser aujourd'hui. Performer demain.",
+    "phone": "01 41 93 52 80",
+    "phoneClean": "+33141935280",
+    "contactEmail": "contact@pexen.fr",
+    "slaHours": "48 h ouvrées",
+    "address": "Paris & Déploiement partout en France",
+    "timezone": "Europe/Paris",
+    "locale": "fr-FR"
+  },
+  "branding": {
+    "siteName": "PEXEN®",
+    "tagline": "Ingénierie & Performance Énergétique",
+    "logoUrl": "/logo-pexen.svg",
+    "colors": {
+      "primary": "#00C6BA",
+      "primaryHover": "#00A89D",
+      "accent": "#0066EE",
+      "navy": "#0B1528",
+      "background": "#F5F7FA",
+      "text": "#0B1528",
+      "muted": "#64748B",
+      "border": "#E3E8EE"
+    },
+    "fonts": {
+      "heading": "Poppins",
+      "body": "Poppins"
+    }
+  },
+  "pages": [
+    {
+      "id": "page-1",
+      "path": "/",
+      "title": "Accueil",
+      "status": "published",
+      "publishedAt": "2026-10-12T07:02:46.153Z",
+      "contentSource": "react",
+      "template": "landing",
+      "blocks": [
+        {
+          "id": "hero-home",
+          "type": "hero",
+          "data": {
+            "title": "Ingénierie & performance énergétique",
+            "subtitle": "Audit, travaux, financement CEE et suivi des économies — partout en France.",
+            "ctaLabel": "Parler de votre projet",
+            "ctaPath": "/contact/",
+            "backgroundStyle": "gradient"
+          }
+        }
+      ],
+      "seo": {
+        "focusKeyphrase": "",
+        "seoTitle": "Accueil | PEXEN",
+        "metaDescription": "Réduisez la facture énergétique de vos sites industriels, tertiaires et résidentiels collectifs : audit, travaux, financement CEE et suivi des économies.",
+        "slug": "accueil",
+        "noindex": false,
+        "nofollow": false,
+        "twitterCard": "summary_large_image",
+        "schemaType": "Organization"
+      },
+      "createdAt": "2026-10-12T07:02:46.153Z",
+      "updatedAt": "2026-10-12T07:02:46.153Z"
+    },
+    {
+      "id": "page-2",
+      "path": "/expertises/",
+      "title": "Expertises",
+      "status": "published",
+      "publishedAt": "2026-10-12T07:02:46.153Z",
+      "contentSource": "react",
+      "template": "default",
+      "blocks": [
+        {
+          "id": "intro-1",
+          "type": "richText",
+          "data": {
+            "html": "<p>Contenu géré depuis le backoffice pour <strong>Expertises</strong>. Le front React actuel reste la vue par défaut tant que la page n'est pas entièrement reconstruite en blocs.</p>"
+          }
+        }
+      ],
+      "seo": {
+        "focusKeyphrase": "",
+        "seoTitle": "Expertises | PEXEN",
+        "metaDescription": "Réduisez la facture énergétique de vos sites industriels, tertiaires et résidentiels collectifs : audit, travaux, financement CEE et suivi des économies.",
+        "slug": "expertises",
+        "noindex": false,
+        "nofollow": false,
+        "twitterCard": "summary_large_image",
+        "schemaType": "WebPage"
+      },
+      "createdAt": "2026-10-12T07:02:46.153Z",
+      "updatedAt": "2026-10-12T07:02:46.153Z"
+    },
+    {
+      "id": "page-3",
+      "path": "/secteurs/",
+      "title": "Secteurs",
+      "status": "published",
+      "publishedAt": "2026-10-12T07:02:46.153Z",
+      "contentSource": "react",
+      "template": "default",
+      "blocks": [
+        {
+          "id": "intro-2",
+          "type": "richText",
+          "data": {
+            "html": "<p>Contenu géré depuis le backoffice pour <strong>Secteurs</strong>. Le front React actuel reste la vue par défaut tant que la page n'est pas entièrement reconstruite en blocs.</p>"
+          }
+        }
+      ],
+      "seo": {
+        "focusKeyphrase": "",
+        "seoTitle": "Secteurs | PEXEN",
+        "metaDescription": "Réduisez la facture énergétique de vos sites industriels, tertiaires et résidentiels collectifs : audit, travaux, financement CEE et suivi des économies.",
+        "slug": "secteurs",
+        "noindex": false,
+        "nofollow": false,
+        "twitterCard": "summary_large_image",
+        "schemaType": "WebPage"
+      },
+      "createdAt": "2026-10-12T07:02:46.153Z",
+      "updatedAt": "2026-10-12T07:02:46.153Z"
+    },
+    {
+      "id": "page-4",
+      "path": "/realisations/",
+      "title": "Réalisations",
+      "status": "published",
+      "publishedAt": "2026-10-12T07:02:46.153Z",
+      "contentSource": "react",
+      "template": "default",
+      "blocks": [
+        {
+          "id": "intro-3",
+          "type": "richText",
+          "data": {
+            "html": "<p>Contenu géré depuis le backoffice pour <strong>Réalisations</strong>. Le front React actuel reste la vue par défaut tant que la page n'est pas entièrement reconstruite en blocs.</p>"
+          }
+        }
+      ],
+      "seo": {
+        "focusKeyphrase": "",
+        "seoTitle": "Réalisations | PEXEN",
+        "metaDescription": "Réduisez la facture énergétique de vos sites industriels, tertiaires et résidentiels collectifs : audit, travaux, financement CEE et suivi des économies.",
+        "slug": "realisations",
+        "noindex": false,
+        "nofollow": false,
+        "twitterCard": "summary_large_image",
+        "schemaType": "WebPage"
+      },
+      "createdAt": "2026-10-12T07:02:46.153Z",
+      "updatedAt": "2026-10-12T07:02:46.153Z"
+    },
+    {
+      "id": "page-5",
+      "path": "/notre-approche/",
+      "title": "Notre approche",
+      "status": "published",
+      "publishedAt": "2026-10-12T07:02:46.153Z",
+      "contentSource": "react",
+      "template": "default",
+      "blocks": [
+        {
+          "id": "intro-4",
+          "type": "richText",
+          "data": {
+            "html": "<p>Contenu géré depuis le backoffice pour <strong>Notre approche</strong>. Le front React actuel reste la vue par défaut tant que la page n'est pas entièrement reconstruite en blocs.</p>"
+          }
+        }
+      ],
+      "seo": {
+        "focusKeyphrase": "",
+        "seoTitle": "Notre approche | PEXEN",
+        "metaDescription": "Réduisez la facture énergétique de vos sites industriels, tertiaires et résidentiels collectifs : audit, travaux, financement CEE et suivi des économies.",
+        "slug": "notre-approche",
+        "noindex": false,
+        "nofollow": false,
+        "twitterCard": "summary_large_image",
+        "schemaType": "WebPage"
+      },
+      "createdAt": "2026-10-12T07:02:46.153Z",
+      "updatedAt": "2026-10-12T07:02:46.153Z"
+    },
+    {
+      "id": "page-6",
+      "path": "/contact/",
+      "title": "Contact",
+      "status": "published",
+      "publishedAt": "2026-10-12T07:02:46.153Z",
+      "contentSource": "react",
+      "template": "default",
+      "blocks": [
+        {
+          "id": "intro-5",
+          "type": "richText",
+          "data": {
+            "html": "<p>Contenu géré depuis le backoffice pour <strong>Contact</strong>. Le front React actuel reste la vue par défaut tant que la page n'est pas entièrement reconstruite en blocs.</p>"
+          }
+        }
+      ],
+      "seo": {
+        "focusKeyphrase": "",
+        "seoTitle": "Contact | PEXEN",
+        "metaDescription": "Réduisez la facture énergétique de vos sites industriels, tertiaires et résidentiels collectifs : audit, travaux, financement CEE et suivi des économies.",
+        "slug": "contact",
+        "noindex": false,
+        "nofollow": false,
+        "twitterCard": "summary_large_image",
+        "schemaType": "WebPage"
+      },
+      "createdAt": "2026-10-12T07:02:46.153Z",
+      "updatedAt": "2026-10-12T07:02:46.153Z"
+    },
+    {
+      "id": "page-7",
+      "path": "/mentions-legales/",
+      "title": "Mentions légales",
+      "status": "published",
+      "publishedAt": "2026-10-12T07:02:46.153Z",
+      "contentSource": "cms",
+      "template": "legal",
+      "blocks": [
+        {
+          "id": "intro-6",
+          "type": "richText",
+          "data": {
+            "html": "<p>Contenu géré depuis le backoffice pour <strong>Mentions légales</strong>. Le front React actuel reste la vue par défaut tant que la page n'est pas entièrement reconstruite en blocs.</p>"
+          }
+        }
+      ],
+      "seo": {
+        "focusKeyphrase": "",
+        "seoTitle": "Mentions légales | PEXEN",
+        "metaDescription": "Réduisez la facture énergétique de vos sites industriels, tertiaires et résidentiels collectifs : audit, travaux, financement CEE et suivi des économies.",
+        "slug": "mentions-legales",
+        "noindex": false,
+        "nofollow": false,
+        "twitterCard": "summary_large_image",
+        "schemaType": "WebPage"
+      },
+      "createdAt": "2026-10-12T07:02:46.153Z",
+      "updatedAt": "2026-10-12T07:02:46.153Z"
+    },
+    {
+      "id": "page-8",
+      "path": "/politique-de-confidentialite/",
+      "title": "Politique de confidentialité",
+      "status": "published",
+      "publishedAt": "2026-10-12T07:02:46.153Z",
+      "contentSource": "cms",
+      "template": "legal",
+      "blocks": [
+        {
+          "id": "intro-7",
+          "type": "richText",
+          "data": {
+            "html": "<p>Contenu géré depuis le backoffice pour <strong>Politique de confidentialité</strong>. Le front React actuel reste la vue par défaut tant que la page n'est pas entièrement reconstruite en blocs.</p>"
+          }
+        }
+      ],
+      "seo": {
+        "focusKeyphrase": "",
+        "seoTitle": "Politique de confidentialité | PEXEN",
+        "metaDescription": "Réduisez la facture énergétique de vos sites industriels, tertiaires et résidentiels collectifs : audit, travaux, financement CEE et suivi des économies.",
+        "slug": "politique-de-confidentialite",
+        "noindex": false,
+        "nofollow": false,
+        "twitterCard": "summary_large_image",
+        "schemaType": "WebPage"
+      },
+      "createdAt": "2026-10-12T07:02:46.153Z",
+      "updatedAt": "2026-10-12T07:02:46.153Z"
+    },
+    {
+      "id": "page-9",
+      "path": "/cookies/",
+      "title": "Cookies",
+      "status": "published",
+      "publishedAt": "2026-10-12T07:02:46.153Z",
+      "contentSource": "cms",
+      "template": "legal",
+      "blocks": [
+        {
+          "id": "intro-8",
+          "type": "richText",
+          "data": {
+            "html": "<p>Contenu géré depuis le backoffice pour <strong>Cookies</strong>. Le front React actuel reste la vue par défaut tant que la page n'est pas entièrement reconstruite en blocs.</p>"
+          }
+        }
+      ],
+      "seo": {
+        "focusKeyphrase": "",
+        "seoTitle": "Cookies | PEXEN",
+        "metaDescription": "Réduisez la facture énergétique de vos sites industriels, tertiaires et résidentiels collectifs : audit, travaux, financement CEE et suivi des économies.",
+        "slug": "cookies",
+        "noindex": false,
+        "nofollow": false,
+        "twitterCard": "summary_large_image",
+        "schemaType": "WebPage"
+      },
+      "createdAt": "2026-10-12T07:02:46.153Z",
+      "updatedAt": "2026-10-12T07:02:46.153Z"
+    }
+  ],
+  "posts": [],
+  "menus": [
+    {
+      "id": "primary",
+      "label": "Menu principal (desktop)",
+      "items": [
+        {
+          "id": "m-exp",
+          "label": "Expertises",
+          "path": "/expertises/",
+          "openInNewTab": false,
+          "highlight": false,
+          "children": [
+            {
+              "id": "m-exp-froid",
+              "label": "Froid commercial & industriel",
+              "path": "/expertises/froid/",
+              "openInNewTab": false,
+              "highlight": false
+            },
+            {
+              "id": "m-exp-recup",
+              "label": "Récupération de chaleur",
+              "path": "/expertises/recuperation-de-chaleur/",
+              "openInNewTab": false,
+              "highlight": false
+            },
+            {
+              "id": "m-exp-cvc",
+              "label": "Chauffage & traitement d'air",
+              "path": "/expertises/chauffage-traitement-air/",
+              "openInNewTab": false,
+              "highlight": false
+            },
+            {
+              "id": "m-exp-gtb",
+              "label": "GTB / GTC & BACS",
+              "path": "/expertises/gtb-gtc/",
+              "openInNewTab": false,
+              "highlight": false
+            },
+            {
+              "id": "m-exp-iso",
+              "label": "Isolation technique",
+              "path": "/expertises/isolation-technique/",
+              "openInNewTab": false,
+              "highlight": false
+            },
+            {
+              "id": "m-exp-cee",
+              "label": "Réglementation & CEE",
+              "path": "/expertises/reglementation-cee/",
+              "openInNewTab": false,
+              "highlight": false
+            }
+          ]
+        },
+        {
+          "id": "m-sec",
+          "label": "Secteurs",
+          "path": "/secteurs/",
+          "openInNewTab": false,
+          "highlight": false,
+          "children": [
+            {
+              "id": "m-sec-ind",
+              "label": "Industrie",
+              "path": "/secteurs/industrie/",
+              "openInNewTab": false,
+              "highlight": false
+            },
+            {
+              "id": "m-sec-ter",
+              "label": "Tertiaire",
+              "path": "/secteurs/tertiaire/",
+              "openInNewTab": false,
+              "highlight": false
+            },
+            {
+              "id": "m-sec-res",
+              "label": "Résidentiel collectif",
+              "path": "/secteurs/residentiel-collectif/",
+              "openInNewTab": false,
+              "highlight": false
+            }
+          ]
+        },
+        {
+          "id": "m-real",
+          "label": "Réalisations",
+          "path": "/realisations/",
+          "openInNewTab": false,
+          "highlight": false
+        },
+        {
+          "id": "m-approche",
+          "label": "Notre approche",
+          "path": "/notre-approche/",
+          "openInNewTab": false,
+          "highlight": false
+        },
+        {
+          "id": "m-contact",
+          "label": "Parler de votre projet",
+          "path": "/contact/",
+          "openInNewTab": false,
+          "highlight": true
+        }
+      ]
+    },
+    {
+      "id": "mobile",
+      "label": "Menu mobile",
+      "items": [
+        {
+          "id": "m-exp",
+          "label": "Expertises",
+          "path": "/expertises/",
+          "openInNewTab": false,
+          "highlight": false,
+          "children": [
+            {
+              "id": "m-exp-froid",
+              "label": "Froid commercial & industriel",
+              "path": "/expertises/froid/",
+              "openInNewTab": false,
+              "highlight": false
+            },
+            {
+              "id": "m-exp-recup",
+              "label": "Récupération de chaleur",
+              "path": "/expertises/recuperation-de-chaleur/",
+              "openInNewTab": false,
+              "highlight": false
+            },
+            {
+              "id": "m-exp-cvc",
+              "label": "Chauffage & traitement d'air",
+              "path": "/expertises/chauffage-traitement-air/",
+              "openInNewTab": false,
+              "highlight": false
+            },
+            {
+              "id": "m-exp-gtb",
+              "label": "GTB / GTC & BACS",
+              "path": "/expertises/gtb-gtc/",
+              "openInNewTab": false,
+              "highlight": false
+            },
+            {
+              "id": "m-exp-iso",
+              "label": "Isolation technique",
+              "path": "/expertises/isolation-technique/",
+              "openInNewTab": false,
+              "highlight": false
+            },
+            {
+              "id": "m-exp-cee",
+              "label": "Réglementation & CEE",
+              "path": "/expertises/reglementation-cee/",
+              "openInNewTab": false,
+              "highlight": false
+            }
+          ]
+        },
+        {
+          "id": "m-sec",
+          "label": "Secteurs",
+          "path": "/secteurs/",
+          "openInNewTab": false,
+          "highlight": false,
+          "children": [
+            {
+              "id": "m-sec-ind",
+              "label": "Industrie",
+              "path": "/secteurs/industrie/",
+              "openInNewTab": false,
+              "highlight": false
+            },
+            {
+              "id": "m-sec-ter",
+              "label": "Tertiaire",
+              "path": "/secteurs/tertiaire/",
+              "openInNewTab": false,
+              "highlight": false
+            },
+            {
+              "id": "m-sec-res",
+              "label": "Résidentiel collectif",
+              "path": "/secteurs/residentiel-collectif/",
+              "openInNewTab": false,
+              "highlight": false
+            }
+          ]
+        },
+        {
+          "id": "m-real",
+          "label": "Réalisations",
+          "path": "/realisations/",
+          "openInNewTab": false,
+          "highlight": false
+        },
+        {
+          "id": "m-approche",
+          "label": "Notre approche",
+          "path": "/notre-approche/",
+          "openInNewTab": false,
+          "highlight": false
+        },
+        {
+          "id": "m-contact",
+          "label": "Parler de votre projet",
+          "path": "/contact/",
+          "openInNewTab": false,
+          "highlight": true
+        }
+      ]
+    },
+    {
+      "id": "footer",
+      "label": "Pied de page",
+      "items": [
+        {
+          "id": "f-real",
+          "label": "Réalisations & Chantiers",
+          "path": "/realisations/",
+          "openInNewTab": false,
+          "highlight": false
+        },
+        {
+          "id": "f-approche",
+          "label": "Notre approche (4 étapes)",
+          "path": "/notre-approche/",
+          "openInNewTab": false,
+          "highlight": false
+        },
+        {
+          "id": "f-contact",
+          "label": "Parler de votre projet",
+          "path": "/contact/",
+          "openInNewTab": false,
+          "highlight": true
+        },
+        {
+          "id": "f-legal",
+          "label": "Mentions légales",
+          "path": "/mentions-legales/",
+          "openInNewTab": false,
+          "highlight": false
+        },
+        {
+          "id": "f-privacy",
+          "label": "Politique de confidentialité",
+          "path": "/politique-de-confidentialite/",
+          "openInNewTab": false,
+          "highlight": false
+        },
+        {
+          "id": "f-cookies",
+          "label": "Cookies",
+          "path": "/cookies/",
+          "openInNewTab": false,
+          "highlight": false
+        }
+      ]
+    }
+  ],
+  "forms": [
+    {
+      "id": "contact-main",
+      "name": "Formulaire contact principal",
+      "recipientEmails": [
+        "contact@pexen.fr"
+      ],
+      "successPath": "/contact/merci/",
+      "enabled": true,
+      "honeypotField": "website_url",
+      "fields": [
+        {
+          "id": "f1",
+          "name": "vousEtes",
+          "label": "Vous êtes",
+          "type": "select",
+          "required": true,
+          "options": [
+            "Entreprise",
+            "Collectivité",
+            "Partenaire CEE",
+            "Autre"
+          ]
+        },
+        {
+          "id": "f2",
+          "name": "entreprise",
+          "label": "Entreprise / Organisation",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "f3",
+          "name": "nomPrenom",
+          "label": "Nom & prénom",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "f4",
+          "name": "email",
+          "label": "E-mail",
+          "type": "email",
+          "required": true
+        },
+        {
+          "id": "f5",
+          "name": "telephone",
+          "label": "Téléphone",
+          "type": "tel",
+          "required": true
+        },
+        {
+          "id": "f6",
+          "name": "message",
+          "label": "Votre projet",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "id": "f7",
+          "name": "rgpdAccepted",
+          "label": "J'accepte la politique de confidentialité",
+          "type": "checkbox",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "formSubmissions": [],
+  "whatsapp": {
+    "enabled": true,
+    "number": "+33141935280",
+    "defaultMessage": "Bonjour PEXEN, je souhaite échanger sur un projet de performance énergétique.",
+    "showOnMobile": true,
+    "showOnDesktop": true,
+    "position": "bottom-right"
+  },
+  "floatingButtons": [],
+  "ai": {
+    "enabled": true,
+    "model": "gemini-3.8-flash",
+    "temperature": 0.3,
+    "maxMessagesPerSession": 30,
+    "maxSessionsPerDayPerIp": 20,
+    "maxTokensPerDayGlobal": 500000,
+    "showOnPages": "*"
+  },
+  "newsletter": {
+    "enabled": false,
+    "provider": "internal",
+    "doubleOptIn": true
+  },
+  "subscribers": [],
+  "settings": {
+    "publicUrl": "https://pexen.fr",
+    "maintenance": {
+      "enabled": false,
+      "title": "Maintenance en cours",
+      "message": "Le site est momentanément indisponible. Merci de votre patience.",
+      "allowedIps": []
+    },
+    "cookieBannerEnabled": true,
+    "analyticsEnabled": true,
+    "sitemapAuto": true,
+    "seo": {
+      "titleSeparator": "|",
+      "titleSuffix": "PEXEN",
+      "organizationName": "PEXEN SAS",
+      "socialProfiles": []
+    }
+  },
+  "google": {
+    "connected": false
+  },
+  "media": [],
+  "redirects": [
+    {
+      "from": "/contactez-nous/",
+      "to": "/contact/",
+      "permanent": true
+    },
+    {
+      "from": "/nos-solutions/",
+      "to": "/expertises/",
+      "permanent": true
+    }
+  ],
+  "users": [
+    {
+      "id": "admin-1",
+      "email": "admin@pexen.fr",
+      "passwordHash": "03341d22ea5acb91e3a3fedea6016755cb004fc7bc125afd4ca203eb0017fb6f8f3b587fe0f7bc0de3a2dc3e0292190aa3b93d9426d559e617882ea15ad8e55a",
+      "salt": "4fb3e24810435ddac2ff16d982099495",
+      "role": "superadmin",
+      "name": "Administrateur PEXEN",
+      "lastLoginAt": "2026-10-12T07:21:03.115Z"
+    }
+  ]
+}

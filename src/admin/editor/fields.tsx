@@ -288,7 +288,11 @@ const itemTitle = (it: Data, fallback: string, summary?: (it: Data) => string) =
 function ListField({ value, onChange, def }: { value: Data[]; onChange: (v: Data[]) => void; def: Extract<FieldDef, { t: 'list' }> }) {
   const [openId, setOpenId] = useState<string | null>(null);
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 4 } }), useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }));
-  const items = value.map((it, i) => (typeof it.id === 'string' && it.id ? it : { ...it, id: `tmp-${i}` }));
+  /* Anciens hero.galleryImages stockés en string[] → objets { image } pour le sélecteur médiathèque. */
+  const coerced: Data[] = value.every((it) => typeof it === 'string')
+    ? (value as unknown as string[]).map((image, i) => ({ id: `tmp-${i}`, image }))
+    : value;
+  const items = coerced.map((it, i) => (typeof it.id === 'string' && it.id ? it : { ...it, id: `tmp-${i}` }));
   const onDragEnd = (e: DragEndEvent) => {
     if (!e.over || e.active.id === e.over.id) return;
     onChange(arrayMove(items, items.findIndex((x) => x.id === e.active.id), items.findIndex((x) => x.id === e.over!.id)));

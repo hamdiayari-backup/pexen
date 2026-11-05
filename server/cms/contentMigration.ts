@@ -10,10 +10,11 @@ import type { BlockDataMap, BlockKind, BlockStyle, ButtonData, ProjectMeta } fro
 import { button, uid } from './blocks';
 import { BLOCK_CATALOG, isBlockKind } from './blockCatalog';
 import type { CmsBlock, CmsPage, CmsSnapshot, ContactFormField, PageTemplate } from './types';
-import { cmsNow, defaultSeoForPath } from './defaults';
+import { cmsNow, createDefaultMenus, defaultSeoForPath } from './defaults';
 import { CEE_SHEETS, EXPERTISES, FAQ_HOME, METHODE_STEPS, REALISATIONS, SECTEURS } from '../../src/data/pexenData';
+import { BRIEF_REDIRECTS, briefPageDefinitions } from './briefPages';
 
-export const CONTENT_VERSION = 2;
+export const CONTENT_VERSION = 16;
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PUBLIC_DIR = path.resolve(__dirname, '../../public');
@@ -46,12 +47,12 @@ const EXPERTISE_ICONS: Record<string, string> = {
   'reglementation-cee': 'fileCheck',
 };
 const EXPERTISE_IMAGES: Record<string, string> = {
-  froid: '/images/terrain/meubles_froids.jpg',
-  'recuperation-de-chaleur': '/images/terrain/couv_pac_maison.jpg',
-  'chauffage-traitement-air': '/images/terrain/rooftop_cta.jpg',
-  'gtb-gtc': '/images/terrain/gtb_supervision.jpg',
-  'isolation-technique': '/images/terrain/maison_solaire.jpg',
-  'reglementation-cee': '/images/terrain/transition_energetique.jpg',
+  froid: '/images/pompes-a-chaleur-toiture.webp',
+  'recuperation-de-chaleur': '/images/installation-technique.webp',
+  'chauffage-traitement-air': '/images/audit-batiment.webp',
+  'gtb-gtc': '/images/performance-energetique.webp',
+  'isolation-technique': '/images/centrale-froid.webp',
+  'reglementation-cee': '/images/cee-tertiaire.webp',
 };
 const SECTOR_ICONS: Record<string, string> = { industrie: 'factory', tertiaire: 'building', 'residentiel-collectif': 'home' };
 
@@ -73,9 +74,9 @@ function homeBlocks(): CmsBlock[] {
         liveText: "Réponse d'un ingénieur sous {{delai}}",
         trustItems: ['RGE Ventilation+', 'RGE Qualisol', 'SOCOTEC Cat. I'],
         media: 'composition',
-        mainImage: '/images/terrain/couv_pac_maison.jpg',
-        mainImageAlt: 'Réseau électrique, éoliennes et panneaux solaires au coucher du soleil',
-        secondaryImage: '/images/terrain/ingenieure_casque.jpg',
+        mainImage: '/images/audit-batiment.webp',
+        mainImageAlt: 'Rénovation énergétique intérieure',
+        secondaryImage: '/images/pompes-a-chaleur-toiture.webp',
         secondaryImageAlt: 'Ingénieure PEXEN sur chantier',
         secondaryCaption: 'Nos équipes sur site',
         statValue: "jusqu'à -35 %",
@@ -89,7 +90,7 @@ function homeBlocks(): CmsBlock[] {
       {
         background: 'video',
         backgroundVideo: '/videos/hero_solaire.mp4',
-        backgroundImage: '/videos/hero_solaire_poster.jpg',
+        backgroundImage: '/images/renovation-energetique.webp',
         overlayTone: 'light',
         overlay: 55,
         decor: 'none',
@@ -121,8 +122,8 @@ function homeBlocks(): CmsBlock[] {
         title: 'Vos travaux sont peut-être déjà financés.',
         highlight: 'Vérifions-le ensemble.',
         buttons: [button("Étude d'éligibilité gratuite", '/contact/', 'dark'), phoneButton('glass')],
-        image: '/images/terrain/ingenieur_tablette.jpg',
-        imageAlt: 'Centrale solaire au coucher du soleil',
+        image: '/images/cee-tertiaire.webp',
+        imageAlt: 'Primes et certificats d’économies d’énergie',
         imageCaption: "De l'étude au chantier",
       },
       { background: 'white', paddingTop: 'sm', paddingBottom: 'sm' }
@@ -227,21 +228,20 @@ function homeBlocks(): CmsBlock[] {
         intro: "Le monde de l'énergie tel qu'il est vraiment : installations, réseaux et équipements photographiés sur le terrain.",
         style: 'polaroid',
         handNote: 'faites défiler →',
-        note: "Photos de chantiers PEXEN et illustrations techniques d'installations réelles (Wikimedia Commons, licences CC BY / CC BY-SA / CC0).",
+        note: "Photos et illustrations techniques fournies pour le site PEXEN.",
         items: [
-          ['ingenieur_tablette.jpg', 'Centrale solaire au couchant'],
-          ['couv_pac_maison.jpg', 'Réseau, nucléaire & renouvelables'],
-          ['pac_exterieur.jpg', 'Éolien, solaire & réseau électrique'],
-          ['meubles_froids.jpg', 'Meubles froids — grande distribution'],
-          ['transition_energetique.jpg', 'Réseaux & transition énergétique'],
-          ['gaz_renouvelable.jpg', 'Parc éolien en montagne'],
-          ['gtb_supervision.jpg', 'Supervision GTB en exploitation'],
-          ['ferme_solaire_eolienne.jpg', 'Ferme solaire & éolienne'],
-          ['maison_solaire.jpg', 'Éolienne au coucher du soleil'],
-          ['ampoule_led.jpg', 'Sobriété — relamping LED'],
-          ['mix_energetique.jpg', 'Le mix énergétique en mutation'],
-          ['panneau_solaire.jpg', 'Autoproduction solaire'],
-        ].map(([file, caption]) => ({ id: uid('g'), image: `/images/terrain/${file}`, caption })),
+          ['renovation-energetique.webp', 'Rénovation énergétique'],
+          ['pompes-a-chaleur-toiture.webp', 'Pompes à chaleur en toiture tertiaire'],
+          ['installation-technique.webp', 'Installation technique'],
+          ['climatisation-toiture.webp', 'Unités de climatisation en toiture'],
+          ['centrale-froid.webp', 'Centrale froid & équipements'],
+          ['sobriete-energetique.webp', 'Sobriété énergétique'],
+          ['audit-batiment.webp', 'Audit énergétique'],
+          ['audit-energetique-entreprise.webp', 'Audit énergétique entreprise'],
+          ['performance-energetique.webp', 'Performance énergétique'],
+          ['cee-tertiaire.webp', 'CEE tertiaire'],
+          ['professionnel-pac.webp', 'Professionnel pompe à chaleur'],
+        ].map(([file, caption]) => ({ id: uid('g'), image: `/images/${file}`, caption })),
       },
       { background: 'white', paddingBottom: 'md' }
     ),
@@ -256,7 +256,7 @@ function homeBlocks(): CmsBlock[] {
         bigNumber: '-40%',
         bigNumberLabel: 'de consommation',
         bigNumberStrong: 'exigés en 2030',
-        backgroundImage: '/images/terrain/mix_energetique.jpg',
+        backgroundImage: '/images/sobriete-energetique.webp',
         buttons: [button('Vérifier ma conformité', '/expertises/reglementation-cee/')],
       },
       { background: 'white', paddingTop: 'sm', paddingBottom: 'sm' }
@@ -297,7 +297,7 @@ function homeBlocks(): CmsBlock[] {
           { id: uid('k'), value: 'France', label: 'déploiement national', hint: 'Interventions sur tout le territoire' },
         ],
       },
-      { background: 'image', backgroundImage: '/images/terrain/ferme_solaire_eolienne.jpg', overlayTone: 'light', overlay: 85, borderTop: true, paddingBottom: 'sm' }
+      { background: 'image', backgroundImage: '/images/renovation-energetique.webp', overlayTone: 'light', overlay: 85, borderTop: true, paddingBottom: 'sm' }
     ),
     b(
       'cta',
@@ -692,8 +692,8 @@ function approcheBlocks(): CmsBlock[] {
         html: "<p>Ingénieurs thermiciens, experts frigoristes certifiés catégorie I, chargés d'affaires CEE et techniciens de mise en service : une équipe pluridisciplinaire d'ingénierie mobilisée sur vos chantiers.</p>",
         bullets: ['Ingénieurs thermiciens', 'Frigoristes certifiés catégorie I', "Chargés d'affaires CEE", 'Techniciens de mise en service'],
         mediaType: 'image',
-        image: '/images/terrain/ingenieure_casque.jpg',
-        imageAlt: 'Ingénieure PEXEN sur chantier',
+        image: '/images/climatisation-toiture.webp',
+        imageAlt: 'Chantier d’isolation thermique',
         mediaPosition: 'right',
         mediaStyle: 'polaroid',
         caption: 'Nos équipes sur site',
@@ -822,47 +822,14 @@ interface PageDef {
   seoTitle: string;
   metaDescription?: string;
   noindex?: boolean;
+  status?: 'published' | 'draft';
+  focus?: string;
   blocks: () => CmsBlock[];
   project?: ProjectMeta;
 }
 
 function pageDefinitions(): PageDef[] {
-  const defs: PageDef[] = [
-    { path: '/', title: 'Accueil', template: 'landing', seoTitle: 'PEXEN | Ingénierie & performance énergétique', blocks: homeBlocks },
-    { path: '/expertises/', title: 'Expertises', template: 'default', seoTitle: 'Nos expertises en performance énergétique | PEXEN', blocks: expertisesBlocks },
-    ...EXPERTISES.map<PageDef>((e) => ({
-      path: `/expertises/${e.slug}/`,
-      title: e.title,
-      template: 'default',
-      seoTitle: `${e.heroTitle} | PEXEN`,
-      metaDescription: e.metaDesc,
-      blocks: () => expertiseBlocks(e.slug),
-    })),
-    { path: '/secteurs/', title: 'Secteurs', template: 'default', seoTitle: 'Industrie, tertiaire, résidentiel collectif | PEXEN', blocks: secteursBlocks },
-    ...SECTEURS.map<PageDef>((s) => ({
-      path: `/secteurs/${s.slug}/`,
-      title: s.title,
-      template: 'default',
-      seoTitle: `${s.heroTitle} | PEXEN`,
-      metaDescription: s.metaDesc,
-      blocks: () => secteurBlocks(s.slug),
-    })),
-    { path: '/realisations/', title: 'Réalisations', template: 'default', seoTitle: 'Nos réalisations en performance énergétique | PEXEN', blocks: realisationsBlocks },
-    ...REALISATIONS.map<PageDef>((r, i) => ({
-      path: `/realisations/${r.slug}/`,
-      title: `${r.client} — ${r.location}`,
-      template: 'project',
-      seoTitle: `${r.solution} — ${r.client} | PEXEN`,
-      metaDescription: r.shortDescription,
-      blocks: () => projectBlocks(r),
-      project: projectMeta(r, i === 0),
-    })),
-    { path: '/notre-approche/', title: 'Notre approche', template: 'default', seoTitle: 'Notre approche : conseil, ingénierie, suivi | PEXEN', blocks: approcheBlocks },
-    { path: '/contact/', title: 'Contact', template: 'default', seoTitle: 'Contact : parlez de votre projet | PEXEN', blocks: contactBlocks },
-    { path: '/contact/merci/', title: 'Merci', template: 'default', seoTitle: 'Merci pour votre demande | PEXEN', noindex: true, blocks: merciBlocks },
-    ...Object.entries(LEGAL).map<PageDef>(([p, l]) => ({ path: p, title: l.title, template: 'legal', seoTitle: `${l.title} | PEXEN`, blocks: () => legalBlocks(p) })),
-  ];
-  return defs;
+  return briefPageDefinitions();
 }
 
 /* ------------------------------------------------------------------ Blocs hérités (v1) */
@@ -991,7 +958,7 @@ export function contactFormFields(): ContactFormField[] {
       placeholder: 'Sélectionnez…',
       width: 'full',
     }),
-    f('rgpdAccepted', "J'accepte que PEXEN utilise mes données pour traiter ma demande, conformément à la politique de confidentialité", {
+    f('rgpdAccepted', "J'accepte que PEXEN utilise ces informations pour répondre à ma demande. En savoir plus : politique de confidentialité.", {
       type: 'checkbox',
       width: 'full',
     }),
@@ -1002,7 +969,7 @@ const MIME: Record<string, string> = { '.jpg': 'image/jpeg', '.jpeg': 'image/jpe
 
 function registerBundledMedia(snapshot: CmsSnapshot) {
   const known = new Set(snapshot.media.map((m) => m.url));
-  for (const dir of ['images/terrain', 'videos']) {
+  for (const dir of ['images', 'videos', 'brand']) {
     let files: string[] = [];
     try {
       files = fs.readdirSync(path.join(PUBLIC_DIR, dir));
@@ -1063,13 +1030,19 @@ export function migrateContentToBlocks(snapshot: CmsSnapshot): void {
   for (const def of pageDefinitions()) {
     const existing = snapshot.pages.find((p) => p.path === def.path);
     if (existing) {
-      if (isUntouched(existing)) {
-        existing.blocks = def.blocks();
-        existing.template = def.template;
-        if (def.project) existing.project = def.project;
-        existing.seo = { ...existing.seo, seoTitle: def.seoTitle, ...(def.metaDescription ? { metaDescription: def.metaDescription } : {}) };
-        existing.updatedAt = now;
-      }
+      existing.blocks = def.blocks();
+      existing.title = def.title;
+      existing.template = def.template;
+      existing.status = def.status ?? 'published';
+      if (def.project) existing.project = def.project;
+      existing.seo = {
+        ...existing.seo,
+        seoTitle: def.seoTitle,
+        ...(def.metaDescription ? { metaDescription: def.metaDescription } : {}),
+        ...(def.focus ? { focusKeyphrase: def.focus } : {}),
+        noindex: !!def.noindex,
+      };
+      existing.updatedAt = now;
       existing.contentSource = 'cms';
       continue;
     }
@@ -1077,7 +1050,7 @@ export function migrateContentToBlocks(snapshot: CmsSnapshot): void {
       id: uid('page'),
       path: def.path,
       title: def.title,
-      status: 'published',
+      status: def.status ?? 'published',
       publishedAt: now,
       contentSource: 'cms',
       template: def.template,
@@ -1086,6 +1059,7 @@ export function migrateContentToBlocks(snapshot: CmsSnapshot): void {
         ...defaultSeoForPath(def.path, def.title),
         seoTitle: def.seoTitle,
         ...(def.metaDescription ? { metaDescription: def.metaDescription } : {}),
+        ...(def.focus ? { focusKeyphrase: def.focus } : {}),
         ...(def.noindex ? { noindex: true } : {}),
       },
       ...(def.project ? { project: def.project } : {}),
@@ -1102,13 +1076,49 @@ export function migrateContentToBlocks(snapshot: CmsSnapshot): void {
     post.blocks = post.blocks.map(upgradeLegacyBlock).filter((x): x is CmsBlock => !!x);
   }
 
-  const form = snapshot.forms.find((f) => f.id === 'contact-main');
-  if (form && !form.fields.some((f) => f.name === 'fonction')) form.fields = contactFormFields();
-
-  for (const [from, to] of LEGACY_REDIRECTS) {
+  for (const [from, to] of [...LEGACY_REDIRECTS, ...BRIEF_REDIRECTS]) {
     if (!snapshot.redirects.some((r) => r.from === from)) snapshot.redirects.push({ from, to, permanent: true });
   }
 
+  const kept = new Set(pageDefinitions().map((p) => p.path));
+  for (const page of snapshot.pages) {
+    if (page.path.startsWith('/realisations/') && page.path !== '/realisations/' && !kept.has(page.path)) {
+      page.status = 'draft';
+    }
+  }
+
+  snapshot.menus = createDefaultMenus();
+  snapshot.general.address = '111 avenue Victor Hugo, 93300 Aubervilliers';
+  snapshot.branding.logoUrl = '/brand/logo-sans-baseline-couleur.svg';
+  snapshot.branding.logoDarkUrl = '/brand/logo-principal-blanc.svg';
+  snapshot.branding.faviconUrl = '/favicon.svg';
+  snapshot.branding.colors = {
+    primary: '#009FCC',
+    primaryHover: '#00769A',
+    accent: '#01CDF3',
+    navy: '#082D4A',
+    background: '#F4F8F9',
+    text: '#0B1B2B',
+    muted: '#5A6B7B',
+    border: '#D5E1E6',
+  };
+  snapshot.branding.fonts = { heading: 'Sora', body: 'Figtree' };
+
+  const form = snapshot.forms.find((f) => f.id === 'contact-main');
+  if (form) {
+    form.fields = contactFormFields();
+    form.successPath = '/contact/merci/';
+  }
+
   registerBundledMedia(snapshot);
+  snapshot.media = snapshot.media.filter((m) => {
+    if (m.url.startsWith('/images/terrain/') || m.url.startsWith('/images/chantiers/')) return false;
+    /* Supprime les médias dont le fichier n’existe plus (ex. ancienne photothèque). */
+    if (m.url.startsWith('/images/') || m.url.startsWith('/videos/') || m.url.startsWith('/brand/')) {
+      const abs = path.join(PUBLIC_DIR, m.url.replace(/^\//, ''));
+      return fs.existsSync(abs);
+    }
+    return true;
+  });
   snapshot.version = CONTENT_VERSION;
 }
