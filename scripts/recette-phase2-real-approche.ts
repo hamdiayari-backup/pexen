@@ -280,6 +280,7 @@ function realisations(): CmsBlock[] {
   ];
 }
 
+/** Fiche PDF Recette Phase 2 · Notre approche (p.102–108) — textes collés tels quels. */
 function notreApproche(): CmsBlock[] {
   return [
     b(
@@ -290,7 +291,7 @@ function notreApproche(): CmsBlock[] {
         title: 'Notre approche',
         highlight: 'Optimiser aujourd’hui. Performer demain.',
         intro:
-          'Derrière chaque site, des installations qui ne s’arrêtent jamais, et des équipes qui en portent la responsabilité face à des coûts qui augmentent et à des obligations qui se durcissent. PEXEN est né d’une conviction : la performance énergétique ne se décrète pas, elle s’ingénie. Elle commence par un audit énergétique sur le terrain, se calcule, se construit sur le chantier, puis se prouve dans le temps.',
+          "Derrière chaque site, des installations qui ne s’arrêtent jamais, et des équipes qui en portent la responsabilité face à des coûts qui augmentent et à des obligations qui se durcissent. PEXEN est né d’une conviction : la performance énergétique ne se décrète pas, elle s’ingénie. Elle commence par un audit énergétique sur le terrain, se calcule, se construit sur le chantier, puis se prouve dans le temps.",
         image: IMG('ingenieur-pexen-sur-site-ingenierie-et-performance-energetique.webp'),
         imageAlt: 'Ingénieur PEXEN lors d’un audit énergétique sur site',
         buttons: [contactBtn(), estimBtn()],
@@ -303,25 +304,44 @@ function notreApproche(): CmsBlock[] {
       },
       { background: 'navy', paddingTop: 'lg', paddingBottom: 'md' }
     ),
-    rich(
-      `<h2>Notre mission</h2><p>Faire de la performance énergétique un levier maîtrisé, mesurable et durable pour les sites industriels, tertiaires et résidentiels collectifs. Notre vision : un parc bâti et industriel où chaque kWh économisé est calculé, réalisé et démontré. La performance ne se promet plus, elle se prouve.</p>`
+
+    /* §1 Notre mission */
+    b(
+      'textMedia',
+      {
+        eyebrow: 'Mission',
+        title: 'Notre mission',
+        html: `<p>Faire de la performance énergétique un levier maîtrisé, mesurable et durable pour les sites industriels, tertiaires et résidentiels collectifs. Notre vision : un parc bâti et industriel où chaque kWh économisé est calculé, réalisé et démontré.</p><p><strong>La performance ne se promet plus, elle se prouve.</strong></p>`,
+        image: IMG('performance-energetique.webp'),
+        imageAlt: 'Performance énergétique mesurée sur site',
+        mediaPosition: 'right',
+        bullets: [
+          'Maîtrisé, mesurable et durable',
+          'Industrie, tertiaire et résidentiel collectif',
+          'Chaque kWh calculé, réalisé et démontré',
+        ],
+        buttons: [button('Demander une étude', '/contact/?demande=etude')],
+      },
+      { background: 'white', paddingTop: 'lg', paddingBottom: 'lg' }
     ),
+
+    /* §2 Méthode 4 étapes */
     steps('Une méthode en 4 étapes, de l’audit énergétique à la mesure', [
       {
         title: 'Prévisite et audit',
-        text: 'Relevé des équipements, lecture des factures et des courbes de charge, mesures ponctuelles. Les audits réglementaires sont conduits avec notre partenaire Leo Energy, qualifié OPQIBI 1905 et 1717. Remis : pré-étude d’ingénierie avec le gisement par poste.',
+        text: "Relevé des équipements, lecture des factures et des courbes de charge, mesures ponctuelles. Les audits réglementaires sont conduits avec notre partenaire Leo Energy, qualifié OPQIBI 1905 et 1717. Remis : pré-étude d’ingénierie avec le gisement par poste.",
       },
       {
         title: 'Dimensionnement et ingénierie technico-financière',
-        text: 'Notes de calcul, choix des équipements, chiffrage des travaux, calcul des kWh cumac et engagement du dossier CEE avant toute signature. Remis : dossier technique, devis, plan de financement.',
+        text: "Notes de calcul, choix des équipements, chiffrage des travaux, calcul des kWh cumac et engagement du dossier CEE avant toute signature. Remis : dossier technique, devis, plan de financement.",
       },
       {
         title: 'Installation et mise en service',
-        text: 'Travaux réalisés par nos équipes et nos partenaires qualifiés, phasés pour maintenir l’exploitation, réglages et essais. Remis : procès-verbal de réception.',
+        text: "Travaux réalisés par nos équipes et nos partenaires qualifiés, phasés pour maintenir l’exploitation, réglages et essais. Remis : procès-verbal de réception.",
       },
       {
         title: 'Contrôle COFRAC, suivi et performance',
-        text: 'Contrôle de l’opération par un organisme accrédité COFRAC, suivi des consommations, ajustement des réglages. Remis : bilan d’économies d’énergie.',
+        text: "Contrôle de l’opération par un organisme accrédité COFRAC, suivi des consommations, ajustement des réglages. Remis : bilan d’économies d’énergie.",
       },
     ]),
     b(
@@ -329,24 +349,84 @@ function notreApproche(): CmsBlock[] {
       { variant: 'light', layout: 'centered', title: 'Demander une étude', text: '', buttons: [etudeBtn()] },
       { background: 'white', paddingTop: 'md', paddingBottom: 'md' }
     ),
-    solCardsLikeValeurs(),
-    rich(
-      `<h2>Ingénierie, travaux et financement réunis</h2><p>Un bureau d'études s'arrête au rapport. Un installateur dimensionne au catalogue. Un intermédiaire CEE ne voit que la prime. PEXEN porte la note de calcul, le chantier et le dossier : le froid, la chaleur, le pilotage et l'isolation traités dans un même projet, par la même équipe.</p>`,
-      'soft'
+
+    /* §3 Nos valeurs */
+    b(
+      'cards',
+      {
+        eyebrow: '',
+        title: 'Nos valeurs',
+        intro: '',
+        columns: 3,
+        style: 'hoverDark',
+        headerLinkLabel: '',
+        items: [
+          {
+            id: uid('c'),
+            title: 'Exigence',
+            text: "La précision de l’ingénieur, à chaque étape : aucune préconisation sans relevé, une note de calcul signée pour chaque solution.",
+            tags: [],
+            link: '',
+            linkLabel: '',
+          },
+          {
+            id: uid('c'),
+            title: 'Engagement',
+            text: "Jusqu’au résultat, pas jusqu’à la facture : un livrable à chaque étape, le suivi des consommations après travaux, une réponse sous 48 h ouvrées.",
+            tags: [],
+            link: '',
+            linkLabel: '',
+          },
+          {
+            id: uid('c'),
+            title: 'Intégrité',
+            text: "Des chiffres justes, des engagements tenus : une estimation n’est jamais présentée comme une mesure, les règles CEE et les limites d’une solution sont dites d’emblée.",
+            tags: [],
+            link: '',
+            linkLabel: '',
+          },
+        ],
+      },
+      { background: 'white', paddingTop: 'lg', paddingBottom: 'lg' }
+    ),
+
+    /* §4 Ingénierie, travaux et financement */
+    b(
+      'textMedia',
+      {
+        eyebrow: 'PEXEN',
+        title: 'Ingénierie, travaux et financement réunis',
+        html: `<p>Un bureau d’études s’arrête au rapport. Un installateur dimensionne au catalogue. Un intermédiaire CEE ne voit que la prime. PEXEN porte la note de calcul, le chantier et le dossier : le froid, la chaleur, le pilotage et l’isolation traités dans un même projet, par la même équipe.</p>`,
+        image: IMG('equipe-pexen-ingenierie-travaux-financement.webp'),
+        imageAlt: 'Équipe PEXEN sur site : ingénierie, travaux et financement',
+        mediaPosition: 'left',
+        bullets: [
+          'Note de calcul portée en interne',
+          'Chantier mené par la même équipe',
+          'Dossier CEE monté jusqu’au contrôle',
+          'Froid, chaleur, pilotage et isolation dans un même projet',
+        ],
+        buttons: [button('Parler de votre projet', '/contact/')],
+      },
+      { background: 'soft', paddingTop: 'lg', paddingBottom: 'lg' }
     ),
     b(
       'cta',
       { variant: 'light', layout: 'centered', title: 'Parlons de votre projet', text: '', buttons: [contactBtn()] },
       { background: 'soft', paddingTop: 'none', paddingBottom: 'lg' }
     ),
+
+    /* §5 Qualifiés */
     checklist('Qualifiés, assurés, contrôlés', [
       'RGE QualiPAC (chauffage et eau chaude sanitaire) et RGE Qualisol CESI.',
       'Audits énergétiques via notre partenaire Leo Energy : OPQIBI 1905 et 1717.',
       'Responsabilité civile professionnelle et garantie décennale : MIC Insurance.',
       'Opérations contrôlées par des organismes accrédités COFRAC.',
     ]),
+
+    /* §6 Partenaires */
     rich(
-      `<article id="partenaires"><h2 id="partenaires">Un réseau de partenaires</h2><p>Obligés, délégataires et mandataires CEE, fabricants d'équipements frigorifiques et de pompes à chaleur, bureaux d'études : PEXEN travaille avec des partenaires choisis pour la conformité de leurs dossiers et la disponibilité de leurs équipements.</p></article>`,
+      `<article id="partenaires"><h2>Un réseau de partenaires</h2><p>Obligés, délégataires et mandataires CEE, fabricants d'équipements frigorifiques et de pompes à chaleur, bureaux d'études : PEXEN travaille avec des partenaires choisis pour la conformité de leurs dossiers et la disponibilité de leurs équipements.</p></article>`,
       'soft'
     ),
     b(
@@ -354,6 +434,8 @@ function notreApproche(): CmsBlock[] {
       { variant: 'light', layout: 'centered', title: 'Demander une étude', text: '', buttons: [etudeBtn()] },
       { background: 'soft', paddingTop: 'none', paddingBottom: 'lg' }
     ),
+
+    /* §7 Tableau livrables */
     table('Les livrables, étape par étape', ['Étape', 'Document remis', 'Ce qu’il contient'], [
       ['01 Prévisite et audit', 'Pré-étude d’ingénierie', 'État initial, gisement par poste, premières recommandations'],
       [
@@ -364,14 +446,34 @@ function notreApproche(): CmsBlock[] {
       ['03 Installation', 'Procès-verbal de réception', 'Travaux réalisés, réglages, essais, réserves levées'],
       ['04 Suivi et performance', 'Bilan d’économies d’énergie', 'Consommations avant et après, écarts, ajustements'],
     ]),
-    rich(
-      `<h2>Pourquoi un livrable à chaque étape</h2><p>Un projet d'efficacité énergétique engage plusieurs décideurs : direction technique, direction financière, exploitant, parfois conseil syndical. Un document daté à chaque étape permet à chacun de valider en connaissance de cause, et sert de pièce justificative au dossier CEE et au contrôle COFRAC.</p>`
+
+    /* §8 Pourquoi un livrable */
+    b(
+      'textMedia',
+      {
+        eyebrow: 'Gouvernance',
+        title: 'Pourquoi un livrable à chaque étape',
+        html: `<p>Un projet d’efficacité énergétique engage plusieurs décideurs : direction technique, direction financière, exploitant, parfois conseil syndical. Un document daté à chaque étape permet à chacun de valider en connaissance de cause, et sert de pièce justificative au dossier CEE et au contrôle COFRAC.</p>`,
+        image: IMG('tableau-gantt-pexen-sur-ordinateur-portable.webp'),
+        imageAlt: 'Tableau de suivi de projet PEXEN sur ordinateur portable',
+        mediaPosition: 'right',
+        bullets: [
+          'Direction technique, financière, exploitant, conseil syndical',
+          'Document daté pour valider chaque étape',
+          'Pièce justificative du dossier CEE',
+          'Contrôle par un organisme accrédité COFRAC',
+        ],
+        buttons: [button('Demander une étude', '/contact/?demande=etude')],
+      },
+      { background: 'soft', paddingTop: 'lg', paddingBottom: 'lg' }
     ),
     b(
       'cta',
       { variant: 'light', layout: 'centered', title: 'Parlons de votre projet', text: '', buttons: [contactBtn()] },
       { background: 'white', paddingTop: 'md', paddingBottom: 'md' }
     ),
+
+    /* §9 FAQ */
     faq('Questions fréquentes sur notre approche', [
       [
         'L’audit énergétique est-il payant ?',
@@ -394,60 +496,16 @@ function notreApproche(): CmsBlock[] {
         'Le suivi de l’étape 4 compare les consommations aux estimations. En cas d’écart, nous en recherchons la cause et ajustons les réglages.',
       ],
     ]),
+
     finalCta(),
   ];
 }
 
-function solCardsLikeValeurs(): CmsBlock {
-  return b(
-    'cards',
-    {
-      eyebrow: '',
-      title: 'Nos valeurs',
-      intro: '',
-      columns: 3,
-      style: 'hoverDark',
-      headerLinkLabel: '',
-      items: [
-        {
-          id: uid('c'),
-          title: 'Exigence',
-          text: 'La précision de l’ingénieur, à chaque étape : aucune préconisation sans relevé, une note de calcul signée pour chaque solution.',
-          tags: [],
-          link: '',
-          linkLabel: '',
-        },
-        {
-          id: uid('c'),
-          title: 'Engagement',
-          text: 'Jusqu’au résultat, pas jusqu’à la facture : un livrable à chaque étape, le suivi des consommations après travaux, une réponse sous 48 h ouvrées.',
-          tags: [],
-          link: '',
-          linkLabel: '',
-        },
-        {
-          id: uid('c'),
-          title: 'Intégrité',
-          text: 'Des chiffres justes, des engagements tenus : une estimation n’est jamais présentée comme une mesure, les règles CEE et les limites d’une solution sont dites d’emblée.',
-          tags: [],
-          link: '',
-          linkLabel: '',
-        },
-      ],
-    },
-    { background: 'white', paddingTop: 'lg', paddingBottom: 'lg' }
-  );
-}
-
 const CHANTER_REDIRECTS: [string, string][] = [
-  ['/realisations/intermarche-sortie-du-fioul/', '/realisations/#intermarche'],
-  ['/realisations/intermarche-trevenans/', '/realisations/#intermarche'],
-  ['/realisations/carrefour-market-recuperation-de-chaleur/', '/realisations/#carrefour-market'],
-  ['/realisations/carrefour-market/', '/realisations/#carrefour-market'],
-  ['/realisations/cedim-destratification/', '/realisations/#cedim'],
-  ['/realisations/cedim/', '/realisations/#cedim'],
-  ['/realisations/colorcon-efficacite-energetique-industrielle/', '/realisations/#colorcon'],
-  ['/realisations/colorcon-bazainville/', '/realisations/#colorcon'],
+  ['/realisations/intermarche-trevenans/', '/realisations/intermarche-sortie-du-fioul/'],
+  ['/realisations/carrefour-market/', '/realisations/carrefour-market-recuperation-de-chaleur/'],
+  ['/realisations/cedim/', '/realisations/cedim-destratification/'],
+  ['/realisations/colorcon-bazainville/', '/realisations/colorcon-efficacite-energetique-industrielle/'],
   ['/partenaires/', '/notre-approche/#partenaires'],
 ];
 
@@ -470,10 +528,19 @@ const snap = await updateSnapshot((s) => {
     ensureRedirect(s.redirects, from, to);
   }
 
+  /* Les 4 fiches canoniques restent publiées (pages dédiées). Autres démos → draft. */
+  const keepPublished = new Set([
+    '/realisations/intermarche-sortie-du-fioul/',
+    '/realisations/carrefour-market-recuperation-de-chaleur/',
+    '/realisations/cedim-destratification/',
+    '/realisations/colorcon-efficacite-energetique-industrielle/',
+  ]);
   for (const p of s.pages) {
     if (p.path.startsWith('/realisations/') && p.path !== '/realisations/' && p.template === 'project') {
-      p.status = 'draft';
-      p.updatedAt = now();
+      if (!keepPublished.has(p.path)) {
+        p.status = 'draft';
+        p.updatedAt = now();
+      }
     }
   }
 

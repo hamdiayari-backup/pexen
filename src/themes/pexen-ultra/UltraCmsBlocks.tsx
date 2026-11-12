@@ -8,6 +8,7 @@ import type {
   CardsData,
   ChecklistData,
   ContactFormData,
+  CtaData,
   FaqData,
   GalleryData,
   HeroData,
@@ -19,8 +20,10 @@ import type {
   SimulatorData,
   StatsData,
   StepsData,
+  TableData,
   TextMediaData,
 } from '../../../server/cms/blocks';
+import { CtaBlock } from '../../components/cms/blocks/ConversionBlocks';
 import { RichHtml, useCms, VideoPlayer } from '../../components/cms/kit';
 import {
   UltraDiagonalSkillsSection,
@@ -385,6 +388,7 @@ export function UltraCmsCards({ d }: { d: CardsData; style: BlockStyle }) {
         ...(d.headerLinkLabel !== undefined || d.headerLink
           ? { footerLabel: d.headerLinkLabel || '', footerLink: d.headerLink }
           : {}),
+        ...(d.columns ? { columns: d.columns } : {}),
         items: items.map((it, i) => ({
           num: String(i + 1).padStart(2, '0'),
           title: it.title,
@@ -392,7 +396,7 @@ export function UltraCmsCards({ d }: { d: CardsData; style: BlockStyle }) {
           path: it.link || '#',
           image: it.image,
           imageAlt: it.imageAlt,
-          ctaLabel: it.linkLabel || '',
+          ctaLabel: it.linkLabel || (it.link ? 'Découvrir →' : ''),
           ceeBadge: (it.tags || []).filter(Boolean).join(' · ') || undefined,
         })),
       }}
@@ -562,7 +566,8 @@ export function UltraCmsChecklist({ d }: { d: ChecklistData; style: BlockStyle }
               alt: l.alt || c.title || 'Logo',
               size: l.size || 'md',
             })),
-          items: (c.entries || []).map((e) => (e.text ? `${e.title} — ${e.text}` : e.title)),
+          items: (c.entries || []).map((e) => e.title),
+          itemDetails: (c.entries || []).map((e) => e.text),
         })),
       }}
     />
@@ -655,18 +660,196 @@ function splitRefBody(html: string): { meta: string; media: string; content: str
   return { meta, media, content: rest };
 }
 
+const STUDY_CTA_RE = /demander une étude|étude chiffrée|une étude|demande=etude/i;
+
+/** CTA Ultra — bandeau animé (étude) ou finale navy. */
+export function UltraCmsCta({ d }: { d: CtaData; style: BlockStyle }) {
+  const { navigate, t } = useCms();
+  if (d.layout !== 'centered') {
+    return <CtaBlock d={d} style={style} />;
+  }
+
+  const primary = d.buttons?.[0];
+  const isStudy = STUDY_CTA_RE.test(`${d.title} ${primary?.label || ''} ${primary?.link || ''}`);
+  const isNavy = d.variant === 'dark';
+  const tone = isNavy ? 'navy' : 'study';
+
+  const btnLabel = t(primary?.label || '').trim();
+  const titleRaw = t(d.title || '').trim();
+  const title =
+    titleRaw && btnLabel && titleRaw.toLowerCase() === btnLabel.toLowerCase()
+      ? 'Votre projet mérite une étude chiffrée'
+      : titleRaw || (isStudy ? 'Votre projet mérite une étude chiffrée' : 'Parlons de votre projet');
+
+  const lead =
+    t(d.text || '').trim() ||
+    (isStudy
+      ? 'Un ingénieur PEXEN qualifie votre site, dimensionne les solutions et vous répond sous 48 h ouvrées.'
+      : "Un ingénieur PEXEN étudie votre site, évalue le gisement et vous répond sous 48 h ouvrées.");
+
+  const badge = t(d.badge || '').trim() || (isStudy ? 'Réponse sous 48 h ouvrées' : '');
+  const eyebrow = t(d.eyebrow || '').trim() || (isStudy ? 'Étude & dimensionnement' : '');
+  const bgShot =
+    d.backgroundImage || '/themes/ultra-s/images/pexen/ingenieur-pexen-sur-site-ingenierie-et-performance-energetique.webp';
+
+  return (
+    <section
+      className={`sec-padding px-ultra-action-cta px-ultra-action-cta--${tone}${isStudy ? ' px-ultra-action-cta--study' : ''}${tone === 'navy' ? ' px-ultra-atm' : ''}`}
+      {...(tone === 'navy' ? { 'data-px-atm': 'cta' } : {})}
+    >
+      {tone === 'navy' ? (
+        <>
+          <div className="px-ultra-atm__photo" style={{ backgroundImage: `url('${bgShot}')` }} aria-hidden="true" />
+          <div className="px-ultra-atm__veil" aria-hidden="true" />
+          <div className="px-ultra-atm__schema" aria-hidden="true" />
+        </>
+      ) : (
+        <div className="px-ultra-action-cta__fx" aria-hidden="true">
+          <span className="px-ultra-action-cta__mesh" />
+          <span className="px-ultra-action-cta__orb px-ultra-action-cta__orb--a" />
+          <span className="px-ultra-action-cta__orb px-ultra-action-cta__orb--b" />
+          <span className="px-ultra-action-cta__beam" />
+        </div>
+      )}
+      <div className="container position-relative">
+        <article className="px-ultra-action-cta__card">
+          {badge ? <span className="px-ultra-action-cta__badge">{badge}</span> : null}
+          {eyebrow ? <span className="px-ultra-action-cta__eyebrow">{eyebrow}</span> : null}
+          <h2 className="px-ultra-action-cta__title">{title}</h2>
+          {d.highlight ? (
+            <p className="px-ultra-action-cta__highlight">{t(d.highlight)}</p>
+          ) : null}
+          {lead ? <p className="px-ultra-action-cta__lead">{lead}</p> : null}
+          <div className="px-ultra-action-cta__btns">
+            {(d.buttons || []).map((b) => {
+              const raw = b.link || '/contact/';
+              const href =
+                isStudy && /demander une étude|étude chiffrée/i.test(`${b.label || ''} ${raw}`) && !/demande=etude/i.test(raw)
+                  ? '/contact/?demande=etude'
+                  : raw;
+              return (
+              <button
+                key={b.id}
+                type="button"
+                className={`px-ultra-action-cta__btn${b.variant === 'secondary' ? ' px-ultra-action-cta__btn--ghost' : ''}`}
+                onClick={() => navigate(href)}
+              >
+                <span className="px-ultra-action-cta__btn-shine" aria-hidden="true" />
+                {t(b.label)}
+                <i className="fa fa-arrow-right" aria-hidden="true" />
+              </button>
+              );
+            })}
+          </div>
+        </article>
+      </div>
+    </section>
+  );
+}
+
+/** Tableau Ultra — échéances / comparatifs (remplace le TableBlock générique). */
+export function UltraCmsTable({ d }: { d: TableData; style: BlockStyle }) {
+  const { t } = useCms();
+  const rows = d.rows || [];
+  return (
+    <section className="sec-padding px-ultra-table-sec">
+      <div className="container">
+        <header className="px-ultra-table-sec__head">
+          {d.eyebrow ? <span className="px-ultra-table-sec__eyebrow">{t(d.eyebrow)}</span> : null}
+          {d.title ? <h2 className="px-ultra-table-sec__title">{t(d.title)}</h2> : null}
+          {d.intro ? <p className="px-ultra-table-sec__lead">{t(d.intro)}</p> : null}
+        </header>
+        <div className="px-ultra-table-wrap">
+          <table className="px-ultra-table">
+            <thead>
+              <tr>
+                {(d.columns || []).map((c, i) => (
+                  <th key={`${c}-${i}`}>{t(c)}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((r, ri) => (
+                <tr key={r.id || ri}>
+                  {(d.columns || []).map((_, i) => (
+                    <td key={`${r.id}-${i}`} className={i === 0 ? 'px-ultra-table__cell--key' : 'px-ultra-table__cell--val'}>
+                      {t(r.cells[i] || '')}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 /** Rich text Ultra : chaque H2 devient un bloc moderne animé (charte navy / cyan). */
 export function UltraCmsRichText({ d }: { d: RichTextData; style: BlockStyle }) {
-  const sections = splitRichSections(d.html || '');
+  const raw = d.html || '';
   const large = d.size === 'large';
+
+  /* Gabarits structurés : ne jamais découper sur les H2 internes */
+  if (/px-ultra-case(?:-list|\s|"|'|>)|px-ultra-ops|px-ultra-op(?:\s|"|'|>)|px-ultra-grade|px-ultra-reg|px-ultra-ref-grid|px-ultra-zig|px-ultra-pillars|px-ultra-mission|px-ultra-method|px-ultra-featgrid|px-ultra-benefits/i.test(raw)) {
+    const secClass = /px-ultra-zig/i.test(raw)
+      ? 'px-ultra-zig-sec'
+      : /px-ultra-mission/i.test(raw)
+        ? 'px-ultra-mission-sec'
+        : /px-ultra-method/i.test(raw)
+          ? 'px-ultra-method-sec'
+          : /px-ultra-featgrid/i.test(raw)
+            ? 'px-ultra-featgrid-sec'
+            : /px-ultra-benefits/i.test(raw)
+              ? 'px-ultra-benefits-sec'
+              : /px-ultra-pillars/i.test(raw)
+                ? 'px-ultra-pillars-sec'
+                : /px-ultra-grade/i.test(raw)
+                  ? 'px-ultra-grade-sec'
+                  : /px-ultra-reg/i.test(raw)
+                    ? 'px-ultra-reg-sec'
+                    : /px-ultra-ref-grid/i.test(raw)
+                      ? 'px-ultra-case-sec px-ultra-case-sec--refs'
+                      : 'px-ultra-case-sec';
+    return (
+      <section className={secClass}>
+        <div className="container">
+          <RichHtml html={raw} />
+        </div>
+      </section>
+    );
+  }
+
+  const plain = raw.replace(/<[^>]+>/g, '').trim();
+  const isFootnote =
+    (/text-xs|text-slate-500|px-ultra-legal-note|kwh cumac|fiches d’opérations standardisées/i.test(raw) &&
+      plain.length < 520) ||
+    /^\s*\*?\s*estimation calculée selon les fiches/i.test(plain);
+  if (isFootnote) {
+    return (
+      <section className="px-ultra-ed px-ultra-ed--soft px-ultra-ed--note">
+        <div className="container">
+          <div className="px-ultra-ed__inner px-ultra-ed__inner--note">
+            <RichHtml html={raw} className="px-ultra-ed__prose" />
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  const sections = splitRichSections(raw);
 
   if (sections.length <= 1 && !sections[0]?.title) {
     const soloId = sections[0]?.id || '';
     return (
-      <section id={soloId || undefined} className="px-ultra-rt sec-padding bg-white">
+      <section
+        id={soloId || undefined}
+        className="px-ultra-ed px-ultra-ed--white"
+      >
         <div className="container">
-          <div className={`px-ultra-rt__card px-ultra-rt__card--solo ${large ? 'px-ultra-rt__card--lg' : ''}`}>
-            <RichHtml html={d.html || ''} className="px-ultra-rt__prose" />
+          <div className={`px-ultra-ed__inner ${large ? 'px-ultra-ed__inner--lg' : ''}`}>
+            <RichHtml html={raw} className="px-ultra-ed__prose" />
           </div>
         </div>
       </section>
@@ -708,14 +891,13 @@ export function UltraCmsRichText({ d }: { d: RichTextData; style: BlockStyle }) 
         return (
           <section
             key={`${i}-${sec.title.slice(0, 24)}`}
-            className={`px-ultra-rt__section px-ultra-rt__section--${tone}`}
-            style={{ animationDelay: `${Math.min(i, 6) * 70}ms` }}
+            className={`px-ultra-ed px-ultra-ed--${tone}`}
           >
             <div className="container">
-              <article className={`px-ultra-rt__card ${hasBody ? '' : 'px-ultra-rt__card--title-only'} ${large ? 'px-ultra-rt__card--lg' : ''}`}>
-                {sec.title ? <h2 className="px-ultra-rt__title">{sec.title}</h2> : null}
-                {hasBody ? <RichHtml html={sec.body} className="px-ultra-rt__prose" /> : <div className="px-ultra-rt__pulse" aria-hidden="true" />}
-              </article>
+              <div className={`px-ultra-ed__inner ${large ? 'px-ultra-ed__inner--lg' : ''}`}>
+                {sec.title ? <h2 className="px-ultra-ed__title">{sec.title}</h2> : null}
+                {hasBody ? <RichHtml html={sec.body} className="px-ultra-ed__prose" /> : null}
+              </div>
             </div>
           </section>
         );

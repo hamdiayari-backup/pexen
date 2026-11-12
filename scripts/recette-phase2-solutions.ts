@@ -75,113 +75,189 @@ function upsertPage(pages: CmsPage[], path: string, title: string, blocks: CmsBl
   return page;
 }
 
+function zigRow(opts: {
+  id: string;
+  num: string;
+  title: string;
+  lead: string;
+  bullets: string[];
+  moreHref: string;
+  flip?: boolean;
+  card: { href: string; image: string; imageAlt: string; tag: string; title: string; metrics: string[] };
+}) {
+  const bullets = opts.bullets.map((x) => `<li>${x}</li>`).join('');
+  const metrics = opts.card.metrics.map((m) => `<span>${m}</span>`).join('');
+  return `<article id="${opts.id}" class="px-ultra-zig${opts.flip ? ' px-ultra-zig--flip' : ''}">
+  <div class="px-ultra-zig__copy">
+    <span class="px-ultra-zig__num">${opts.num}</span>
+    <h2 class="px-ultra-zig__title">${opts.title}</h2>
+    <p class="px-ultra-zig__lead">${opts.lead}</p>
+    <ul class="px-ultra-zig__list">${bullets}</ul>
+    <a class="px-ultra-zig__more" href="${opts.moreHref}">En savoir plus <span aria-hidden="true">→</span></a>
+  </div>
+  <a class="px-ultra-zig__card" href="${opts.card.href}">
+    <div class="px-ultra-zig__card-media"><img src="${opts.card.image}" alt="${opts.card.imageAlt}" loading="lazy" width="640" height="400" /></div>
+    <div class="px-ultra-zig__card-body">
+      <p class="px-ultra-zig__card-tag">${opts.card.tag}</p>
+      <h3 class="px-ultra-zig__card-title">${opts.card.title}</h3>
+      <div class="px-ultra-zig__card-metrics">${metrics}</div>
+    </div>
+  </a>
+</article>`;
+}
+
 function solutionsLanding(): CmsBlock[] {
+  const zigHtml = `<nav class="px-ultra-zig-nav" aria-label="Solutions">
+  <a href="#froid"><span class="px-ultra-zig-nav__n">01</span> Froid commercial</a>
+  <a href="#chaleur"><span class="px-ultra-zig-nav__n">02</span> Récupération de chaleur</a>
+  <a href="#pac"><span class="px-ultra-zig-nav__n">03</span> Chauffage &amp; air</a>
+  <a href="#gtb"><span class="px-ultra-zig-nav__n">04</span> Pilotage GTB</a>
+  <a href="#isolation"><span class="px-ultra-zig-nav__n">05</span> Isolation technique</a>
+</nav>
+<div class="px-ultra-zig-list">
+${zigRow({
+  id: 'froid',
+  num: '01',
+  title: 'Optimiser les installations frigorifiques',
+  lead: 'Dans un supermarché, le froid représente 45 à 75 % des dépenses d’énergie. Régulation, condensation et variation de vitesse réduisent la facture sans arrêter l’exploitation.',
+  bullets: [
+    'Haute et basse pression flottante',
+    'Condensation haute efficacité',
+    'Variation électronique de vitesse',
+    'Fermeture des meubles frigorifiques',
+  ],
+  moreHref: '/solutions/froid-commercial-industriel/',
+  card: {
+    href: '/realisations/carrefour-market-recuperation-de-chaleur/',
+    image: IMG('recuperation-de-chaleur-sur-la-centrale-froid-de-carrefour-market.webp'),
+    imageAlt: 'Centrale froid Carrefour Market',
+    tag: 'Grande distribution',
+    title: 'Carrefour Market : froid, chaleur et toiture sous CPE',
+    metrics: ['30,6 GWh cumac*', 'Objectif −40 %'],
+  },
+})}
+${zigRow({
+  id: 'chaleur',
+  num: '02',
+  title: 'Récupérer la chaleur disponible',
+  lead: 'Un groupe froid rejette en continu la chaleur extraite des meubles et des chambres. Récupérée, elle chauffe la surface de vente ou l’eau chaude sanitaire.',
+  bullets: [
+    'Évaluation de la chaleur récupérable',
+    'Couverture chauffage et ECS',
+    'Intégration des CEE dès la conception',
+  ],
+  moreHref: '/solutions/recuperation-de-chaleur/',
+  flip: true,
+  card: {
+    href: '/realisations/carrefour-market-recuperation-de-chaleur/',
+    image: IMG('drive-recuperateur-de-chaleur.webp'),
+    imageAlt: 'Récupérateur de chaleur',
+    tag: 'Réalisation',
+    title: 'Récupération de chaleur sur centrale froid',
+    metrics: ['535 kW', '30,6 GWh cumac*'],
+  },
+})}
+${zigRow({
+  id: 'pac',
+  num: '03',
+  title: 'Décarboner la production de chaleur',
+  lead: 'Remplacement des chaudières fioul ou gaz par des pompes à chaleur performantes, et déstratification des grands volumes.',
+  bullets: [
+    'PAC air/eau, eau/eau, géothermie',
+    'Bonifications Coup de pouce selon le cas',
+    'Déstratification des volumes > 4 m',
+  ],
+  moreHref: '/solutions/pompe-a-chaleur-tertiaire/',
+  card: {
+    href: '/realisations/intermarche-sortie-du-fioul/',
+    image: IMG('pompes-a-chaleur-air-eau-sortie-du-fioul-chez-intermarche.webp'),
+    imageAlt: 'PAC Intermarché',
+    tag: 'Grande distribution',
+    title: 'Intermarché : sortie du fioul et optimisation du froid',
+    metrics: ['1 650 m²', '14,8 GWh cumac*'],
+  },
+})}
+${zigRow({
+  id: 'gtb',
+  num: '04',
+  title: 'Piloter les consommations',
+  lead: 'GTB de classe A ou B, conformité au décret BACS, suivi des indicateurs pour les équipes techniques.',
+  bullets: [
+    'Classes A et B (NF EN ISO 52120-1)',
+    'Mise en conformité décret BACS',
+    'Tableaux de bord et alertes de dérive',
+  ],
+  moreHref: '/solutions/gtb-tertiaire-gtc/',
+  flip: true,
+  card: {
+    href: '/realisations/intermarche-sortie-du-fioul/',
+    image: IMG('pilotage-gtb-decret-bacs-pexen.webp'),
+    imageAlt: 'Supervision GTB',
+    tag: 'Pilotage',
+    title: 'GTB de classe B associée à la PAC et au froid',
+    metrics: ['Classe B', 'BAT-TH-116'],
+  },
+})}
+${zigRow({
+  id: 'isolation',
+  num: '05',
+  title: 'Limiter les pertes thermiques',
+  lead: 'Calorifugeage des réseaux, matelas isolants sur points singuliers, isolation des toitures-terrasses.',
+  bullets: [
+    'Réseaux et équipements (IND-UT-131)',
+    'Matelas démontables (IND-UT-121)',
+    'Toitures-terrasses (BAT-EN-107)',
+  ],
+  moreHref: '/solutions/isolation-technique/',
+  card: {
+    href: '/realisations/cedim-destratification/',
+    image: IMG('destratificateur-d-air-installe-dans-un-magasin-de-grande-hauteur.webp'),
+    imageAlt: 'Déstratification CEDIM',
+    tag: 'Négoce',
+    title: 'CEDIM : ramener la chaleur au sol',
+    metrics: ['2,1 GWh cumac*', 'BAT-TH-142'],
+  },
+})}
+</div>`;
+
   return [
     b(
       'pageHeader',
       {
         breadcrumb: true,
         eyebrow: 'Solutions',
-        title: "Nos solutions d'ingénierie énergétique",
+        title: 'Des solutions de décarbonation adaptées aux enjeux de votre bâtiment',
         intro:
-          "L'ingénierie énergétique de PEXEN couvre les cinq postes qui concentrent les consommations d'un site professionnel : la production de froid, la chaleur perdue, le chauffage des grands volumes, le pilotage et les pertes thermiques. Chaque expertise associe une étude chiffrée, des travaux réalisés par nos équipes et un suivi des résultats.",
+          'Production de froid, chaleur récupérée, chauffage, pilotage et isolation : nous identifions les solutions pertinentes pour votre site et intégrons dès l’amont les aides mobilisables, dont les CEE.',
         image: IMG('projets-de-performance-energetique-realises-par-pexen.webp'),
         imageAlt: 'Ingénierie énergétique PEXEN',
-        buttons: [contactBtn(), estimBtn()],
+        buttons: [etudeBtn(), estimBtn()],
         metrics: [
-          { value: 'Jusqu’à 30 %', label: 'par groupe froid (haute pression flottante)' },
-          { value: '15 à 30 %', label: 'sur les consommations pilotées par GTB (ADEME)' },
-          { value: '3 à 4 kWh', label: 'de chaleur par kWh électrique (PAC)' },
+          { value: '5 leviers', label: 'froid · chaleur · PAC · GTB · isolation' },
+          { value: 'CEE intégrés', label: 'dès l’étude, avant devis' },
+          { value: 'Sans arrêt', label: 'exploitation maintenue' },
         ],
+        heroVariant: 'solution',
       },
-      { background: 'white', paddingTop: 'lg', paddingBottom: 'md' }
+      { background: 'navy', paddingTop: 'lg', paddingBottom: 'md' }
     ),
+    b('richText', { html: zigHtml, size: 'normal' }, { background: 'white', paddingTop: 'lg', paddingBottom: 'lg' }),
     b(
-      'cards',
+      'textMedia',
       {
-        eyebrow: 'Solutions',
-        title: 'Cinq solutions, un seul interlocuteur',
-        intro: '',
-        columns: 3,
-        style: 'hoverDark',
-        items: [
-          {
-            id: uid('c'),
-            icon: 'snowflake',
-            image: IMG('drive-froid-commercial-industriel.webp'),
-            imageAlt: 'Ingénierie énergétique du froid commercial',
-            title: 'Froid commercial et industriel',
-            text: 'Haute et basse pression flottante, condensation haute efficacité, variation électronique de vitesse, fermeture des meubles frigorifiques. Dans un supermarché, le froid représente 45 à 75 % des dépenses d’énergie : c’est le premier gisement.',
-            bullets: [],
-            link: '/solutions/froid-commercial-industriel/',
-            linkLabel: 'Découvrir la solution',
-          },
-          {
-            id: uid('c'),
-            icon: 'flame',
-            image: IMG('drive-recuperateur-de-chaleur.webp'),
-            imageAlt: 'Récupération de chaleur sur groupe froid',
-            title: 'Récupération de chaleur',
-            text: 'Un groupe froid rejette en continu la chaleur extraite des meubles et des chambres froides. Récupérée, elle chauffe la surface de vente, l’eau chaude sanitaire ou un process.',
-            bullets: [],
-            link: '/solutions/recuperation-de-chaleur/',
-            linkLabel: 'Découvrir la solution',
-          },
-          {
-            id: uid('c'),
-            icon: 'wind',
-            image: IMG('drive-chauffage-traitement-dair.webp'),
-            imageAlt: 'Pompe à chaleur tertiaire',
-            title: 'Chauffage et traitement d’air',
-            text: 'Pompes à chaleur air/eau, eau/eau et géothermie en remplacement du fioul ou du gaz, déstratification des volumes de plus de 4 mètres sous plafond.',
-            bullets: [],
-            link: '/solutions/pompe-a-chaleur-tertiaire/',
-            linkLabel: 'Découvrir la solution',
-          },
-          {
-            id: uid('c'),
-            icon: 'cpu',
-            image: IMG('drive-pilotage-gtb-gtc.webp'),
-            imageAlt: 'GTB tertiaire',
-            title: 'Pilotage GTB / GTC',
-            text: 'Gestion technique du bâtiment de classe A ou B selon la norme NF EN ISO 52120-1, conformité au décret BACS, suivi des indicateurs de performance.',
-            bullets: [],
-            link: '/solutions/gtb-tertiaire-gtc/',
-            linkLabel: 'Découvrir la solution',
-          },
-          {
-            id: uid('c'),
-            icon: 'shieldCheck',
-            image: IMG('drive-isolation-technique-sur-reseau-hvac-industriel.webp'),
-            imageAlt: 'Isolation technique des réseaux',
-            title: 'Isolation technique',
-            text: 'Isolation des toitures-terrasses, calorifugeage des réseaux, matelas isolants sur vannes et points singuliers.',
-            bullets: [],
-            link: '/solutions/isolation-technique/',
-            linkLabel: 'Découvrir la solution',
-          },
-        ],
+        eyebrow: 'Financement',
+        title: 'Une ingénierie énergétique financée par les CEE',
+        html: `<p>Chaque solution correspond à une ou plusieurs fiches d'opérations standardisées. Nous calculons le volume de kWh cumac dès l'étude, engageons le dossier avant signature et préparons les pièces du contrôle.</p>`,
+        bullets: ['Note de calcul avant devis', 'Dossier engagé avant signature', 'Pièces prêtes pour le contrôle COFRAC'],
+        buttons: [button('Réglementation et financement CEE', '/expertises/financement-cee-reglementation/', 'primary', 'arrow')],
+        mediaType: 'image',
+        image: IMG('cee-tertiaire.webp'),
+        imageAlt: 'Financement CEE des travaux énergétiques',
+        mediaPosition: 'right',
+        mediaStyle: 'framed',
+        ratio: 'landscape',
       },
       { background: 'soft', paddingTop: 'lg', paddingBottom: 'lg' }
-    ),
-    b(
-      'richText',
-      {
-        html: `<h2>Une ingénierie énergétique financée par les CEE</h2><p>Chaque solution correspond à une ou plusieurs fiches d'opérations standardisées des certificats d'économies d'énergie (CEE). Nous calculons le volume de kWh cumac dès l'étude, nous engageons le dossier avant la signature du devis et nous préparons les pièces exigées au contrôle. Les fiches mobilisées sont publiées sur le <a href="https://www.ecologie.gouv.fr/politiques-publiques/operations-standardisees-deconomies-denergie" target="_blank" rel="noopener noreferrer">site du ministère</a>.</p><p><a href="/expertises/financement-cee-reglementation/">Réglementation et financement CEE</a></p>`,
-        size: 'normal',
-      },
-      { background: 'white', paddingTop: 'lg', paddingBottom: 'md' }
-    ),
-    b(
-      'cta',
-      {
-        variant: 'light',
-        layout: 'centered',
-        title: 'Financer votre projet',
-        text: 'Demandez une étude : gisement, CEE et planning sur votre site.',
-        buttons: [etudeBtn()],
-      },
-      { background: 'white', paddingTop: 'none', paddingBottom: 'lg' }
     ),
     b(
       'richText',

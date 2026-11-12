@@ -66,15 +66,23 @@ export function CtaBlock({ d, style }: { d: CtaData; style: BlockStyle }) {
                   {t(d.badge)}
                 </div>
               ) : null}
-              <h2 className={cx('text-4xl font-semibold leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl', onDark ? 'text-white' : 'text-px-navy')}>
-                {t(d.title)}
-                {d.highlight ? (
-                  <>
-                    {' '}
-                    <span className="bg-gradient-to-r from-px-primary-light to-px-accent-light bg-clip-text text-transparent">{t(d.highlight)}</span>
-                  </>
-                ) : null}
-              </h2>
+              {(() => {
+                const title = t(d.title || '').trim();
+                const btn = t(d.buttons?.[0]?.label || '').trim();
+                const sameAsBtn = Boolean(title && btn && title.toLowerCase() === btn.toLowerCase());
+                if (sameAsBtn) return null;
+                return (
+                  <h2 className={cx('text-4xl font-semibold leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl', onDark ? 'text-white' : 'text-px-navy')}>
+                    {title}
+                    {d.highlight ? (
+                      <>
+                        {' '}
+                        <span className="bg-gradient-to-r from-px-primary-light to-px-accent-light bg-clip-text text-transparent">{t(d.highlight)}</span>
+                      </>
+                    ) : null}
+                  </h2>
+                );
+              })()}
               {d.text ? <p className={cx('text-base leading-relaxed sm:text-lg', onDark ? 'text-slate-300' : 'text-slate-600')}>{t(d.text)}</p> : null}
               <ButtonRow buttons={d.buttons} center size="lg" className="pt-2" />
             </div>

@@ -126,8 +126,8 @@ function expertisesLanding(): CmsBlock[] {
   return [
     hero(
       'Expertises',
-      "Nos expertises, de l'étude au suivi",
-      "PEXEN accompagne les sites industriels, tertiaires et résidentiels collectifs à chaque étape d'un projet de performance énergétique : l'étude, les travaux, l'engagement de résultat et le financement. Une seule équipe, du premier relevé au bilan d'économies.",
+      'Un accompagnement adapté à votre projet',
+      "Chaque site et chaque projet répondent à des enjeux différents. PEXEN intervient selon vos besoins — mission ciblée ou accompagnement global — de l'étude au financement CEE, jusqu'au suivi des performances.",
       IMG('ingenieur-pexen-sur-site-ingenierie-et-performance-energetique.webp'),
       [
         { value: '4 expertises', label: "de l'étude au financement" },
@@ -136,10 +136,45 @@ function expertisesLanding(): CmsBlock[] {
       ]
     ),
     b(
+      'richText',
+      {
+        html: `<div class="px-ultra-pillars">
+  <header class="px-ultra-pillars__head">
+    <span class="px-ultra-pillars__eyebrow">Accompagnement</span>
+    <h2 class="px-ultra-pillars__title">Trois piliers, une seule équipe</h2>
+    <p class="px-ultra-pillars__lead">Études, financement CEE et travaux : nous intervenons là où vous avez besoin de nous.</p>
+  </header>
+  <div class="px-ultra-pillars__grid">
+    <a class="px-ultra-pillar" href="/expertises/bureau-etudes-fluides/">
+      <span class="px-ultra-pillar__num">01</span>
+      <h3 class="px-ultra-pillar__title">Études &amp; stratégie</h3>
+      <p class="px-ultra-pillar__text">Audit, relevés, scénarios et feuille de route pour prioriser les investissements.</p>
+      <span class="px-ultra-pillar__cta">Découvrir <span aria-hidden="true">→</span></span>
+    </a>
+    <a class="px-ultra-pillar" href="/expertises/financement-cee-reglementation/">
+      <span class="px-ultra-pillar__num">02</span>
+      <h3 class="px-ultra-pillar__title">CEE &amp; financement</h3>
+      <p class="px-ultra-pillar__text">Éligibilité, note de calcul, montage du dossier jusqu’au contrôle COFRAC.</p>
+      <span class="px-ultra-pillar__cta">Découvrir <span aria-hidden="true">→</span></span>
+    </a>
+    <a class="px-ultra-pillar" href="/expertises/assistance-maitrise-ouvrage/">
+      <span class="px-ultra-pillar__num">03</span>
+      <h3 class="px-ultra-pillar__title">Accompagnement travaux</h3>
+      <p class="px-ultra-pillar__text">Planification, suivi de chantier, mise en service et documents de fin de travaux.</p>
+      <span class="px-ultra-pillar__cta">Découvrir <span aria-hidden="true">→</span></span>
+    </a>
+  </div>
+</div>`,
+        size: 'normal',
+      },
+      { background: 'surface', paddingTop: 'lg', paddingBottom: 'lg' }
+    ),
+    b(
       'cards',
       {
-        eyebrow: 'Expertises',
-        title: 'Quatre expertises, une seule équipe',
+        eyebrow: 'Engagement',
+        title: 'Quand les économies doivent être garanties',
+        intro: '',
         style: 'hoverDark',
         columns: 2,
         headerLinkLabel: '',
@@ -147,51 +182,48 @@ function expertisesLanding(): CmsBlock[] {
         items: [
           {
             id: uid('c'),
-            title: 'Études et ingénierie',
-            text: 'Audit, relevés, dimensionnement et solutions techniques.',
-            tags: [],
-            link: '/expertises/bureau-etudes-fluides/',
-            linkLabel: "Découvrir l'expertise",
-            image: IMG('audit-batiment.webp'),
-          },
-          {
-            id: uid('c'),
-            title: 'Accompagnement travaux et AMO',
-            text: 'Planification, suivi de chantier et mise en service.',
-            tags: [],
-            link: '/expertises/assistance-maitrise-ouvrage/',
-            linkLabel: "Découvrir l'expertise",
-            image: IMG('pexen-partenaire-installateur-livraison-d-equipements-sur-chantier.webp'),
-          },
-          {
-            id: uid('c'),
             title: 'Contrat de performance énergétique',
-            text: 'Objectifs, mesure et suivi des consommations.',
-            tags: [],
+            text: 'Un objectif d’économies fixé par contrat, puis mesuré. Périmètre, baseline et suivi.',
+            tags: ['CPE'],
             link: '/expertises/contrat-performance-energetique/',
             linkLabel: "Découvrir l'expertise",
             image: IMG('contrat-de-performance-energetique-sur-une-centrale-de-froid-commercial.webp'),
           },
           {
             id: uid('c'),
-            title: 'Réglementation et financement',
-            text: 'Décret tertiaire, décret BACS et aides financières.',
+            title: 'Voir nos réalisations',
+            text: 'Intermarché, Carrefour Market, CEDIM, Colorcon : enjeux, solutions et kWh cumac estimés.',
             tags: [],
-            link: '/expertises/financement-cee-reglementation/',
-            linkLabel: "Découvrir l'expertise",
-            image: IMG('cee-tertiaire.webp'),
+            link: '/realisations/',
+            linkLabel: 'Voir les références →',
+            image: IMG('projets-de-performance-energetique-realises-par-pexen.webp'),
           },
         ],
       },
-      { background: 'surface', paddingTop: 'lg', paddingBottom: 'lg' }
+      { background: 'white', paddingTop: 'lg', paddingBottom: 'lg' }
+    ),
+    b(
+      'steps',
+      {
+        eyebrow: 'Méthode',
+        title: 'Comment se déroule une étude',
+        intro: 'Quatre étapes, un livrable daté à chaque étape.',
+        items: [
+          { id: uid('s'), num: '01', title: 'Prévisite et audit', text: 'Relevé sur site, inventaire des utilités, année de référence.' },
+          { id: uid('s'), num: '02', title: 'Dimensionnement', text: 'Ingénierie technique et financière, fiches CEE identifiées.' },
+          { id: uid('s'), num: '03', title: 'Travaux et mise en service', text: 'Installation par nos équipes, sans arrêter l’exploitation.' },
+          { id: uid('s'), num: '04', title: 'Contrôle et suivi', text: 'Dossier COFRAC, bilans de consommations, ajustements.' },
+        ],
+      },
+      { background: 'white', paddingTop: 'lg', paddingBottom: 'lg' }
     ),
     b(
       'textMedia',
       {
         eyebrow: 'Méthode',
         title: "De l'audit à la mesure des économies",
-        html: "<p>Prévisite et audit, dimensionnement et ingénierie technico-financière, installation et mise en service, puis contrôle COFRAC et suivi des performances : quatre étapes, un livrable daté à chaque étape.</p>",
-        bullets: [],
+        html: "<p>Chaque étape produit un livrable exploitable par votre direction : notes de calcul, planning, dossier CEE, bilans avant/après.</p>",
+        bullets: ['Relevé avant toute préconisation', 'CEE engagés avant signature des devis', 'Travaux sans fermeture du site', 'Suivi des consommations après mise en service'],
         buttons: [etudeBtn()],
         mediaType: 'image',
         image: IMG('performance-energetique.webp'),
@@ -309,6 +341,30 @@ function cpeBlocks(): CmsBlock[] {
       { label: 'Expertises', link: '/expertises/' }
     ),
     b(
+      'richText',
+      {
+        html: `<div class="px-ultra-zig-list"><article class="px-ultra-zig">
+  <div class="px-ultra-zig__copy">
+    <span class="px-ultra-zig__num">Preuve terrain</span>
+    <h2 class="px-ultra-zig__title">−40 % visés sur 10 ans</h2>
+    <p class="px-ultra-zig__lead">Chez Carrefour Market, récupération de chaleur, régulation du froid, isolation toiture et fermeture des meubles sont combinés sous contrat de performance.</p>
+    <ul class="px-ultra-zig__list"><li>Objectif contractuel −40 %</li><li>Périmètre froid + chaleur + enveloppe</li><li>30,6 GWh cumac estimés*</li></ul>
+    <a class="px-ultra-zig__more" href="/realisations/carrefour-market-recuperation-de-chaleur/">Voir la réalisation <span aria-hidden="true">→</span></a>
+  </div>
+  <a class="px-ultra-zig__card" href="/realisations/carrefour-market-recuperation-de-chaleur/">
+    <div class="px-ultra-zig__card-media"><img src="${IMG('recuperation-de-chaleur-sur-la-centrale-froid-de-carrefour-market.webp')}" alt="Carrefour Market" loading="lazy" width="640" height="400" /></div>
+    <div class="px-ultra-zig__card-body">
+      <p class="px-ultra-zig__card-tag">CPE · Grande distribution</p>
+      <h3 class="px-ultra-zig__card-title">Carrefour Market : contrat de performance</h3>
+      <div class="px-ultra-zig__card-metrics"><span>−40 % CPE</span><span>30,6 GWh cumac*</span></div>
+    </div>
+  </a>
+</article></div>`,
+        size: 'normal',
+      },
+      { background: 'white', paddingTop: 'lg', paddingBottom: 'lg' }
+    ),
+    b(
       'steps',
       {
         eyebrow: 'Parcours',
@@ -326,25 +382,6 @@ function cpeBlocks(): CmsBlock[] {
         buttons: [],
       } as Partial<BlockDataMap['steps']> & { phaseBanner: string },
       { background: 'navy', paddingTop: 'lg', paddingBottom: 'lg' }
-    ),
-    b(
-      'textMedia',
-      {
-        eyebrow: 'Exemple',
-        title: '−40 % visés sur 10 ans',
-        html: "<p>Dans un supermarché d'Île-de-France, PEXEN a combiné récupération de chaleur sur le froid commercial, régulation du froid, isolation de la toiture-terrasse et fermeture des meubles, dans un contrat qui vise −40 % de consommation sur le périmètre traité pendant 10 ans*.</p><p class=\"text-sm text-slate-500\">* Objectif contractuel de réduction des consommations, sur le périmètre et la durée du contrat de performance énergétique, à conditions d'exploitation comparables.</p>",
-        bullets: ['Grande distribution'],
-        buttons: [etudeBtn()],
-        mediaType: 'image',
-        image: IMG('carrefour-market-recuperation-de-chaleur-sur-le-froid-commercial.webp'),
-        imageAlt: 'Carrefour Market, récupération de chaleur',
-        videoSource: 'file',
-        mediaPosition: 'left',
-        mediaStyle: 'framed',
-        ratio: 'landscape',
-        autoplay: false,
-      },
-      { background: 'white', paddingTop: 'lg', paddingBottom: 'lg' }
     ),
     faq('Questions fréquentes sur le contrat de performance énergétique', [
       ["Que se passe-t-il si l'objectif n'est pas atteint ?", "Le contrat prévoit les modalités d'ajustement."],
@@ -373,22 +410,97 @@ function ceeBlocks(): CmsBlock[] {
     b(
       'richText',
       {
-        html: `<h2>Décret tertiaire : −40 % en 2030</h2><p>Tout bâtiment, partie de bâtiment ou ensemble de bâtiments accueillant des activités tertiaires sur 1 000 m² ou plus doit réduire sa consommation d'énergie finale de 40 % en 2030, 50 % en 2040 et 60 % en 2050, par rapport à une année de référence comprise entre 2010 et 2019, ou atteindre un seuil en valeur absolue. Les consommations se déclarent chaque année sur la plateforme <a href="https://operat.ademe.fr/" target="_blank" rel="noopener noreferrer">OPERAT</a> de l'ADEME, avant le 30 septembre.</p><h2>Décret BACS : la GTB obligatoire</h2><p>Les bâtiments tertiaires dont le système de chauffage ou de climatisation dépasse 290 kW doivent être équipés d'un système d'automatisation et de contrôle (GTB) depuis le 1er janvier 2025. Pour les bâtiments existants entre 70 et 290 kW, l'échéance est fixée au 1er janvier 2030.</p><p><a href="/solutions/gtb-tertiaire-gtc/">Pilotage GTB / GTC</a></p>`,
+        html: `<div class="px-ultra-reg">
+  <header class="px-ultra-reg__head">
+    <span class="px-ultra-reg__eyebrow">Décret tertiaire</span>
+    <h2 class="px-ultra-reg__title">−40 % en 2030, une trajectoire jusqu’en 2050</h2>
+    <p class="px-ultra-reg__lead">Tout bâtiment, partie de bâtiment ou ensemble accueillant des activités tertiaires sur 1 000 m² ou plus doit réduire sa consommation d’énergie finale — ou atteindre un seuil en valeur absolue — par rapport à une année de référence entre 2010 et 2019. Déclaration annuelle sur <a href="https://operat.ademe.fr/" target="_blank" rel="noopener noreferrer">OPERAT</a> (ADEME), avant le 30 septembre.</p>
+  </header>
+  <div class="px-ultra-reg__grid">
+    <article class="px-ultra-reg__card px-ultra-reg__card--now">
+      <span class="px-ultra-reg__year">2030</span>
+      <strong class="px-ultra-reg__goal">−40 %</strong>
+      <p>Premier jalon réglementaire. Plan d’actions, année de référence et suivi OPERAT.</p>
+    </article>
+    <article class="px-ultra-reg__card">
+      <span class="px-ultra-reg__year">2040</span>
+      <strong class="px-ultra-reg__goal">−50 %</strong>
+      <p>Renforcement de la trajectoire. Les actions lourdes (froid, enveloppe, GTB) se dimensionnent dès maintenant.</p>
+    </article>
+    <article class="px-ultra-reg__card">
+      <span class="px-ultra-reg__year">2050</span>
+      <strong class="px-ultra-reg__goal">−60 %</strong>
+      <p>Objectif final. Chaque chantier d’aujourd’hui compte dans le bilan de demain.</p>
+    </article>
+  </div>
+</div>`,
         size: 'normal',
       },
-      { background: 'white', paddingTop: 'lg', paddingBottom: 'md' }
+      { background: 'white', paddingTop: 'lg', paddingBottom: 'lg' }
+    ),
+    b(
+      'table',
+      {
+        eyebrow: 'Décret BACS',
+        title: 'La GTB obligatoire : qui et quand',
+        intro:
+          'Les bâtiments tertiaires dont le système de chauffage ou de climatisation dépasse les seuils ci-dessous doivent être équipés d’un système d’automatisation et de contrôle (GTB).',
+        searchable: false,
+        columns: ['Situation', 'Échéance'],
+        rows: [
+          { id: uid('r'), cells: ['Chauffage ou climatisation > 290 kW', 'Depuis le 1er janvier 2025'] },
+          { id: uid('r'), cells: ['Existant entre 70 et 290 kW', '1er janvier 2030'] },
+          { id: uid('r'), cells: ['Bâtiment neuf > 70 kW', 'Dès la construction'] },
+        ],
+      },
+      { background: 'soft', paddingTop: 'lg', paddingBottom: 'lg' }
+    ),
+    b(
+      'cards',
+      {
+        eyebrow: 'Suite logique',
+        title: 'Passer à l’action sur le pilotage',
+        intro: 'Une fois le seuil BACS identifié, la GTB de classe A ou B devient le levier technique — et souvent le levier CEE.',
+        columns: 2,
+        style: 'hoverDark',
+        headerLinkLabel: '',
+        headerLink: '',
+        items: [
+          {
+            id: uid('c'),
+            title: 'Pilotage GTB / GTC',
+            text: 'Classes A et B, conformité BACS, supervision et gains ADEME estimés entre 15 et 30 % sur les postes pilotés.',
+            image: IMG('pilotage-gtb-decret-bacs-pexen.webp'),
+            imageAlt: 'Pilotage GTB tertiaire',
+            tags: ['BAT-TH-116'],
+            link: '/solutions/gtb-tertiaire-gtc/',
+            linkLabel: 'Voir la solution',
+          },
+          {
+            id: uid('c'),
+            title: 'Audit énergétique',
+            text: 'Relevé, année de référence, gisement et plan d’actions aligné décret tertiaire / OPERAT.',
+            image: IMG('audit-energetique-entreprise.webp'),
+            imageAlt: 'Audit énergétique en entreprise',
+            tags: [],
+            link: '/contact/?demande=etude',
+            linkLabel: 'Demander une étude',
+          },
+        ],
+      },
+      { background: 'white', paddingTop: 'lg', paddingBottom: 'lg' }
     ),
     b(
       'textMedia',
       {
         eyebrow: 'Financement',
         title: 'Le financement CEE, un levier intégré au projet',
-        html: "<p>Les fournisseurs d'énergie ont l'obligation de financer des économies d'énergie chez leurs clients. Chaque action conforme à une opération standardisée ouvre droit à une valorisation qui réduit le reste à charge. Le financement accompagne le projet : il ne remplace ni le relevé, ni le dimensionnement.</p>",
-        bullets: ['Avant devis', 'Note de calcul'],
-        buttons: [etudeBtn()],
+        html: "<p>Les fournisseurs d'énergie ont l'obligation de financer des économies d'énergie chez leurs clients. Chaque action conforme à une opération standardisée ouvre droit à une valorisation qui réduit le reste à charge. Le financement accompagne le projet : il ne remplace ni le relevé, ni le dimensionnement.</p><ul><li>Éligibilité vérifiée avant devis</li><li>Note de calcul et pièces pour le contrôle COFRAC</li><li>Engagement du dossier avant signature des travaux</li></ul>",
+        bullets: [],
+        buttons: [etudeBtn(), estimBtn()],
         mediaType: 'image',
         image: IMG('cee-tertiaire.webp'),
-        imageAlt: 'Financement CEE',
+        imageAlt: 'Dossier de financement CEE',
         videoSource: 'file',
         mediaPosition: 'right',
         mediaStyle: 'framed',
@@ -397,10 +509,33 @@ function ceeBlocks(): CmsBlock[] {
       },
       { background: 'surface', paddingTop: 'lg', paddingBottom: 'lg' }
     ),
+    b(
+      'checklist',
+      {
+        title: 'Ce que nous prenons en charge',
+        intro: '',
+        cards: [
+          {
+            id: uid('ck'),
+            title: '',
+            icon: 'fa-check',
+            entries: [
+              { id: uid('e'), title: 'Lecture de vos obligations (tertiaire, BACS, audit).' },
+              { id: uid('e'), title: 'Plan d’actions chiffré, CEE déduits.' },
+              { id: uid('e'), title: 'Montage du dossier CEE avant signature des devis.' },
+              { id: uid('e'), title: 'Pièces prêtes pour le contrôle COFRAC.' },
+            ],
+          },
+        ],
+      },
+      { background: 'white', paddingTop: 'lg', paddingBottom: 'lg' }
+    ),
     faq('Questions fréquentes sur le financement CEE', [
       ['Quel montant de prime CEE puis-je obtenir ?', "Il dépend du volume de kWh cumac et du prix du marché. Nous le chiffrons à l'étude, avant toute signature."],
       ['Les CEE sont-ils cumulables avec d’autres aides ?', 'Souvent, selon les règles propres à chaque aide. Nous vérifions les cumuls projet par projet.'],
       ['Que se passe-t-il lors du contrôle ?', "Un organisme accrédité COFRAC vérifie sur site la conformité de l'opération. Nos dossiers sont constitués pour ce contrôle dès l'engagement."],
+      ['Mon site est-il soumis au décret tertiaire ?', 'Si la surface tertiaire atteint 1 000 m² (bâtiment, partie ou ensemble), oui. La déclaration OPERAT est annuelle.'],
+      ['Faut-il une GTB pour mon bâtiment ?', 'Au-delà de 290 kW de chauffage ou climatisation, l’obligation s’applique depuis 2025 ; entre 70 et 290 kW (existant), en 2030.'],
     ]),
     finalCta(),
   ];

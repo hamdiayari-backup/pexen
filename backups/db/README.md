@@ -2,7 +2,7 @@
 
 - `pexen-latest.sql` — dump SQL plain (restauration simple)
 - `pexen-latest.dump` — dump custom (`pg_restore`)
-- Daté : 2026-11-05
+- Daté : 2026-11-12
 
 ## Restaurer
 

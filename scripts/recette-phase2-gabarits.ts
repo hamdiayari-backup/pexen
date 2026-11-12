@@ -6,6 +6,7 @@ import 'dotenv/config';
 import type { BlockDataMap, BlockKind, BlockStyle, ButtonData } from '../server/cms/blocks';
 import { button, uid } from '../server/cms/blocks';
 import { BLOCK_CATALOG } from '../server/cms/blockCatalog';
+import { normalizePageCtas } from '../server/cms/normalizeCtas';
 import { updateSnapshot } from '../server/cms/store';
 import type { CmsBlock, CmsPage } from '../server/cms/types';
 import { pool } from '../server/db/client';
@@ -40,11 +41,19 @@ const finalCta = () =>
     { background: 'navy', paddingTop: 'lg', paddingBottom: 'lg' }
   );
 
-const etudeCta = (title = 'Demander une étude') =>
+const etudeCta = () =>
   b(
     'cta',
-    { variant: 'light', layout: 'centered', title, text: '', buttons: [etudeBtn()] },
-    { background: 'white', paddingTop: 'md', paddingBottom: 'md' }
+    {
+      variant: 'light',
+      layout: 'centered',
+      eyebrow: 'Étude & dimensionnement',
+      title: 'Votre projet mérite une étude chiffrée',
+      text: 'Un ingénieur PEXEN qualifie votre site, dimensionne les solutions et vous répond sous 48 h ouvrées.',
+      badge: 'Réponse sous 48 h',
+      buttons: [etudeBtn()],
+    },
+    { background: 'soft', paddingTop: 'md', paddingBottom: 'md' }
   );
 
 function hero(opts: {
@@ -78,12 +87,13 @@ function hero(opts: {
   );
 }
 
-function checklist(title: string, items: string[], bg: BlockStyle['background'] = 'white') {
+function checklist(title: string, items: string[], bg: BlockStyle['background'] = 'white', eyebrow = '') {
   return b(
     'checklist',
     {
       title,
       intro: '',
+      eyebrow,
       cards: [
         {
           id: uid('ck'),
@@ -126,8 +136,126 @@ function solCards(
   );
 }
 
+/** Cartes réalisation (photo + lien ancre /realisations/#…). */
+function caseCards(
+  title: string,
+  items: {
+    anchor: string;
+    image: string;
+    imageAlt: string;
+    meta: string;
+    cardTitle: string;
+    enjeu: string;
+    result: string;
+  }[]
+) {
+  const solo = items.length === 1 ? ' px-ultra-case-list--solo' : '';
+  const cards = items
+    .map(
+      (it) => `<a class="px-ultra-case-card" href="/realisations/#${it.anchor}">
+    <div class="px-ultra-case-card__media"><img src="${it.image}" alt="${it.imageAlt}" loading="lazy" width="640" height="400" /></div>
+    <div class="px-ultra-case-card__body">
+      <p class="px-ultra-case-card__meta">${it.meta}</p>
+      <h3 class="px-ultra-case-card__title">${it.cardTitle}</h3>
+      <p class="px-ultra-case-card__enjeu">${it.enjeu}</p>
+      <p class="px-ultra-case-card__result">${it.result}</p>
+      <span class="px-ultra-case-card__cta">Voir le projet <span aria-hidden="true">→</span></span>
+    </div>
+  </a>`
+    )
+    .join('\n');
+  return rich(
+    `<h2>${title}</h2><div class="px-ultra-case-list${solo}">${cards}</div><p><a href="/realisations/">Voir nos réalisations →</a></p>`
+  );
+}
+
+/** Cartes offres cliquables (landing / secteurs) — grille type TERA. */
+function offerCards(
+  title: string,
+  items: { title: string; text: string; image?: string; link: string; linkLabel?: string }[],
+  cols: 2 | 3 = 3
+) {
+  return b(
+    'cards',
+    {
+      eyebrow: 'Offres',
+      title,
+      intro: '',
+      columns: cols,
+      style: 'hoverDark',
+      headerLinkLabel: '',
+      items: items.map((it) => ({
+        id: uid('c'),
+        title: it.title,
+        text: it.text,
+        image: it.image,
+        imageAlt: it.title,
+        tags: [],
+        link: it.link,
+        linkLabel: it.linkLabel || 'Découvrir →',
+      })),
+    },
+    { background: 'soft', paddingTop: 'lg', paddingBottom: 'lg' }
+  );
+}
+
 function rich(html: string, bg: BlockStyle['background'] = 'white') {
   return b('richText', { html, size: 'normal' }, { background: bg, paddingTop: 'lg', paddingBottom: 'lg' });
+}
+
+function sourceCards(
+  title: string,
+  items: { title: string; text: string; image: string; imageAlt?: string }[],
+) {
+  return b(
+    'cards',
+    {
+      eyebrow: 'Sources',
+      title,
+      intro: '',
+      columns: 2,
+      style: 'hoverDark',
+      headerLinkLabel: '',
+      items: items.map((it) => ({
+        id: uid('c'),
+        title: it.title,
+        text: it.text,
+        image: it.image,
+        imageAlt: it.imageAlt || it.title,
+        tags: [],
+        link: '',
+        linkLabel: '',
+      })),
+    },
+    { background: 'white', paddingTop: 'lg', paddingBottom: 'lg' }
+  );
+}
+
+function tmBlock(opts: {
+  eyebrow?: string;
+  title: string;
+  html: string;
+  image: string;
+  imageAlt?: string;
+  flip?: boolean;
+  bg?: BlockStyle['background'];
+  bullets?: string[];
+  button?: ButtonData;
+}) {
+  return b(
+    'textMedia',
+    {
+      eyebrow: opts.eyebrow || 'Ingénierie',
+      title: opts.title,
+      html: opts.html,
+      image: opts.image,
+      imageAlt: opts.imageAlt || opts.title,
+      mediaPosition: opts.flip ? 'left' : 'right',
+      bullets: opts.bullets || [],
+      buttons: opts.button ? [opts.button] : [],
+    },
+    { background: opts.bg || 'white', paddingTop: 'lg', paddingBottom: 'lg' }
+  );
 }
 
 function steps(title: string, items: { title: string; text: string }[]) {
@@ -148,18 +276,18 @@ function steps(title: string, items: { title: string; text: string }[]) {
   );
 }
 
-function table(title: string, columns: string[], rows: string[][]) {
+function table(title: string, columns: string[], rows: string[][], intro = '') {
   return b(
     'table',
     {
-      eyebrow: '',
+      eyebrow: 'Réglementation',
       title,
-      intro: '',
+      intro,
       searchable: false,
       columns,
       rows: rows.map((cells) => ({ id: uid('r'), cells })),
     },
-    { background: 'white', paddingTop: 'lg', paddingBottom: 'lg' }
+    { background: 'soft', paddingTop: 'lg', paddingBottom: 'lg' }
   );
 }
 
@@ -178,7 +306,7 @@ function faq(title: string, items: [string, string][]) {
 }
 
 function note(text: string) {
-  return rich(`<p class="text-xs text-slate-500">${text}</p>`, 'white');
+  return rich(`<p class="px-ultra-legal-note text-xs text-slate-500">${text}</p>`, 'white');
 }
 
 function upsert(pages: CmsPage[], path: string, title: string, blocks: CmsBlock[], seo: Partial<CmsPage['seo']>) {
@@ -211,7 +339,7 @@ function upsert(pages: CmsPage[], path: string, title: string, blocks: CmsBlock[
   page.title = title;
   page.status = 'published';
   page.publishedAt = page.publishedAt || now();
-  page.blocks = blocks;
+  page.blocks = normalizePageCtas(blocks);
   page.seo = { ...page.seo, ...seo, seoTitle: seo.seoTitle || page.seo.seoTitle };
   page.updatedAt = now();
 }
@@ -220,6 +348,39 @@ const SOL = { label: 'Solutions', link: '/solutions/' };
 const SEC = { label: 'Secteurs', link: '/secteurs/' };
 const CUMAC =
   '* Estimation calculée selon les fiches d’opérations standardisées CEE mobilisées (arrêté du 22 décembre 2014 modifié). Le kWh cumac cumule et actualise les économies sur la durée de vie conventionnelle des équipements ; il ne mesure pas les consommations réelles.';
+
+/** Zig-zag preuve réalisation (modèle TERA) — après le hero des fiches. */
+function zigProof(opts: {
+  num?: string;
+  title: string;
+  lead: string;
+  bullets: string[];
+  moreHref: string;
+  moreLabel?: string;
+  flip?: boolean;
+  card: { href: string; image: string; imageAlt: string; tag: string; title: string; metrics: string[] };
+}): CmsBlock {
+  const bullets = opts.bullets.map((x) => `<li>${x}</li>`).join('');
+  const metrics = opts.card.metrics.map((m) => `<span>${m}</span>`).join('');
+  const html = `<div class="px-ultra-zig-list"><article class="px-ultra-zig${opts.flip ? ' px-ultra-zig--flip' : ''}">
+  <div class="px-ultra-zig__copy">
+    <span class="px-ultra-zig__num">${opts.num || 'Référence'}</span>
+    <h2 class="px-ultra-zig__title">${opts.title}</h2>
+    <p class="px-ultra-zig__lead">${opts.lead}</p>
+    <ul class="px-ultra-zig__list">${bullets}</ul>
+    <a class="px-ultra-zig__more" href="${opts.moreHref}">${opts.moreLabel || 'Voir la réalisation'} <span aria-hidden="true">→</span></a>
+  </div>
+  <a class="px-ultra-zig__card" href="${opts.card.href}">
+    <div class="px-ultra-zig__card-media"><img src="${opts.card.image}" alt="${opts.card.imageAlt}" loading="lazy" width="640" height="400" /></div>
+    <div class="px-ultra-zig__card-body">
+      <p class="px-ultra-zig__card-tag">${opts.card.tag}</p>
+      <h3 class="px-ultra-zig__card-title">${opts.card.title}</h3>
+      <div class="px-ultra-zig__card-metrics">${metrics}</div>
+    </div>
+  </a>
+</article></div>`;
+  return rich(html);
+}
 
 /* ——— Solutions ——— */
 
@@ -240,6 +401,21 @@ function froid(): CmsBlock[] {
       ],
       parent: SOL,
       variant: 'solution',
+    }),
+    zigProof({
+      num: 'Preuve terrain',
+      title: 'Ce que ça donne sur un magasin réel',
+      lead: 'Sur Carrefour Market, régulation du froid, récupération de chaleur et isolation toiture ont été combinées sous contrat de performance.',
+      bullets: ['Haute pression flottante', 'Récupération de chaleur', 'Objectif contractuel −40 %'],
+      moreHref: '/realisations/#carrefour-market',
+      card: {
+        href: '/realisations/#carrefour-market',
+        image: IMG('recuperation-de-chaleur-sur-la-centrale-froid-de-carrefour-market.webp'),
+        imageAlt: 'Centrale froid Carrefour Market',
+        tag: 'Grande distribution',
+        title: 'Carrefour Market : froid, chaleur et toiture',
+        metrics: ['30,6 GWh cumac*', '−40 % CPE'],
+      },
     }),
     checklist('Pourquoi vos groupes froids consomment trop', [
       'Une pression de condensation fixe, réglée pour les journées les plus chaudes, alors que la température extérieure reste sous 20 °C la majeure partie de l’année.',
@@ -292,7 +468,7 @@ function froid(): CmsBlock[] {
     ]),
     b(
       'cta',
-      { variant: 'light', layout: 'centered', title: 'Parlons de votre site', text: '', buttons: [contactBtn()] },
+      { variant: 'light', layout: 'centered', title: 'Parler de votre projet', text: '', buttons: [contactBtn()] },
       { background: 'white', paddingTop: 'md', paddingBottom: 'md' }
     ),
     checklist('Les indicateurs que nous suivons sur un groupe froid', [
@@ -302,6 +478,27 @@ function froid(): CmsBlock[] {
       'Températures des produits dans les meubles positifs et négatifs.',
     ]),
     rich(`<p>Ces mesures, relevées avant et après travaux, alimentent le bilan d'économies d'énergie de l'étape 4.</p>`),
+    caseCards('Réalisations en froid commercial', [
+      {
+        anchor: 'carrefour-market',
+        image: IMG('recuperation-de-chaleur-sur-la-centrale-froid-de-carrefour-market.webp'),
+        imageAlt: 'Centrale de froid commercial chez Carrefour Market',
+        meta: 'Réalisation · Île-de-France · Grande distribution',
+        cardTitle: 'Carrefour Market : régulation et fermeture des meubles',
+        enjeu:
+          'Haute pression flottante, fermeture des meubles positifs et négatifs, récupération de chaleur.',
+        result: '30,6 GWh cumac estimés*',
+      },
+      {
+        anchor: 'intermarche',
+        image: IMG('fermeture-de-meubles-frigorifiques-en-froid-commercial.webp'),
+        imageAlt: 'Fermeture des meubles frigorifiques Intermarché',
+        meta: 'Réalisation · Bourgogne-Franche-Comté · Grande distribution',
+        cardTitle: 'Intermarché : haute pression flottante et récupération',
+        enjeu: 'Haute pression flottante, fermeture des meubles, récupération de chaleur.',
+        result: '14,8 GWh cumac estimés*',
+      },
+    ]),
     note(CUMAC),
     faq('Questions fréquentes sur le froid commercial', [
       [
@@ -339,11 +536,43 @@ function recup(): CmsBlock[] {
       parent: SOL,
       variant: 'solution',
     }),
-    checklist('D’où vient la chaleur récupérable', [
-      'Groupe de production de froid : la chaleur extraite des meubles et des chambres froides, augmentée de l’énergie des compresseurs, est rejetée au condenseur.',
-      'Compresseur d’air : la quasi-totalité de l’électricité absorbée se transforme en chaleur.',
-      'Process industriels : fumées, eaux de refroidissement, buées, eaux de lavage.',
-      'Eaux grises : douches et lavages des bâtiments tertiaires.',
+    zigProof({
+      num: 'Preuve terrain',
+      title: '535 kW récupérés sur une centrale froid',
+      lead: 'Chez Carrefour Market, la chaleur fatale du froid chauffe le magasin. Le projet a été engagé sous contrat de performance énergétique.',
+      bullets: ['Puissance récupérée : 535 kW', '30,6 GWh cumac estimés*', 'Objectif contractuel −40 %'],
+      moreHref: '/realisations/#carrefour-market',
+      flip: true,
+      card: {
+        href: '/realisations/#carrefour-market',
+        image: IMG('drive-recuperateur-de-chaleur.webp'),
+        imageAlt: 'Récupérateur de chaleur',
+        tag: 'Grande distribution',
+        title: 'Carrefour Market : récupération de chaleur',
+        metrics: ['535 kW', '30,6 GWh cumac*'],
+      },
+    }),
+    sourceCards('D’où vient la chaleur récupérable', [
+      {
+        title: 'Groupe de production de froid',
+        text: 'Chaleur extraite des meubles et chambres froides, augmentée de l’énergie des compresseurs, rejetée au condenseur.',
+        image: IMG('recuperation-de-chaleur-sur-groupe-froid-installee-par-pexen.webp'),
+      },
+      {
+        title: 'Compresseur d’air',
+        text: 'La quasi-totalité de l’électricité absorbée se transforme en chaleur récupérable sur le circuit d’huile ou l’air de refroidissement.',
+        image: IMG('efficacite-energetique-industrielle-pexen.webp'),
+      },
+      {
+        title: 'Process industriels',
+        text: 'Fumées, eaux de refroidissement, buées et eaux de lavage : chaleur fatale à valoriser ou à rehausser.',
+        image: IMG('chaufferie-vapeur-d-un-site-industriel-efficacite-energetique-industrielle.webp'),
+      },
+      {
+        title: 'Eaux grises',
+        text: 'Douches et lavages des bâtiments tertiaires : récupération instantanée sur l’évacuation.',
+        image: IMG('installation-technique.webp'),
+      },
     ]),
     solCards(
       'Nos solutions de valorisation de la chaleur',
@@ -375,31 +604,61 @@ function recup(): CmsBlock[] {
       ],
       2
     ),
+    checklist(
+      'Où réutiliser la chaleur récupérée',
+      [
+        'Chauffage : surface de vente, bureaux ou ateliers.',
+        'Eau chaude sanitaire et préchauffage de l’air neuf.',
+        'Process : eau de lavage et nettoyage en agroalimentaire.',
+        'Préchauffage de l’eau d’appoint d’une chaudière vapeur.',
+      ],
+      'soft',
+      'Usages',
+    ),
+    tmBlock({
+      eyebrow: 'Rentabilité',
+      title: "Les conditions d'un projet rentable",
+      html: '<p>Le projet tient si trois conditions sont réunies : des besoins de chaleur simultanés aux rejets, une distance courte entre source et usage, une régulation du froid qui reste prioritaire. Notre étude croise les courbes de rejet et de besoin heure par heure avant de dimensionner l’échangeur et le stockage.</p>',
+      image: IMG('recuperation-de-chaleur-sur-la-centrale-froid-de-carrefour-market.webp'),
+      bg: 'white',
+    }),
+    tmBlock({
+      eyebrow: 'Dimensionnement',
+      title: "Dimensionner l'échangeur et le stockage",
+      html: '<p>La puissance valorisable dépend de la température de condensation du groupe et du mode de captage. La désurchauffe capte une fraction à haute température (ECS) ; la condensation totale capte l’essentiel des rejets à plus basse température (chauffage). Un ballon tampon lisse l’écart entre production et besoin. La régulation donne toujours la priorité au froid.</p>',
+      image: IMG('recuperation-de-chaleur-groupe-froid-pexen.webp'),
+      flip: true,
+      bg: 'soft',
+    }),
+    tmBlock({
+      eyebrow: 'CEE',
+      title: 'Comment se calcule la prime BAT-TH-139',
+      html: '<p>Le volume de kWh cumac dépend du secteur, de la zone climatique, de l’usage de la chaleur et de la puissance thermique récupérée. L’étude datée et signée fixe cette puissance : c’est la pièce contrôlée.</p><p><a href="/expertises/financement-cee-reglementation/">Réglementation et financement CEE</a></p>',
+      image: IMG('cee-tertiaire.webp'),
+      bg: 'white',
+    }),
     etudeCta(),
-    checklist('Où réutiliser la chaleur récupérée', [
-      'Chauffage de la surface de vente ou des bureaux.',
-      'Production d’eau chaude sanitaire.',
-      'Préchauffage de l’air neuf.',
-      'Eau de lavage et de nettoyage en industrie agroalimentaire.',
-      'Préchauffage de l’eau d’appoint d’une chaudière vapeur.',
+    caseCards('Réalisations liées', [
+      {
+        anchor: 'carrefour-market',
+        image: IMG('recuperation-de-chaleur-sur-la-centrale-froid-de-carrefour-market.webp'),
+        imageAlt: 'Récupération de chaleur sur la centrale froid de Carrefour Market',
+        meta: 'Réalisation · Île-de-France · Grande distribution',
+        cardTitle: 'Carrefour Market : récupération sur centrale froid',
+        enjeu:
+          'Récupération de chaleur sur la centrale froid, en complément de la régulation et de l’isolation.',
+        result: '30,6 GWh cumac estimés*',
+      },
+      {
+        anchor: 'intermarche',
+        image: IMG('recuperation-de-chaleur-sur-groupe-froid-installee-par-pexen.webp'),
+        imageAlt: 'Récupération de chaleur Intermarché',
+        meta: 'Réalisation · Bourgogne-Franche-Comté · Grande distribution',
+        cardTitle: 'Intermarché : récupération couplée à la PAC',
+        enjeu: 'Récupération de chaleur couplée à une pompe à chaleur pour sortir du fioul.',
+        result: '14,8 GWh cumac estimés*',
+      },
     ]),
-    rich(
-      `<h2>Les conditions d'un projet rentable</h2><p>Le projet tient si trois conditions sont réunies : des besoins de chaleur simultanés aux rejets, une distance courte entre source et usage, une régulation du froid qui reste prioritaire. Notre étude croise les courbes de rejet et de besoin heure par heure avant de dimensionner l'échangeur et le stockage.</p>`,
-      'soft'
-    ),
-    b(
-      'cta',
-      { variant: 'light', layout: 'centered', title: 'Parlons de votre site', text: '', buttons: [contactBtn()] },
-      { background: 'soft', paddingTop: 'none', paddingBottom: 'lg' }
-    ),
-    rich(
-      `<h2>Dimensionner l'échangeur et le stockage</h2><p>La puissance valorisable dépend de la température de condensation du groupe et du mode de captage. La désurchauffe capte une fraction de la chaleur à haute température, adaptée à l'eau chaude sanitaire. La condensation totale capte l'essentiel des rejets à plus basse température, adaptée au chauffage par plancher ou par batterie. Un ballon tampon lisse l'écart entre les heures de production et les heures de besoin. La régulation donne toujours la priorité à la production de froid.</p>`
-    ),
-    rich(
-      `<h2>Comment se calcule la prime de la fiche BAT-TH-139</h2><p>Le volume de kWh cumac dépend du secteur d'activité du bâtiment, de la zone climatique, de l'usage de la chaleur et de la puissance thermique récupérée. L'étude de dimensionnement, datée et signée, fixe cette puissance : c'est la pièce que vérifie le contrôle.</p><p><a href="/expertises/financement-cee-reglementation/">Réglementation et financement CEE</a></p>`,
-      'soft'
-    ),
-    etudeCta(),
     note(CUMAC),
     faq('Questions fréquentes sur la récupération de chaleur', [
       [
@@ -433,6 +692,21 @@ function pac(): CmsBlock[] {
       ],
       parent: SOL,
       variant: 'solution',
+    }),
+    zigProof({
+      num: 'Preuve terrain',
+      title: 'Sortie du fioul sur 1 650 m²',
+      lead: 'Chez Intermarché, deux chaudières fioul ont été remplacées par une pompe à chaleur air/eau, associée à la récupération de chaleur et à la déstratification.',
+      bullets: ['1 650 m² chauffés', '14,8 GWh cumac estimés*', 'Sortie complète du fioul'],
+      moreHref: '/realisations/#intermarche',
+      card: {
+        href: '/realisations/#intermarche',
+        image: IMG('pompes-a-chaleur-air-eau-sortie-du-fioul-chez-intermarche.webp'),
+        imageAlt: 'PAC Intermarché',
+        tag: 'Grande distribution',
+        title: 'Intermarché : sortie du fioul',
+        metrics: ['1 650 m²', '14,8 GWh cumac*'],
+      },
     }),
     rich(
       `<h2>Pompe à chaleur tertiaire : remplacer une chaudière fossile</h2><p>Depuis le 1er janvier 2026, trois fiches CEE remplacent l'ancienne BAT-TH-113. Quand la pompe à chaleur remplace une chaudière au fioul, au charbon ou au gaz hors condensation, le Coup de pouce Chauffage multiplie la prime :</p>`
@@ -471,9 +745,26 @@ function pac(): CmsBlock[] {
       `<h2>Traitement d'air des surfaces de vente et des ateliers</h2><p>Les centrales de traitement d'air consomment pour chauffer, refroidir et déplacer l'air. La variation électronique de vitesse des ventilateurs (BAT-TH-112) et un pilotage par la GTB ajustent les débits à l'occupation réelle.</p><p><a href="/solutions/gtb-tertiaire-gtc/">Pilotage GTB / GTC</a></p>`,
       'soft'
     ),
-    rich(
-      `<h2>Réalisations en chauffage et traitement d'air</h2><ul><li><a href="/realisations/">Intermarché · Bourgogne-Franche-Comté</a> : Pompe à chaleur air/eau en remplacement de deux chaudières fioul, déstratification. 14,8 GWh cumac estimés*</li><li><a href="/realisations/">CEDIM · Centre-Val de Loire</a> : Déstratification d'air d'un magasin chauffé par aérothermes gaz. 2,1 GWh cumac estimés*</li></ul>`
-    ),
+    caseCards('Réalisations en chauffage et traitement d’air', [
+      {
+        anchor: 'intermarche',
+        image: IMG('pompes-a-chaleur-air-eau-sortie-du-fioul-chez-intermarche.webp'),
+        imageAlt: 'Pompes à chaleur air/eau Intermarché',
+        meta: 'Réalisation · Bourgogne-Franche-Comté · Grande distribution',
+        cardTitle: 'Intermarché : sortie du fioul',
+        enjeu: 'Pompe à chaleur air/eau en remplacement de deux chaudières fioul, déstratification.',
+        result: '14,8 GWh cumac estimés*',
+      },
+      {
+        anchor: 'cedim',
+        image: IMG('destratificateur-d-air-installe-dans-un-magasin-de-grande-hauteur.webp'),
+        imageAlt: 'Déstratification d’air CEDIM',
+        meta: 'Réalisation · Centre-Val de Loire · Négoce',
+        cardTitle: 'CEDIM : déstratification d’air',
+        enjeu: 'Déstratification d’air d’un magasin chauffé par aérothermes gaz.',
+        result: '2,1 GWh cumac estimés*',
+      },
+    ]),
     note(CUMAC),
     faq('Questions fréquentes sur la pompe à chaleur tertiaire', [
       [
@@ -515,17 +806,64 @@ function gtb(): CmsBlock[] {
       parent: SOL,
       variant: 'solution',
     }),
-    table('Le décret BACS : qui est concerné et quand', ['Bâtiment tertiaire', 'Échéance'], [
-      ['Chauffage ou climatisation > 290 kW', 'Depuis le 1er janvier 2025'],
-      ['Chauffage ou climatisation entre 70 et 290 kW (existant)', '1er janvier 2030'],
-      ['Bâtiment neuf > 70 kW', 'Dès la construction'],
-    ]),
-    rich(
-      `<p>Le système doit suivre, enregistrer et analyser les consommations par zone, conserver les données à l'échelle horaire et permettre l'arrêt manuel et la gestion autonome. Une dérogation est possible si le temps de retour sur investissement dépasse 10 ans, sur étude justificative.</p>`
+    zigProof({
+      num: 'Preuve terrain',
+      title: 'GTB de classe B sur un supermarché',
+      lead: 'Chez Intermarché, la GTB pilote la pompe à chaleur, la récupération de chaleur et la régulation du froid — un seul système pour plusieurs postes.',
+      bullets: ['Classe B', 'Conformité décret BACS', 'Associée au bouquet PAC + froid'],
+      moreHref: '/realisations/#intermarche',
+      flip: true,
+      card: {
+        href: '/realisations/#intermarche',
+        image: IMG('pilotage-gtb-decret-bacs-pexen.webp'),
+        imageAlt: 'Pilotage GTB',
+        tag: 'Pilotage',
+        title: 'Intermarché : GTB associée à la PAC',
+        metrics: ['Classe B', 'BAT-TH-116'],
+      },
+    }),
+    table(
+      'Le décret BACS : qui est concerné et quand',
+      ['Bâtiment tertiaire', 'Échéance'],
+      [
+        ['Chauffage ou climatisation > 290 kW', 'Depuis le 1er janvier 2025'],
+        ['Chauffage ou climatisation entre 70 et 290 kW (existant)', '1er janvier 2030'],
+        ['Bâtiment neuf > 70 kW', 'Dès la construction'],
+      ],
+      'Le système doit suivre, enregistrer et analyser les consommations par zone, conserver les données à l’échelle horaire et permettre l’arrêt manuel. Une dérogation est possible si le temps de retour sur investissement dépasse 10 ans, sur étude justificative.'
     ),
     rich(
-      `<h2>Classe A, B, C ou D : ce que change le niveau de GTB</h2><p>La norme NF EN ISO 52120-1 classe les systèmes de régulation de A (haute performance) à D (non performant). Dans un immeuble de bureaux, passer de la classe C à la classe A réduit d'environ 30 % la consommation thermique et de 13 % la consommation électrique. La fiche CEE BAT-TH-116 ne finance que les classes A et B.</p>`,
-      'soft'
+      `<div class="px-ultra-grade">
+  <header class="px-ultra-grade__head">
+    <span class="px-ultra-grade__eyebrow">Norme NF EN ISO 52120-1</span>
+    <h2 class="px-ultra-grade__title">Classe A, B, C ou D : ce que change le niveau de GTB</h2>
+    <p class="px-ultra-grade__lead">Dans un immeuble de bureaux, passer de la classe C à la classe A réduit d’environ 30 % la consommation thermique et de 13 % la consommation électrique.</p>
+  </header>
+  <div class="px-ultra-grade__grid">
+    <article class="px-ultra-grade__card px-ultra-grade__card--a">
+      <span class="px-ultra-grade__letter">A</span>
+      <h3>Haute performance</h3>
+      <p>Optimisation selon l’occupation, consignes dynamiques, supervision fine.</p>
+      <span class="px-ultra-grade__tag">Éligible BAT-TH-116</span>
+    </article>
+    <article class="px-ultra-grade__card px-ultra-grade__card--b">
+      <span class="px-ultra-grade__letter">B</span>
+      <h3>Performant</h3>
+      <p>Souvent suffisant pour le décret BACS et la prime CEE.</p>
+      <span class="px-ultra-grade__tag">Éligible BAT-TH-116</span>
+    </article>
+    <article class="px-ultra-grade__card px-ultra-grade__card--c">
+      <span class="px-ultra-grade__letter">C</span>
+      <h3>Standard</h3>
+      <p>Régulation basique, peu d’optimisation. Hors financement CEE GTB.</p>
+    </article>
+    <article class="px-ultra-grade__card px-ultra-grade__card--d">
+      <span class="px-ultra-grade__letter">D</span>
+      <h3>Non performant</h3>
+      <p>Pas de pilotage réel. À remplacer pour gagner et se mettre en conformité.</p>
+    </article>
+  </div>
+</div>`
     ),
     etudeCta(),
     solCards(
@@ -564,17 +902,27 @@ function gtb(): CmsBlock[] {
       'Froid commercial : supervision des températures et des alarmes.',
       'Eau chaude sanitaire : production et bouclage selon les besoins.',
     ]),
-    b(
-      'cta',
-      { variant: 'light', layout: 'centered', title: 'Parlons de votre projet', text: '', buttons: [contactBtn()] },
-      { background: 'white', paddingTop: 'md', paddingBottom: 'md' }
-    ),
+    tmBlock({
+      eyebrow: 'Exploitation',
+      title: 'Après l’installation',
+      html: `<p>Une GTB perd son efficacité si personne ne l’exploite. Nous formons vos équipes techniques, ajustons les réglages à chaque changement de saison et remettons un bilan comparant les consommations avant et après mise en service.</p>`,
+      image: IMG('ingenieur-pexen-sur-site-ingenierie-et-performance-energetique.webp'),
+      imageAlt: 'Ingénieur PEXEN en supervision de GTB',
+      bg: 'soft',
+    }),
     rich(
-      `<h2>Après l'installation</h2><p>Une GTB perd son efficacité si personne ne l'exploite. Nous formons vos équipes techniques, ajustons les réglages à chaque changement de saison et remettons un bilan comparant les consommations avant et après mise en service.</p>`,
-      'soft'
-    ),
-    rich(
-      `<h2>Réalisation en pilotage</h2><ul><li><a href="/realisations/">Intermarché · Bourgogne-Franche-Comté</a> : GTB de classe B associée à la pompe à chaleur, à la récupération de chaleur et à la régulation du froid. 14,8 GWh cumac estimés*</li></ul>`
+      `<div class="px-ultra-case-list px-ultra-case-list--solo">
+  <a id="intermarche" class="px-ultra-case-card" href="/realisations/#intermarche">
+    <div class="px-ultra-case-card__media"><img src="${IMG('pompes-a-chaleur-air-eau-sortie-du-fioul-chez-intermarche.webp')}" alt="GTB et sortie du fioul chez Intermarché" loading="lazy" width="640" height="400" /></div>
+    <div class="px-ultra-case-card__body">
+      <p class="px-ultra-case-card__meta">Réalisation · Bourgogne-Franche-Comté · Grande distribution</p>
+      <h3 class="px-ultra-case-card__title">Intermarché : GTB de classe B associée à la PAC et au froid</h3>
+      <p class="px-ultra-case-card__enjeu">GTB de classe B couplée à la pompe à chaleur, à la récupération de chaleur et à la régulation du froid.</p>
+      <p class="px-ultra-case-card__result">14,8 GWh cumac d’économies d’énergie estimées*</p>
+      <span class="px-ultra-case-card__cta">Voir le projet <span aria-hidden="true">→</span></span>
+    </div>
+  </a>
+</div>`
     ),
     note(CUMAC),
     faq('Questions fréquentes sur la GTB tertiaire', [
@@ -621,6 +969,21 @@ function isolation(): CmsBlock[] {
       parent: SOL,
       variant: 'solution',
     }),
+    zigProof({
+      num: 'Preuve terrain',
+      title: 'Isolation et régulation sur toiture-terrasse',
+      lead: 'Sur Carrefour Market, l’isolation de la toiture-terrasse a été combinée à la régulation du froid et à la récupération de chaleur.',
+      bullets: ['BAT-EN-107', 'Bouquet multi-fiches', '30,6 GWh cumac estimés*'],
+      moreHref: '/realisations/#carrefour-market',
+      card: {
+        href: '/realisations/#carrefour-market',
+        image: IMG('isolation-technique-d-une-toiture-terrasse-par-pexen.webp'),
+        imageAlt: 'Isolation toiture-terrasse',
+        tag: 'Isolation',
+        title: 'Carrefour Market : toiture et froid',
+        metrics: ['BAT-EN-107', '30,6 GWh cumac*'],
+      },
+    }),
     checklist('Où se perd la chaleur d’un site', [
       'Réseaux de distribution en chaufferie, en galerie technique ou en faux plafond.',
       'Points singuliers : vannes, brides, filtres, pompes, rarement isolés après une intervention de maintenance.',
@@ -648,10 +1011,20 @@ function isolation(): CmsBlock[] {
       },
     ]),
     etudeCta(),
-    rich(
-      `<h2>Repérer, chiffrer, isoler</h2><p>Nous relevons chaque tronçon et chaque point singulier : diamètre, longueur, température du fluide, ambiance. Une thermographie infrarouge localise les pertes invisibles. Le chiffrage classe les actions par temps de retour, CEE déduits.</p><p><a href="/notre-approche/">Notre approche</a></p>`,
-      'soft'
-    ),
+    tmBlock({
+      eyebrow: 'Notre approche',
+      title: 'Repérer, chiffrer, isoler',
+      html: `<p>Nous relevons chaque tronçon et chaque point singulier : diamètre, longueur, température du fluide, ambiance. Une thermographie infrarouge localise les pertes invisibles. Le chiffrage classe les actions par temps de retour, CEE déduits.</p>`,
+      image: IMG('isolation-technique-calorifugeage-pexen.webp'),
+      imageAlt: 'Isolation technique et calorifugeage par PEXEN',
+      bullets: [
+        'Relevé tronçon par tronçon et points singuliers',
+        'Thermographie infrarouge des pertes',
+        'Chiffrage par temps de retour, CEE déduits',
+      ],
+      button: button('Découvrir notre approche', '/notre-approche/', 'secondary', 'arrow'),
+      bg: 'soft',
+    }),
     rich(
       `<h2>Les réseaux à isoler en priorité</h2><p>Plus le fluide est chaud et plus la ligne fonctionne longtemps, plus l'isolation technique rapporte. Viennent d'abord la vapeur et l'eau surchauffée, puis l'eau chaude de chauffage et de process. Sur les réseaux d'eau glacée, l'isolation limite aussi la condensation et la corrosion.</p>`
     ),
@@ -677,9 +1050,18 @@ function isolation(): CmsBlock[] {
       `<h2>Isolation technique et décret tertiaire</h2><p>Dans un magasin ou un entrepôt de plain-pied, la toiture représente la plus grande surface d'échange avec l'extérieur. L'isolation d'une toiture-terrasse réduit à la fois les besoins de chauffage en hiver et les apports de chaleur en été, qui pèsent sur la climatisation et sur le froid commercial. C'est une action durable : la fiche BAT-EN-107 retient une durée de vie conventionnelle de 30 ans.</p>`,
       'soft'
     ),
-    rich(
-      `<h2>Réalisation en isolation technique</h2><ul><li><a href="/realisations/">Carrefour Market · Île-de-France</a> : Isolation de la toiture-terrasse du magasin, associée à la régulation du froid et à la récupération de chaleur. 30,6 GWh cumac estimés*</li></ul>`
-    ),
+    caseCards('Réalisation en isolation technique', [
+      {
+        anchor: 'carrefour-market',
+        image: IMG('isolation-technique-d-une-toiture-terrasse-par-pexen.webp'),
+        imageAlt: 'Isolation de toiture-terrasse Carrefour Market',
+        meta: 'Réalisation · Île-de-France · Grande distribution',
+        cardTitle: 'Carrefour Market : isolation de toiture-terrasse',
+        enjeu:
+          'Isolation de la toiture-terrasse du magasin, associée à la régulation du froid et à la récupération de chaleur.',
+        result: '30,6 GWh cumac estimés*',
+      },
+    ]),
     note(CUMAC),
     faq('Questions fréquentes sur l’isolation technique', [
       [
@@ -716,6 +1098,21 @@ function industrie(): CmsBlock[] {
       parent: SEC,
       variant: 'sector',
     }),
+    zigProof({
+      num: 'Référence industrie',
+      title: 'Chaufferie vapeur et froid process',
+      lead: 'Sur un site pharmaceutique, nous étudions les utilités en continu : vapeur, froid, réseaux — avec les fiches IND-UT adaptées.',
+      bullets: ['Chaleur fatale', 'Froid process', 'Calorifugeage'],
+      moreHref: '/realisations/#colorcon',
+      card: {
+        href: '/realisations/#colorcon',
+        image: IMG('chaufferie-vapeur-d-un-site-industriel-efficacite-energetique-industrielle.webp'),
+        imageAlt: 'Chaufferie vapeur Colorcon',
+        tag: 'Industrie',
+        title: 'Colorcon : utilités industrielles',
+        metrics: ['IND-UT', 'Process continu'],
+      },
+    }),
     solCards(
       'Vos enjeux industriels',
       [
@@ -749,19 +1146,48 @@ function industrie(): CmsBlock[] {
       ['Pilotage', 'Indicateurs de performance', 'IND-UT-134'],
     ]),
     etudeCta(),
-    rich(
-      `<h2>Une démarche adaptée aux contraintes industrielles</h2><p>Le relevé s'appuie sur vos données de comptage et sur des mesures ponctuelles : puissances, températures, temps de fonctionnement. L'étude classe les actions par temps de retour, CEE déduits. Les audits réglementaires sont conduits avec notre partenaire Leo Energy, qualifié OPQIBI 1717 pour l'industrie.</p><p><a href="/notre-approche/">Notre approche</a></p>`,
-      'soft'
-    ),
+    tmBlock({
+      eyebrow: 'Notre approche',
+      title: 'Une démarche adaptée aux contraintes industrielles',
+      html: `<p>Le relevé s’appuie sur vos données de comptage et sur des mesures ponctuelles : puissances, températures, temps de fonctionnement. L’étude classe les actions par temps de retour, CEE déduits. Les audits réglementaires sont conduits avec notre partenaire Leo Energy, qualifié OPQIBI 1717 pour l’industrie.</p>`,
+      image: IMG('technicien-pexen-inspectant-une-installation-industrielle.webp'),
+      imageAlt: 'Technicien PEXEN inspectant une installation industrielle',
+      bullets: [
+        'Relevé sur données de comptage et mesures ponctuelles',
+        'Actions classées par temps de retour, CEE déduits',
+        'Audits OPQIBI 1717 via Leo Energy',
+        'Travaux calés sur vos arrêts techniques',
+      ],
+      button: button('Découvrir notre approche', '/notre-approche/', 'secondary', 'arrow'),
+      bg: 'soft',
+    }),
     checklist('Utilités industrielles : où se trouve le gisement', [
       'Froid process : régulation flottante, condensation haute efficacité, récupération de la chaleur rejetée.',
       'Air comprimé : fuites, pression de service, variation de vitesse, récupération de chaleur.',
       'Vapeur et eau chaude : brûleur micro-modulant, condensats, purgeurs, calorifugeage.',
       'Moteurs, pompes et ventilateurs : variation électronique de vitesse à charge variable.',
     ]),
-    rich(
-      `<h2>L'audit énergétique réglementaire</h2><p>Au-delà de 2,75 GWh consommés par an, l'audit énergétique devient obligatoire tous les quatre ans pour les entreprises sans système de management de l'énergie certifié. Mené avec notre partenaire Leo Energy, qualifié OPQIBI 1717 pour l'industrie, il ne s'arrête pas au rapport : chaque action recommandée est chiffrée avec sa fiche CEE et peut être réalisée par PEXEN.</p>`
-    ),
+    tmBlock({
+      eyebrow: 'Réglementation',
+      title: 'L’audit énergétique réglementaire',
+      html: `<p>Au-delà de 2,75 GWh consommés par an, l’audit énergétique devient obligatoire tous les quatre ans pour les entreprises sans système de management de l’énergie certifié. Mené avec notre partenaire Leo Energy, qualifié OPQIBI 1717 pour l’industrie, il ne s’arrête pas au rapport : chaque action recommandée est chiffrée avec sa fiche CEE et peut être réalisée par PEXEN.</p>`,
+      image: IMG('audit-energetique-en-environnement-industriel.webp'),
+      imageAlt: 'Audit énergétique en environnement industriel',
+      flip: true,
+      button: button('Parler de votre projet', '/contact/'),
+      bg: 'white',
+    }),
+    caseCards('Réalisation industrielle', [
+      {
+        anchor: 'colorcon',
+        image: IMG('chaufferie-vapeur-d-un-site-industriel-efficacite-energetique-industrielle.webp'),
+        imageAlt: 'Site industriel pharmaceutique Colorcon',
+        meta: 'Réalisation · Île-de-France · Industrie pharmaceutique',
+        cardTitle: 'Colorcon : chaufferie vapeur et froid process',
+        enjeu: 'Optimisation d’une chaufferie vapeur, de la production de froid et des réseaux de distribution.',
+        result: 'Utilités industrielles · fiches IND-UT',
+      },
+    ]),
     faq('Questions fréquentes sur l’efficacité énergétique industrielle', [
       [
         'Pouvez-vous intervenir pendant un arrêt technique court ?',
@@ -797,6 +1223,22 @@ function tertiaire(): CmsBlock[] {
       ],
       parent: SEC,
       variant: 'sector',
+    }),
+    zigProof({
+      num: 'Référence tertiaire',
+      title: 'Supermarché : sortie du fioul et GTB',
+      lead: 'Grande distribution : froid, chaleur, pilotage et CEE sur un même chantier, sans fermer le magasin.',
+      bullets: ['PAC air/eau', 'Récupération de chaleur', 'GTB classe B'],
+      moreHref: '/realisations/#intermarche',
+      flip: true,
+      card: {
+        href: '/realisations/#intermarche',
+        image: IMG('pompes-a-chaleur-air-eau-sortie-du-fioul-chez-intermarche.webp'),
+        imageAlt: 'Intermarché',
+        tag: 'Tertiaire',
+        title: 'Intermarché : 14,8 GWh cumac estimés*',
+        metrics: ['1 650 m²', '14,8 GWh cumac*'],
+      },
     }),
     solCards(
       'Vos enjeux dans le tertiaire',
@@ -859,9 +1301,35 @@ function tertiaire(): CmsBlock[] {
       `<h2>Propriétaires et exploitants : qui décide quoi</h2><p>Le décret tertiaire engage le propriétaire et l'occupant. Les équipements de l'exploitant, comme le froid commercial, relèvent souvent du locataire ; l'enveloppe et la chaufferie, du propriétaire. Nous construisons un plan d'actions qui sépare clairement les deux périmètres, pour que chacun déclare ses consommations et finance ses travaux.</p>`,
       'soft'
     ),
-    rich(
-      `<h2>Réalisations dans le tertiaire</h2><ul><li><a href="/realisations/">Intermarché · Bourgogne-Franche-Comté</a> : 14,8 GWh cumac estimés*</li><li><a href="/realisations/">Carrefour Market · Île-de-France</a> : 30,6 GWh cumac estimés* · objectif contractuel −40 %</li><li><a href="/realisations/">CEDIM · Centre-Val de Loire</a> : 2,1 GWh cumac estimés*</li></ul>`
-    ),
+    caseCards('Réalisations dans le tertiaire', [
+      {
+        anchor: 'intermarche',
+        image: IMG('pompes-a-chaleur-air-eau-sortie-du-fioul-chez-intermarche.webp'),
+        imageAlt: 'Intermarché efficacité énergétique tertiaire',
+        meta: 'Réalisation · Bourgogne-Franche-Comté · Grande distribution',
+        cardTitle: 'Intermarché · Bourgogne-Franche-Comté',
+        enjeu: 'PAC, récupération de chaleur, GTB et régulation du froid.',
+        result: '14,8 GWh cumac estimés*',
+      },
+      {
+        anchor: 'carrefour-market',
+        image: IMG('recuperation-de-chaleur-sur-la-centrale-froid-de-carrefour-market.webp'),
+        imageAlt: 'Carrefour Market efficacité énergétique tertiaire',
+        meta: 'Réalisation · Île-de-France · Grande distribution',
+        cardTitle: 'Carrefour Market · Île-de-France',
+        enjeu: 'Froid, chaleur et toiture sous contrat de performance.',
+        result: '30,6 GWh cumac estimés* · objectif contractuel −40 %',
+      },
+      {
+        anchor: 'cedim',
+        image: IMG('destratificateur-d-air-installe-dans-un-magasin-de-grande-hauteur.webp'),
+        imageAlt: 'CEDIM efficacité énergétique tertiaire',
+        meta: 'Réalisation · Centre-Val de Loire · Négoce',
+        cardTitle: 'CEDIM · Centre-Val de Loire',
+        enjeu: 'Déstratification d’air d’un magasin de grande hauteur.',
+        result: '2,1 GWh cumac estimés*',
+      },
+    ]),
     note(CUMAC),
     faq('Questions fréquentes sur l’efficacité énergétique tertiaire', [
       [
@@ -906,6 +1374,21 @@ function collectifs(): CmsBlock[] {
       ],
       parent: SEC,
       variant: 'sector',
+    }),
+    zigProof({
+      num: 'Référence collectifs',
+      title: 'Déstratification en grande hauteur',
+      lead: 'Un magasin chauffé par aérothermes gaz : l’air chaud stagne sous la toiture. Trois déstratificateurs ramènent la chaleur au sol.',
+      bullets: ['BAT-TH-142', '2,1 GWh cumac estimés*', 'Pose sans arrêt d’activité'],
+      moreHref: '/realisations/#cedim',
+      card: {
+        href: '/realisations/#cedim',
+        image: IMG('destratificateur-d-air-installe-dans-un-magasin-de-grande-hauteur.webp'),
+        imageAlt: 'CEDIM déstratification',
+        tag: 'Collectif / négoce',
+        title: 'CEDIM : ramener la chaleur au sol',
+        metrics: ['2,1 GWh cumac*', 'BAT-TH-142'],
+      },
     }),
     solCards(
       'Vos enjeux de bailleur ou de syndic',
@@ -1052,6 +1535,62 @@ const snap = await updateSnapshot((s) => {
     metaDescription:
       'Rénovation énergétique copropriété et logement social : sortie du fioul, chaufferie collective, équilibrage, dossiers CEE et AG.',
   });
+
+  upsert(
+    s.pages,
+    '/secteurs/',
+    'Secteurs',
+    [
+      hero({
+        eyebrow: 'Secteurs',
+        title: "Nos secteurs d'intervention",
+        highlight: 'Industrie, tertiaire, bâtiments collectifs',
+        intro:
+          "L'efficacité énergétique ne se traite pas de la même manière dans une usine, un supermarché ou une résidence. PEXEN intervient sur trois secteurs, avec des solutions et des priorités propres à chacun.",
+        image: IMG('installation-technique.webp'),
+        imageAlt: 'Intervention PEXEN sur site professionnel',
+        metrics: [
+          { value: '3 secteurs', label: 'industrie · tertiaire · collectif' },
+          { value: 'Sans arrêt', label: 'exploitation maintenue' },
+          { value: 'CEE', label: 'dossiers engagés avant devis' },
+        ],
+        parent: { label: 'PEXEN', link: '/' },
+        variant: 'sector',
+      }),
+      offerCards(
+        'Nos secteurs d’intervention',
+        [
+          {
+            title: 'Industrie',
+            text: 'Froid process, chaleur fatale, vapeur, calorifugeage — sans arrêt de production.',
+            image: IMG('efficacite-energetique-d-un-site-industriel.webp'),
+            link: '/secteurs/efficacite-energetique-industrielle/',
+          },
+          {
+            title: 'Tertiaire',
+            text: 'Grande distribution, bureaux, entrepôts : froid, GTB, chauffage, décret tertiaire.',
+            image: IMG('drive-froid-commercial-industriel.webp'),
+            link: '/secteurs/efficacite-energetique-tertiaire/',
+          },
+          {
+            title: 'Bâtiments collectifs',
+            text: 'Copropriétés et logement social : sortie du fioul, chaufferie, dossiers CEE et AG.',
+            image: IMG('chaufferie-de-batiments-collectifs-modernisee-par-pexen.webp'),
+            link: '/secteurs/renovation-energetique-copropriete/',
+          },
+        ],
+        3
+      ),
+      etudeCta(),
+      finalCta(),
+    ],
+    {
+      focusKeyphrase: 'efficacité énergétique secteurs',
+      seoTitle: 'Secteurs : industrie, tertiaire, collectif | PEXEN',
+      metaDescription:
+        'PEXEN intervient en industrie, tertiaire et bâtiments collectifs : solutions d’efficacité énergétique et financement CEE.',
+    }
+  );
 });
 
 for (const path of [

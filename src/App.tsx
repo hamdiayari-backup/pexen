@@ -64,7 +64,9 @@ export default function App() {
   }, [siteConfig, currentPath]);
 
   useEffect(() => {
-    if (currentPath.startsWith('/blog/')) return;
+    /* Listing /blog/ = page CMS ; seuls les articles /blog/:slug utilisent BlogPostView. */
+    const blogSlug = currentPath.startsWith('/blog/') ? currentPath.split('/').filter(Boolean)[1] : undefined;
+    if (blogSlug) return;
     let alive = true;
     const isHome = currentPath === '/' || currentPath === '';
     /* Invalide tout de suite l’ancienne page → skeleton visible (sauf home). */
@@ -122,14 +124,19 @@ export default function App() {
     const hashIndex = newPath.indexOf('#');
     const hash = hashIndex >= 0 ? newPath.slice(hashIndex) : '';
     const withoutHash = hashIndex >= 0 ? newPath.slice(0, hashIndex) : newPath;
-    let clean = normalize(withoutHash || '/');
-    const rule = (siteConfig?.redirects || []).find((r) => r.from === clean || r.from === withoutHash);
+    const qIndex = withoutHash.indexOf('?');
+    const pathOnly = qIndex >= 0 ? withoutHash.slice(0, qIndex) : withoutHash;
+    let query = qIndex >= 0 ? withoutHash.slice(qIndex) : '';
+    let clean = normalize(pathOnly || '/');
+    const rule = (siteConfig?.redirects || []).find((r) => r.from === clean || r.from === pathOnly || r.from === withoutHash);
     if (rule) {
       const targetHash = rule.to.includes('#') ? rule.to.slice(rule.to.indexOf('#')) : '';
-      clean = normalize(rule.to.split('#')[0]);
+      const targetQ = rule.to.includes('?') ? rule.to.slice(rule.to.indexOf('?'), rule.to.indexOf('#') >= 0 ? rule.to.indexOf('#') : undefined) : '';
+      clean = normalize(rule.to.split('?')[0].split('#')[0]);
+      if (targetQ) query = targetQ;
       if (!hash && targetHash) {
         try {
-          window.history.pushState({}, '', `${clean}${targetHash}`);
+          window.history.pushState({}, '', `${clean}${query}${targetHash}`);
         } catch {
           /* navigation bloquée */
         }
@@ -138,8 +145,11 @@ export default function App() {
         return;
       }
     }
+    if (IS_PREVIEW) {
+      query = query ? `${query}&cms-preview=1` : '?cms-preview=1';
+    }
     try {
-      window.history.pushState({}, '', `${IS_PREVIEW ? `${clean}?cms-preview=1` : clean}${hash}`);
+      window.history.pushState({}, '', `${clean}${query}${hash}`);
     } catch {
       /* navigation bloquée par le navigateur */
     }

@@ -9,6 +9,7 @@ import {
   UltraCmsCards,
   UltraCmsChecklist,
   UltraCmsContact,
+  UltraCmsCta,
   UltraCmsFaq,
   UltraCmsGallery,
   UltraCmsHero,
@@ -20,6 +21,7 @@ import {
   UltraCmsSimulator,
   UltraCmsStats,
   UltraCmsSteps,
+  UltraCmsTable,
   UltraCmsTextMedia,
 } from '../../themes/pexen-ultra/UltraCmsBlocks';
 import {
@@ -91,6 +93,8 @@ const ULTRA_RENDERERS: Partial<{ [K in BlockKind]: Renderer<K> }> = {
   stats: UltraCmsStats as Renderer<'stats'>,
   checklist: UltraCmsChecklist as Renderer<'checklist'>,
   panels: UltraCmsPanels as Renderer<'panels'>,
+  cta: UltraCmsCta as Renderer<'cta'>,
+  table: UltraCmsTable as Renderer<'table'>,
 };
 
 /** Habillage Maquette Amina — mêmes blocs CMS, UI fidèle à la proposition. */

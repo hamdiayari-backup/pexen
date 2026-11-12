@@ -39,14 +39,17 @@ const stripTags = (html: string) =>
     .replace(/\s+/g, ' ')
     .trim();
 
-const normalize = (s: string) =>
-  s
+const normalize = (s: string | null | undefined) =>
+  String(s ?? '')
     .toLowerCase()
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
     .replace(/[’']/g, ' ');
 
-const words = (s: string) => s.split(/\s+/).filter((w) => /[\p{L}\p{N}]/u.test(w));
+const words = (s: string | null | undefined) =>
+  String(s ?? '')
+    .split(/\s+/)
+    .filter((w) => /[\p{L}\p{N}]/u.test(w));
 
 function blocksToContent(blocks: CmsBlock[], extraText = ''): ContentModel {
   const htmlParts: string[] = [];
@@ -98,8 +101,11 @@ function scoreOf(checks: SeoCheck[]): number {
 const statusOf = (score: number) => (score >= 75 ? 'good' : score >= 50 ? 'ok' : 'bad') as SeoAnalysis['status'];
 
 export function analyzeContent(seo: SeoMeta, blocks: CmsBlock[], opts: { kind: 'page' | 'post'; extraText?: string; siteHost?: string }): SeoAnalysis {
-  const c = blocksToContent(blocks, opts.extraText);
-  const kp = seo.focusKeyphrase.trim();
+  const c = blocksToContent(blocks || [], opts.extraText);
+  const seoTitle = String(seo?.seoTitle ?? '');
+  const metaDescription = String(seo?.metaDescription ?? '');
+  const slug = String(seo?.slug ?? '');
+  const kp = String(seo?.focusKeyphrase ?? '').trim();
   const wc = words(c.text).length;
   const kpCount = countOccurrences(c.text, kp);
   const kpWords = kp ? words(kp).length : 1;
@@ -114,13 +120,13 @@ export function analyzeContent(seo: SeoMeta, blocks: CmsBlock[], opts: { kind: '
   if (!kp) {
     add('kp', 'seo', 'Expression clé principale', 'fail', 'Définissez l’expression sur laquelle cette page doit se positionner.');
   } else {
-    const inTitle = has(seo.seoTitle, kp);
-    const atStart = normalize(seo.seoTitle).startsWith(normalize(kp));
+    const inTitle = has(seoTitle, kp);
+    const atStart = normalize(seoTitle).startsWith(normalize(kp));
     add('kp-title', 'seo', 'Expression clé dans le titre SEO', inTitle ? (atStart ? 'pass' : 'warn') : 'fail',
       inTitle ? (atStart ? undefined : 'Idéalement placée en début de titre.') : `Ajoutez « ${kp} » au titre SEO.`);
-    add('kp-desc', 'seo', 'Expression clé dans la meta description', has(seo.metaDescription, kp) ? 'pass' : 'fail',
-      has(seo.metaDescription, kp) ? undefined : 'Google met en gras les termes recherchés dans la description.');
-    const slugHit = words(normalize(kp)).every((w) => normalize(seo.slug).includes(w.replace(/[^a-z0-9]/g, '')));
+    add('kp-desc', 'seo', 'Expression clé dans la meta description', has(metaDescription, kp) ? 'pass' : 'fail',
+      has(metaDescription, kp) ? undefined : 'Google met en gras les termes recherchés dans la description.');
+    const slugHit = words(normalize(kp)).every((w) => normalize(slug).includes(w.replace(/[^a-z0-9]/g, '')));
     add('kp-slug', 'seo', 'Expression clé dans l’URL', slugHit ? 'pass' : 'warn', slugHit ? undefined : 'Intégrez les mots-clés dans le slug.');
     const intro = c.paragraphs.slice(0, 2).join(' ') || c.text.slice(0, 400);
     add('kp-intro', 'seo', 'Expression clé dans l’introduction', has(intro, kp) ? 'pass' : 'fail',
@@ -139,10 +145,10 @@ export function analyzeContent(seo: SeoMeta, blocks: CmsBlock[], opts: { kind: '
     }
   }
 
-  const tl = seo.seoTitle.trim().length;
+  const tl = seoTitle.trim().length;
   add('title-len', 'seo', `Longueur du titre SEO (${tl} car.)`, tl >= 30 && tl <= 60 ? 'pass' : tl === 0 ? 'fail' : 'warn',
     tl < 30 ? 'Trop court : 30 à 60 caractères.' : tl > 60 ? 'Sera tronqué dans Google au-delà de ~60 caractères.' : undefined);
-  const dl = seo.metaDescription.trim().length;
+  const dl = metaDescription.trim().length;
   add('desc-len', 'seo', `Longueur de la meta description (${dl} car.)`, dl >= 120 && dl <= 160 ? 'pass' : dl === 0 ? 'fail' : 'warn',
     dl < 120 ? 'Trop courte : 120 à 160 caractères.' : dl > 160 ? 'Sera tronquée au-delà de 160 caractères.' : undefined);
   const minWords = opts.kind === 'post' ? 600 : 300;
@@ -199,9 +205,9 @@ export function analyzeContent(seo: SeoMeta, blocks: CmsBlock[], opts: { kind: '
 }
 
 export function analyzePageSeo(page: CmsPage): SeoAnalysis {
-  return analyzeContent(page.seo, page.blocks, { kind: 'page' });
+  return analyzeContent(page.seo || ({} as SeoMeta), page.blocks || [], { kind: 'page' });
 }
 
 export function analyzePostSeo(post: BlogPost): SeoAnalysis {
-  return analyzeContent(post.seo, post.blocks, { kind: 'post', extraText: post.excerpt });
+  return analyzeContent(post.seo || ({} as SeoMeta), post.blocks || [], { kind: 'post', extraText: post.excerpt });
 }

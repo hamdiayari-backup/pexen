@@ -174,8 +174,8 @@ export function UltraFooter({ onNavigate, onOpenCookies }: { onNavigate: (p: str
               </div>
               <p className="px-ultra-ft__baseline">Optimiser aujourd’hui. Performer demain.</p>
               <div className="px-ultra-ft__quali">
-                <img src="/themes/ultra-s/images/pexen/quali/qualipac.webp" alt="RGE QualiPAC" height={48} />
-                <img src="/themes/ultra-s/images/pexen/quali/qualisol.webp" alt="RGE Qualisol" height={48} />
+                <img src="/themes/ultra-s/images/pexen/quali/qualipac-navy.png?v=4" alt="RGE QualiPAC" height={48} />
+                <img src="/themes/ultra-s/images/pexen/quali/qualisol-navy.png?v=4" alt="RGE Qualisol" height={48} />
               </div>
               <p className="px-ultra-ft__about">
                 Des économies calculées, réalisées, démontrées. Conseil, ingénierie et suivi opérationnel pour l’industrie, le

@@ -130,6 +130,8 @@ export function UltraExpertisesSection({
     intro?: string;
     footerLabel?: string;
     footerLink?: string;
+    /** Colonnes desktop (2–5), défaut = nombre d’items */
+    columns?: number;
     items?: {
       num: string;
       title: string;
@@ -194,7 +196,9 @@ export function UltraExpertisesSection({
   const eyebrow = override?.eyebrow || 'Expertises';
   const title = override?.title || 'Cinq expertises, une seule exigence';
 
-  const colCount = Math.min(Math.max(mainItems.length, 2), 5);
+  const colCount = override?.columns
+    ? Math.min(Math.max(override.columns, 1), 5)
+    : Math.min(Math.max(mainItems.length, 2), 5);
   const renderCard = (it: (typeof items)[number]) => {
     const clickable = Boolean(it.path && it.path !== '#' && it.ctaLabel !== '');
     return (
@@ -339,11 +343,11 @@ export function UltraDiagonalSkillsSection({
       <div className="container">
         <div className="row align-items-center gy-5">
           <div className="col-lg-6">
-            <div className="px-ultra-diag">
+            <div className="px-ultra-diag-stairs">
               {imgs.map((img, i) => (
                 <div
                   key={img.image + i}
-                  className={`px-ultra-diag__card px-ultra-diag__card--${i + 1} wow fadeInUp`}
+                  className={`px-ultra-diag-stairs__card px-ultra-diag-stairs__card--${i + 1} wow fadeInUp`}
                   data-wow-delay={`${0.1 + i * 0.15}s`}
                 >
                   <img className="anim-zoom" src={img.image} alt={img.caption || `Levier ${i + 1}`} />
@@ -474,9 +478,15 @@ export function UltraMethodTimelineSection({
   const steps = raw.map((s, i) => ({ ...s, final: i === raw.length - 1 }));
   const eyebrow = override?.eyebrow || 'Votre projet';
   const title = override?.title || 'Votre projet en 5 étapes, de l’étude au suivi';
+  /* CMS : intro/buttons vides = rien afficher (évite le fallback « Notre approche » sur /notre-approche/). */
   const closing =
-    override?.intro ||
-    'Un seul interlocuteur du premier relevé jusqu’à la prise en charge complète du dossier. Vos équipes n’ont pas à coordonner les intervenants.';
+    override && 'intro' in override
+      ? (override.intro || '').trim()
+      : 'Un seul interlocuteur du premier relevé jusqu’à la prise en charge complète du dossier. Vos équipes n’ont pas à coordonner les intervenants.';
+  const ctaButtons =
+    override && 'buttons' in override
+      ? override.buttons || []
+      : [{ label: 'Notre approche', link: '/notre-approche/' }];
   const phaseBanner = override?.phaseBanner;
 
   return (
@@ -510,21 +520,20 @@ export function UltraMethodTimelineSection({
           ))}
         </div>
         {closing ? <p className="px-ultra-timeline-closing">{closing}</p> : null}
-        <div className="mt-5 text-center d-flex flex-wrap justify-content-center gap-3">
-          {(override?.buttons?.length
-            ? override.buttons
-            : [{ label: 'Notre approche', link: '/notre-approche/' }]
-          ).map((btn) => (
-            <button
-              key={`${btn.link}-${btn.label}`}
-              type="button"
-              onClick={() => onNavigate(btn.link)}
-              className="btn btn-outline px-cta px-cta--l2 px-cta--l2-on-dark text-white border-white"
-            >
-              {btn.label} <i className="fa fa-arrow-right ms-1" /> <span />
-            </button>
-          ))}
-        </div>
+        {ctaButtons.length ? (
+          <div className="mt-5 text-center d-flex flex-wrap justify-content-center gap-3">
+            {ctaButtons.map((btn) => (
+              <button
+                key={`${btn.link}-${btn.label}`}
+                type="button"
+                onClick={() => onNavigate(btn.link)}
+                className="btn btn-outline px-cta px-cta--l2 px-cta--l2-on-dark text-white border-white"
+              >
+                {btn.label} <i className="fa fa-arrow-right ms-1" /> <span />
+              </button>
+            ))}
+          </div>
+        ) : null}
       </div>
     </section>
   );
@@ -551,20 +560,6 @@ export interface PublicProjectDto {
 
 const FALLBACK_PROJECTS: PublicProjectDto[] = [
   {
-    id: 'carrefour',
-    path: '/realisations/carrefour-market-recuperation-de-chaleur/',
-    title: 'Carrefour Market',
-    client: 'Carrefour Market',
-    location: 'Île-de-France',
-    sector: 'Grande distribution',
-    cumac: '30,6 GWh cumac',
-    solution: '535 kW de chaleur récupérée sur le froid commercial',
-    summary: 'Île-de-France · Grande distribution',
-    image: '/themes/ultra-s/images/pexen/realisation-carrefour-market-facade.webp',
-    results: ['30,6 GWh cumac* · 5 opérations · objectif −40 %* sur 10 ans'],
-    featured: true,
-  },
-  {
     id: 'intermarche',
     path: '/realisations/intermarche-sortie-du-fioul/',
     title: 'Intermarché',
@@ -574,8 +569,22 @@ const FALLBACK_PROJECTS: PublicProjectDto[] = [
     cumac: '14,8 GWh cumac',
     solution: '1 650 m² chauffés et sortis du fioul',
     summary: 'Bourgogne-Franche-Comté · Grande distribution',
-    image: '/themes/ultra-s/images/pexen/realisation-intermarche-facade.webp',
-    results: ['240 kW récupérés · 14,8 GWh cumac* · 6 opérations'],
+    image: '/themes/ultra-s/images/pexen/pompes-a-chaleur-air-eau-sortie-du-fioul-chez-intermarche.webp',
+    results: ['14,8 GWh cumac* · sortie complète du fioul'],
+    featured: true,
+  },
+  {
+    id: 'carrefour',
+    path: '/realisations/carrefour-market-recuperation-de-chaleur/',
+    title: 'Carrefour Market',
+    client: 'Carrefour Market',
+    location: 'Île-de-France',
+    sector: 'Grande distribution',
+    cumac: '30,6 GWh cumac',
+    solution: 'Froid, chaleur et toiture sous contrat de performance',
+    summary: 'Île-de-France · Grande distribution',
+    image: '/themes/ultra-s/images/pexen/recuperation-de-chaleur-sur-la-centrale-froid-de-carrefour-market.webp',
+    results: ['30,6 GWh cumac* · objectif −40 %*'],
     featured: true,
   },
   {
@@ -586,10 +595,24 @@ const FALLBACK_PROJECTS: PublicProjectDto[] = [
     location: 'Centre-Val de Loire',
     sector: 'Négoce et entrepôt',
     cumac: '2,1 GWh cumac',
-    solution: '9 m de hauteur traitée par déstratification',
+    solution: 'Déstratification d’air en grande hauteur',
     summary: 'Centre-Val de Loire · Négoce et entrepôt',
-    image: '/themes/ultra-s/images/pexen/realisation-cedim-batiment.webp',
-    results: ['1 213 m² · 2,1 GWh cumac*'],
+    image: '/themes/ultra-s/images/pexen/destratificateur-d-air-installe-dans-un-magasin-de-grande-hauteur.webp',
+    results: ['2,1 GWh cumac*'],
+    featured: true,
+  },
+  {
+    id: 'colorcon',
+    path: '/realisations/colorcon-efficacite-energetique-industrielle/',
+    title: 'Colorcon',
+    client: 'Colorcon',
+    location: 'Île-de-France',
+    sector: 'Industrie',
+    cumac: '',
+    solution: 'Chaufferie vapeur et froid process',
+    summary: 'Île-de-France · Industrie pharmaceutique',
+    image: '/themes/ultra-s/images/pexen/chaufferie-vapeur-d-un-site-industriel-efficacite-energetique-industrielle.webp',
+    results: ['Utilités industrielles · fiches IND-UT'],
     featured: true,
   },
 ];
@@ -606,22 +629,34 @@ export function UltraRealisationsMixSection({
 }) {
   const [projects, setProjects] = useState<PublicProjectDto[]>(FALLBACK_PROJECTS);
   const [sectorFilter, setSectorFilter] = useState<string>('all');
-  const showFilters = override?.showFilters ?? showAll;
-  const secEyebrow = override?.eyebrow || 'Nos réalisations';
-  const secTitle = override?.title || 'Des projets concrets qui performent — commerce, industrie, tertiaire.';
 
   useEffect(() => {
     let alive = true;
     fetch('/api/public/projects')
       .then((r) => (r.ok ? r.json() : null))
-      .then((rows: PublicProjectDto[] | null) => {
-        if (alive && Array.isArray(rows) && rows.length > 0) setProjects(rows);
+      .then((data: PublicProjectDto[] | null) => {
+        if (!alive || !Array.isArray(data) || data.length === 0) return;
+        setProjects(
+          data.map((p) => ({
+            ...p,
+            id: p.id || p.path,
+            title: p.title || p.client || 'Réalisation',
+            image: p.image || FALLBACK_PROJECTS[0].image,
+            results: p.results || [],
+            solution: p.solution || p.title || '',
+            summary: p.summary || [p.location, p.sector].filter(Boolean).join(' · '),
+          }))
+        );
       })
       .catch(() => undefined);
     return () => {
       alive = false;
     };
   }, []);
+  /* Listing /realisations/ : grille + onglets filtre. Teaser homepage : 3 cartes sans filtres. */
+  const showFilters = showAll ? override?.showFilters !== false : override?.showFilters === true;
+  const secEyebrow = override?.eyebrow || 'Nos réalisations';
+  const secTitle = override?.title || 'Des projets concrets qui performent — commerce, industrie, tertiaire.';
 
   const sectors = ['all', ...Array.from(new Set(projects.map((p) => p.sector).filter(Boolean)))];
   const filtered = sectorFilter === 'all' ? projects : projects.filter((p) => p.sector === sectorFilter);
@@ -629,6 +664,7 @@ export function UltraRealisationsMixSection({
 
   /* Sur la page /realisations/ le pageHeader CMS porte déjà le titre — on allège le bandeau interne */
   const listingPage = showAll;
+  const colClass = listingPage ? 'col-lg-6 col-md-6' : 'col-lg-4 col-md-6';
   return (
     <section
       id="realisations"
@@ -647,6 +683,7 @@ export function UltraRealisationsMixSection({
           {listingPage ? (
             <>
               <span className="sub-title wow fadeInUp text-white border-white border-opacity-25">{secEyebrow}</span>
+              <h2 className="sec-title text-white mb-0 mt-2">{secTitle}</h2>
               {override?.intro ? <p className="text-white-50 mb-0 mt-2 mx-auto" style={{ maxWidth: 560 }}>{override.intro}</p> : null}
             </>
           ) : (
@@ -655,22 +692,16 @@ export function UltraRealisationsMixSection({
               <h2 className="sec-title text-white mb-0">{secTitle}</h2>
             </div>
           )}
-          {showAll && showFilters ? (
-            <div className="d-flex flex-wrap gap-2 justify-content-center mt-3">
+          {showFilters ? (
+            <div className="px-ultra-real-sec__tabs d-flex flex-wrap gap-2 justify-content-center mt-4" role="tablist" aria-label="Filtrer les réalisations">
               {sectors.map((s) => (
                 <button
                   key={s}
                   type="button"
+                  role="tab"
+                  aria-selected={sectorFilter === s}
                   onClick={() => setSectorFilter(s)}
-                  className="btn btn-sm"
-                  style={{
-                    borderRadius: 999,
-                    padding: '0.45rem 1rem',
-                    fontWeight: 700,
-                    background: sectorFilter === s ? 'var(--px-accent)' : 'rgba(255,255,255,0.12)',
-                    color: sectorFilter === s ? 'var(--px-navy)' : '#fff',
-                    border: '1px solid rgba(255,255,255,0.2)',
-                  }}
+                  className={`px-ultra-real-sec__tab${sectorFilter === s ? ' is-active' : ''}`}
                 >
                   {s === 'all' ? `Tous (${projects.length})` : s}
                 </button>
@@ -688,8 +719,19 @@ export function UltraRealisationsMixSection({
             const headline = c.solution || c.title;
             const detail = techLines[0] || (c.cumac ? (c.cumac.includes('*') ? c.cumac : `${c.cumac}*`) : '');
             return (
-            <div key={c.path || c.title} className="col-lg-4 col-md-6">
-              <article className="px-ultra-tera-card" onClick={() => onNavigate(c.path || '/realisations/')} role="button" tabIndex={0}>
+            <div key={c.id || c.path || c.title} className={colClass}>
+              <article
+                className="px-ultra-tera-card"
+                onClick={() => onNavigate(c.path || '/realisations/')}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    onNavigate(c.path || '/realisations/');
+                  }
+                }}
+                role="button"
+                tabIndex={0}
+              >
                 <img
                   src={c.image}
                   alt={c.client || c.title}
@@ -702,13 +744,18 @@ export function UltraRealisationsMixSection({
                   <p className="fw-semibold mb-2" style={{ color: 'var(--px-navy)' }}>{headline}</p>
                   {detail ? <p className="small mb-0">{detail}</p> : null}
                   <div className="px-ultra-tera-card__foot">
-                    <strong>Voir la réalisation →</strong>
+                    <strong>Voir le projet →</strong>
                   </div>
                 </div>
               </article>
             </div>
             );
           })}
+          {list.length === 0 ? (
+            <div className="col-12">
+              <p className="text-center text-white-50 mb-0">Aucune réalisation dans cette catégorie.</p>
+            </div>
+          ) : null}
         </div>
         {!showAll ? (
           <div className="text-center mt-5">
@@ -734,20 +781,20 @@ type PreuvesPartner = string | { name: string; logo?: string };
 type PreuvesQuali = { label: string; alt?: string; logo?: string; caption?: string };
 
 const PREUVES_CLIENTS: PreuvesPartner[] = [
-  { name: 'Intermarché', logo: '/themes/ultra-s/images/pexen/partners/intermarche.webp' },
-  { name: 'Carrefour Market', logo: '/themes/ultra-s/images/pexen/partners/carrefour-market.webp' },
-  { name: 'CEDIM', logo: '/themes/ultra-s/images/pexen/partners/cedim.webp' },
-  { name: 'Colorcon', logo: '/themes/ultra-s/images/pexen/partners/colorcon.webp' },
+  { name: 'Intermarché', logo: '/themes/ultra-s/images/pexen/partners/intermarche.png' },
+  { name: 'Carrefour Market', logo: '/themes/ultra-s/images/pexen/partners/carrefour-market.png' },
+  { name: 'CEDIM', logo: '/themes/ultra-s/images/pexen/partners/cedim.png' },
+  { name: 'Colorcon', logo: '/themes/ultra-s/images/pexen/partners/colorcon.png' },
 ];
 
 const PREUVES_QUALI: PreuvesQuali[] = [
-  { label: 'RGE QualiPAC', alt: 'Qualification RGE QualiPAC de PEXEN', logo: '/themes/ultra-s/images/pexen/quali/qualipac.webp' },
-  { label: 'RGE Qualisol', alt: 'Qualification RGE Qualisol de PEXEN', logo: '/themes/ultra-s/images/pexen/quali/qualisol.webp' },
-  { label: 'OPQIBI', alt: 'Qualifications OPQIBI de PEXEN', logo: '/themes/ultra-s/images/pexen/quali/opqibi.webp', caption: 'Via notre partenaire' },
+  { label: 'RGE QualiPAC', alt: 'Qualification RGE QualiPAC de PEXEN', logo: '/themes/ultra-s/images/pexen/quali/qualipac.png?v=4' },
+  { label: 'RGE Qualisol', alt: 'Qualification RGE Qualisol de PEXEN', logo: '/themes/ultra-s/images/pexen/quali/qualisol.png?v=4' },
+  { label: 'OPQIBI', alt: 'Qualifications OPQIBI de PEXEN', logo: '/themes/ultra-s/images/pexen/quali/opqibi.png', caption: 'Via notre partenaire' },
   {
     label: 'Assurance décennale',
     alt: 'Qualification Assurance décennale',
-    logo: '/themes/ultra-s/images/pexen/quali/assurance-decennale.webp?v=2',
+    logo: '/themes/ultra-s/images/pexen/quali/assurance-decennale.png',
   },
 ];
 
@@ -866,7 +913,7 @@ export function UltraPreuvesSection({
           })}
         </div>
 
-        <p className="px-ultra-preuves__quali-title">Qualifiés et assurés</p>
+        <p className="px-ultra-preuves__kicker px-ultra-preuves__kicker--after">Qualifiés et assurés</p>
         <a href="#qualifications" className="px-ultra-preuves__quali" onClick={(e) => {
           e.preventDefault();
           document.getElementById('qualifications')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -1063,16 +1110,30 @@ function isFrPhone(raw: string): boolean {
   return /^(?:\+33|0033)[1-9]\d{8}$/.test(compact) || /^0[1-9]\d{8}$/.test(compact);
 }
 
-function trackLead(profil: string, typeSite: string) {
+function readDemandeParam(): string {
+  try {
+    return new URLSearchParams(window.location.search).get('demande')?.trim().toLowerCase() || '';
+  } catch {
+    return '';
+  }
+}
+
+function trackLead(profil: string, typeSite: string, demande = '') {
   try {
     const saved = localStorage.getItem('pexen_cookie_consent');
     if (!saved) return;
     const parsed = JSON.parse(saved) as { analytics?: boolean };
     if (!parsed.analytics) return;
     const w = window as Window & { gtag?: (...args: unknown[]) => void };
-    const params = { profil, type_site: typeSite, page: window.location.pathname };
+    const params = {
+      profil,
+      type_site: typeSite,
+      page: window.location.pathname,
+      demande: demande || undefined,
+    };
     w.gtag?.('event', 'generate_lead', params);
     w.gtag?.('event', 'lead_envoye', params);
+    if (demande === 'etude') w.gtag?.('event', 'demande_etude', params);
   } catch {
     /* ignore */
   }
@@ -1099,10 +1160,14 @@ export function UltraProgressiveContactSection({
   };
 }) {
   const info = usePexenInfo();
-  const formTitle = override?.title || 'Parlons de votre projet';
+  const [demande, setDemande] = useState(() => (typeof window !== 'undefined' ? readDemandeParam() : ''));
+  const isEtude = demande === 'etude';
+  const formTitle = override?.title || (isEtude ? 'Demander une étude' : 'Parlons de votre projet');
   const formIntro =
     override?.intro ||
-    'Décrivez votre site, vos installations et vos échéances. Prise de contact sous 48 h ouvrées par un ingénieur PEXEN, pour qualifier votre besoin et définir les prochaines étapes.';
+    (isEtude
+      ? 'Décrivez votre site et vos installations. Un ingénieur PEXEN dimensionne le gisement et vous répond sous 48 h ouvrées.'
+      : 'Décrivez votre site, vos installations et vos échéances. Prise de contact sous 48 h ouvrées par un ingénieur PEXEN, pour qualifier votre besoin et définir les prochaines étapes.');
   const privacyPath = override?.privacyPath || '/politique-de-confidentialite/';
   const hidePhone = override?.hidePhone === true || !override?.phoneHint;
   const afterItems =
@@ -1122,6 +1187,13 @@ export function UltraProgressiveContactSection({
   const TitleTag: 'h1' | 'h2' = isContactPage ? 'h1' : 'h2';
 
   useEffect(() => {
+    const sync = () => setDemande(readDemandeParam());
+    sync();
+    window.addEventListener('popstate', sync);
+    return () => window.removeEventListener('popstate', sync);
+  }, []);
+
+  useEffect(() => {
     let alive = true;
     fetch(`/api/public/forms/${encodeURIComponent(formId)}`)
       .then((r) => (r.ok ? r.json() : null))
@@ -1133,6 +1205,19 @@ export function UltraProgressiveContactSection({
       alive = false;
     };
   }, [formId]);
+
+  /* ?demande=etude : préremplit le champ projet + suivi Analytics distinct. */
+  useEffect(() => {
+    if (!isEtude) return;
+    setValues((prev) => {
+      if (prev.projet) return prev;
+      return {
+        ...prev,
+        projet:
+          'Demande d’étude énergétique : relever les installations, chiffrer le gisement et les CEE, proposer un plan d’actions.',
+      };
+    });
+  }, [isEtude]);
 
   const fields: ContactFormField[] = formCfg?.fields?.length ? formCfg.fields : BRIEF_CONTACT_FIELDS;
 
@@ -1236,7 +1321,11 @@ export function UltraProgressiveContactSection({
 
     const honeypot = formCfg?.honeypotField || 'website_url';
     const hpInput = (e.currentTarget as HTMLFormElement).elements.namedItem(honeypot) as HTMLInputElement | null;
-    const payload: Record<string, unknown> = { ...values, [honeypot]: hpInput?.value || '' };
+    const payload: Record<string, unknown> = {
+      ...values,
+      [honeypot]: hpInput?.value || '',
+      ...(demande ? { demande } : {}),
+    };
     setSubmitting(true);
     try {
       const res = await fetch(`/api/public/forms/${encodeURIComponent(formId)}/submit`, {
@@ -1246,7 +1335,7 @@ export function UltraProgressiveContactSection({
       });
       const body = await res.json().catch(() => null);
       if (res.ok) {
-        trackLead(String(values.vousEtes || ''), String(values.typeSite || ''));
+        trackLead(String(values.vousEtes || ''), String(values.typeSite || ''), demande);
         setStatus({ kind: 'ok', text: formCfg?.successMessage || SUCCESS_COPY });
         setValues({});
         window.setTimeout(() => onNavigate(body?.redirect || formCfg?.successPath || '/contact/merci/'), 1600);
@@ -1558,17 +1647,110 @@ type GarantCard = {
   icon?: string;
   logos?: GarantLogo[];
   items: string[];
+  /** Descriptions CMS (checklist entries.text), alignées sur items */
+  itemDetails?: (string | undefined)[];
 };
+
+const LIVRABLE_BLURBS: [RegExp, string][] = [
+  [/audit/i, 'État des lieux, consommations par usage, scénarios de travaux chiffrés.'],
+  [/dpe|tertiaire/i, 'Diagnostic de performance énergétique des bâtiments tertiaires.'],
+  [/dimensionnement|note|sign/i, 'Notes datées et signées, exigées pour valoriser de nombreuses opérations.'],
+  [/gisement|calcul|action/i, "Calcul du gisement d'économies, action par action."],
+];
+
+function livrableDetail(title: string, cms?: string) {
+  const fromCms = (cms || '').trim();
+  if (fromCms) return fromCms;
+  const t = title.toLowerCase();
+  for (const [re, blurb] of LIVRABLE_BLURBS) {
+    if (re.test(t)) return blurb;
+  }
+  return 'Document remis à l’issue de l’étude, prêt pour la décision et le financement.';
+}
+
+function parseColonItem(raw: string): { heading?: string; body: string } {
+  const m = raw.match(/^([^:]{3,120}):\s*(.+)$/s);
+  if (m) return { heading: m[1].trim(), body: m[2].trim() };
+  return { body: raw.trim() };
+}
+
+function parseLivrableLine(raw: string, cmsDetail?: string): { title: string; detail: string } {
+  const merged = raw.match(/^(.+?)\s+[—–-]\s+(.+)$/s);
+  if (merged) {
+    return { title: merged[1].trim(), detail: merged[2].trim() };
+  }
+  return { title: raw.trim(), detail: livrableDetail(raw, cmsDetail) };
+}
+
+/** Grille livrables : clic → texte descriptif sur la photo */
+function UltraLivrablesVizSection({
+  eyebrow,
+  sectionTitle,
+  lead,
+  rows,
+}: {
+  eyebrow?: string;
+  sectionTitle: string;
+  lead: string;
+  rows: { title: string; detail: string; image: string }[];
+}) {
+  const [open, setOpen] = useState<number | null>(null);
+  const toggle = (i: number) => setOpen((prev) => (prev === i ? null : i));
+
+  return (
+    <section className="sec-padding px-ultra-livrables px-ultra-livrables--viz">
+      <div className="container">
+        <header className="px-ultra-livrables__viz-head">
+          {eyebrow ? <span className="px-ultra-livrables__eyebrow">{eyebrow}</span> : null}
+          <h2 className="px-ultra-livrables__heading">{sectionTitle}</h2>
+          <p className="px-ultra-livrables__lead">{lead}</p>
+        </header>
+        <div className="px-ultra-livrables__viz-grid">
+          {rows.map((row, i) => {
+            const isOpen = open === i;
+            return (
+              <article
+                key={`${row.title}-${i}`}
+                className={`px-ultra-livrables__tile${isOpen ? ' px-ultra-livrables__tile--open' : ''}`}
+                onClick={() => toggle(i)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    toggle(i);
+                  }
+                }}
+                role="button"
+                tabIndex={0}
+                aria-expanded={isOpen}
+              >
+                <img className="px-ultra-livrables__img" src={row.image} alt="" loading="lazy" />
+                <div className="px-ultra-livrables__shade" aria-hidden="true" />
+                <div className="px-ultra-livrables__copy">
+                  <span className="px-ultra-livrables__badge">{String(i + 1).padStart(2, '0')}</span>
+                  <h3 className="px-ultra-livrables__label">{row.title}</h3>
+                  <p className="px-ultra-livrables__detail">{row.detail}</p>
+                  <span className="px-ultra-livrables__hint" aria-hidden="true">
+                    {isOpen ? 'Fermer' : 'Cliquer pour le détail'}
+                  </span>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
 
 const GARANT_FALLBACK_LOGOS: GarantLogo[][] = [
   [
-    { src: '/themes/ultra-s/images/pexen/quali/qualipac.webp', alt: 'RGE QualiPAC', size: 'lg' },
-    { src: '/themes/ultra-s/images/pexen/quali/qualisol.webp', alt: 'RGE Qualisol', size: 'md' },
+    { src: '/themes/ultra-s/images/pexen/quali/qualipac.png?v=4', alt: 'RGE QualiPAC', size: 'lg' },
+    { src: '/themes/ultra-s/images/pexen/quali/qualisol.png?v=4', alt: 'RGE Qualisol', size: 'md' },
   ],
-  [{ src: '/themes/ultra-s/images/pexen/quali/opqibi.webp', alt: 'OPQIBI', size: 'lg' }],
+  [{ src: '/themes/ultra-s/images/pexen/quali/opqibi.png', alt: 'OPQIBI', size: 'lg' }],
   [
     {
-      src: '/themes/ultra-s/images/pexen/quali/assurance-decennale.webp?v=2',
+      src: '/themes/ultra-s/images/pexen/quali/assurance-decennale.png',
       alt: 'Qualification Assurance décennale',
       size: 'wide',
     },
@@ -1626,12 +1808,150 @@ export function UltraGarantiesSection({
       ];
   const introRaw = (override?.intro || '').trim();
   const showIntro = introRaw && !/logos officiels|ancre #/i.test(introRaw);
+  const fromCms = Boolean(override?.cards?.length);
+  const n = cards.length;
+  const colClass = n <= 1 ? 'col-12' : n === 2 ? 'col-md-6' : 'col-lg-4';
+  const isListPanel = fromCms && n === 1;
+
+  /* Checklist CMS 1 carte → variantes pro selon le type de contenu. */
+  if (isListPanel) {
+    const panel = cards[0];
+    const items = panel?.items || [];
+    const sectionTitle = override?.title || panel?.title || 'Nos livrables';
+    const titleKey = sectionTitle.toLowerCase();
+    const isLivrables = /livrables|documents remis/.test(titleKey);
+    const isDiag = /pourquoi|consomment|trop|enjeu|cause|probl/.test(titleKey);
+    const isMetrics = /indicateur|suivons|mesure|suivi|monit/.test(titleKey);
+    const DOC_ICONS = ['fa-file-alt', 'fa-file-signature', 'fa-drafting-compass', 'fa-chart-line', 'fa-clipboard-check', 'fa-folder-open'];
+    const DIAG_ICONS = ['fa-temperature-high', 'fa-store', 'fa-tachometer-alt', 'fa-fan', 'fa-bolt', 'fa-exclamation-triangle'];
+    const METRIC_ICONS = ['fa-thermometer-half', 'fa-sync-alt', 'fa-bolt', 'fa-snowflake', 'fa-chart-area', 'fa-clock'];
+
+    const renderEnumerate = (tone: 'navy' | 'light', defaultEyebrow: string, defaultLead?: string) => (
+      <section className={`sec-padding px-ultra-diag${tone === 'light' ? ' px-ultra-diag--light' : ''}`}>
+        <div className="container">
+          <header className="px-ultra-diag__head">
+            {override?.eyebrow ? <span className="px-ultra-diag__eyebrow">{override.eyebrow}</span> : (
+              <span className="px-ultra-diag__eyebrow">{defaultEyebrow}</span>
+            )}
+            <h2 className="px-ultra-diag__title">{sectionTitle}</h2>
+            {showIntro ? <p className="px-ultra-diag__lead">{introRaw}</p> : defaultLead ? (
+              <p className="px-ultra-diag__lead">{defaultLead}</p>
+            ) : null}
+          </header>
+          <div className="px-ultra-diag__grid px-ultra-diag__grid--auto">
+            {items.map((it, i) => {
+              const line = parseColonItem(it);
+              return (
+                <article key={`${it.slice(0, 24)}-${i}`} className="px-ultra-diag__card">
+                  <div className="px-ultra-diag__top">
+                    <span className="px-ultra-diag__num">{String(i + 1).padStart(2, '0')}</span>
+                    <span className="px-ultra-diag__icon" aria-hidden="true">
+                      <i className={`fa ${DIAG_ICONS[i % DIAG_ICONS.length]}`} />
+                    </span>
+                  </div>
+                  <p className="px-ultra-diag__text">
+                    {line.heading ? <span className="px-ultra-diag__item-title">{line.heading}</span> : null}
+                    {line.heading ? ' ' : null}
+                    {line.body}
+                  </p>
+                </article>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+    );
+
+    if (isDiag) {
+      return renderEnumerate(
+        'navy',
+        'Diagnostic',
+        'Les causes les plus fréquentes d’une surconsommation frigorifique.',
+      );
+    }
+
+    if (isMetrics) {
+      return (
+        <section className="sec-padding px-ultra-metrics">
+          <div className="container">
+            <header className="px-ultra-metrics__head">
+              {override?.eyebrow ? <span className="px-ultra-metrics__eyebrow">{override.eyebrow}</span> : (
+                <span className="px-ultra-metrics__eyebrow">Pilot</span>
+              )}
+              <h2 className="px-ultra-metrics__title">{sectionTitle}</h2>
+              {showIntro ? <p className="px-ultra-metrics__lead">{introRaw}</p> : (
+                <p className="px-ultra-metrics__lead">Des grandeurs mesurées avant et après travaux, pour prouver le gain.</p>
+              )}
+            </header>
+            <div className="px-ultra-metrics__rail">
+              {items.map((it, i) => (
+                <article key={it} className="px-ultra-metrics__tile">
+                  <div className="px-ultra-metrics__icon" aria-hidden="true">
+                    <i className={`fa ${METRIC_ICONS[i % METRIC_ICONS.length]}`} />
+                  </div>
+                  <div className="px-ultra-metrics__body">
+                    <span className="px-ultra-metrics__num">Indicateur {String(i + 1).padStart(2, '0')}</span>
+                    <h3 className="px-ultra-metrics__label">{it}</h3>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    if (!isLivrables) {
+      return renderEnumerate('light', 'Repères', '');
+    }
+
+    const kicker = panel?.title && panel.title !== override?.title ? panel.title : 'Documents remis à chaque étape';
+    const IMG = '/themes/ultra-s/images/pexen';
+    const FALLBACK_SHOTS = [
+      `${IMG}/audit-energetique-entreprise.webp`,
+      `${IMG}/cee-tertiaire.webp`,
+      `${IMG}/ingenieur-pexen-sur-site-ingenierie-et-performance-energetique.webp`,
+      `${IMG}/performance-energetique.webp`,
+      `${IMG}/audit-batiment.webp`,
+      `${IMG}/contrat-de-performance-energetique-sur-une-centrale-de-froid-commercial.webp`,
+    ];
+    const shotFor = (label: string, i: number) => {
+      const t = label.toLowerCase();
+      if (/audit/.test(t)) return `${IMG}/audit-energetique-entreprise.webp`;
+      if (/dpe|tertiaire|operat/.test(t)) return `${IMG}/cee-tertiaire.webp`;
+      if (/dimensionnement|note|sign/.test(t)) return `${IMG}/ingenieur-pexen-sur-site-ingenierie-et-performance-energetique.webp`;
+      if (/gisement|calcul|action/.test(t)) return `${IMG}/performance-energetique.webp`;
+      return FALLBACK_SHOTS[i % FALLBACK_SHOTS.length];
+    };
+    void DOC_ICONS;
+
+    const details = panel?.itemDetails;
+    const rows = items.map((it, i) => {
+      const parsed = parseLivrableLine(it, details?.[i]);
+      return {
+        title: parsed.title,
+        detail: parsed.detail,
+        image: shotFor(parsed.title, i),
+      };
+    });
+
+    return (
+      <UltraLivrablesVizSection
+        eyebrow={override?.eyebrow}
+        sectionTitle={sectionTitle}
+        lead={showIntro ? introRaw : kicker}
+        rows={rows}
+      />
+    );
+  }
 
   return (
     <section id="qualifications" className="sec-padding bg-light">
       <div className="container">
-        <div className="sec-intro text-center mb-5">
-          <span className="sub-title wow fadeInUp">{override?.eyebrow || 'Qualifications & Assurances'}</span>
+        <div className="sec-intro text-center mb-4 mb-lg-5">
+          {override?.eyebrow || !fromCms ? (
+            <span className="sub-title wow fadeInUp">{override?.eyebrow || 'Qualifications & Assurances'}</span>
+          ) : null}
           <h2 className="sec-title">{override?.title || 'Qualifiés, assurés, contrôlés'}</h2>
           {showIntro ? (
             <p className="lead-sm mx-auto" style={{ maxWidth: 680 }}>
@@ -1639,37 +1959,44 @@ export function UltraGarantiesSection({
             </p>
           ) : null}
         </div>
-        <div className="row g-4">
+        <div className={`row g-4 ${n === 1 ? '' : 'justify-content-center'}`}>
           {cards.map((c, idx) => {
-            const logos =
-              c.logos?.filter((l) => l.src)?.length
-                ? c.logos.filter((l) => l.src)
-                : GARANT_FALLBACK_LOGOS[idx] || [];
+            const explicitLogos = c.logos?.filter((l) => l.src) || [];
+            /* Fallbacks RGE uniquement sur la section homepage (pas de cards CMS). */
+            const logos = explicitLogos.length ? explicitLogos : fromCms ? [] : GARANT_FALLBACK_LOGOS[idx] || [];
+            const showLogoRow = logos.length > 0 || Boolean(c.icon);
             return (
-            <div key={c.title || c.tag || idx} className="col-lg-4">
-              <div className="px-ultra-garant-card bg-white p-4 h-100 border d-flex flex-column" style={{ borderColor: '#E2E8F0' }}>
-                <div
-                  className="px-ultra-garant-logos d-flex align-items-center justify-content-center mb-4 pb-2 border-bottom"
-                  style={{ borderColor: '#F1F5F9', minHeight: 64 }}
-                >
-                  {logos.length ? (
-                    <div className="d-flex align-items-center justify-content-center gap-3 flex-wrap">
-                      {logos.map((logo) => (
-                        <img
-                          key={`${logo.src}-${logo.alt || ''}`}
-                          src={logo.src}
-                          alt={logo.alt || c.title || 'Logo'}
-                          className={garantLogoClass(logo.size)}
-                        />
-                      ))}
-                    </div>
-                  ) : c.icon ? (
-                    <i className={`fa ${c.icon} fs-3`} style={{ color: 'var(--px-primary)' }} aria-hidden="true" />
-                  ) : null}
-                </div>
-                <h3 className="h5 mb-3" style={{ color: 'var(--px-navy)' }}>
-                  {c.title}
-                </h3>
+            <div key={c.title || c.tag || idx} className={colClass}>
+              <div
+                className="px-ultra-garant-card bg-white h-100 border d-flex flex-column p-4"
+                style={{ borderColor: '#E2E8F0' }}
+              >
+                {showLogoRow ? (
+                  <div
+                    className="px-ultra-garant-logos d-flex align-items-center justify-content-center mb-4 pb-2 border-bottom"
+                    style={{ borderColor: '#F1F5F9', minHeight: 64 }}
+                  >
+                    {logos.length ? (
+                      <div className="d-flex align-items-center justify-content-center gap-3 flex-wrap">
+                        {logos.map((logo) => (
+                          <img
+                            key={`${logo.src}-${logo.alt || ''}`}
+                            src={logo.src}
+                            alt={logo.alt || c.title || 'Logo'}
+                            className={garantLogoClass(logo.size)}
+                          />
+                        ))}
+                      </div>
+                    ) : c.icon ? (
+                      <i className={`fa ${c.icon} fs-3`} style={{ color: 'var(--px-primary)' }} aria-hidden="true" />
+                    ) : null}
+                  </div>
+                ) : null}
+                {c.title ? (
+                  <h3 className="h5 mb-3" style={{ color: 'var(--px-navy)' }}>
+                    {c.title}
+                  </h3>
+                ) : null}
                 <ul className="list-unstyled mb-0 flex-grow-1">
                   {c.items.map((it) => (
                     <li key={it} className="d-flex align-items-start gap-2 mb-2" style={{ fontSize: '.9rem', color: '#334155' }}>
